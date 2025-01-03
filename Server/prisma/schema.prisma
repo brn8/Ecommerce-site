@@ -12,3 +12,82 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Users{
+  id Int @id @default(autoincrement())
+  firstName String
+  lastName String
+  username String
+  password String
+  address Address @relation(fields: [addressId], references: [id])
+  addressId Int
+  payment Payment @relation(fields: [paymentId], references: [id])
+  paymentId Int
+  orders Orders[]
+  review Review[]
+}
+
+model Address{
+  id Int @id @default(autoincrement())
+  streetAddress String
+  city String
+  state String
+  zipCode Int
+  country String
+  users Users[]
+}
+model Payment{
+  id Int @id @default(autoincrement())
+  cardNumber Int
+  nameOnCard String
+  expiration String
+  users Users[]
+}
+model Orders {
+  id Int @id @default(autoincrement())
+  user Users @relation(fields: [userId], references: [id])
+  userId Int
+  OrderItem OrderItem @relation(fields: [orderItemId], references: [id])
+  orderItemId Int
+  totalPrice Decimal
+}
+
+model OrderItem {
+  id Int @id @default(autoincrement())
+  products Product @relation( fields: [productId], references: [id])
+  productId Int
+  quantity Int
+  price Decimal
+  orders Orders[]
+}
+
+model Product{
+  id Int @id @default(autoincrement())
+  name String
+  description String
+  price Decimal
+  discountAmount Decimal
+  quantity Int
+  productCategory ProductCategory @relation(fields: [productCategoryId], references: [id])
+  productCategoryId Int
+  created_at DateTime
+  modified_at DateTime
+  review Review[]
+  orderItem OrderItem[]
+}
+
+model ProductCategory {
+  id Int @id @default(autoincrement())
+  name String
+  Product Product[]
+}
+
+model Review{
+  id Int @id @default(autoincrement())
+  user Users @relation(fields: [userId], references: [id])
+  userId Int
+  products Product @relation(fields: [productId], references: [id])
+  productId Int
+  comment String
+  review Decimal
+}
