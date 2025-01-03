@@ -2,8 +2,15 @@
 <img width="728" alt="image" src="https://github.com/user-attachments/assets/50c086df-5771-4bad-b9eb-bfaa0a199890" />
 
 # Designs 
+Wireframe Video| Click on the following link<br/>
+https://drive.google.com/file/d/1h1BOtlC_uZ1TEXXeIzn3klmXvFctka_C/view?usp=sharing
+</br></br>
 Login Page<br/>
-<img width="542" alt="image" src="https://github.com/user-attachments/assets/c809f339-2dbf-4bf1-b56a-ca08635bb693" /><br/>
+![login_page](https://github.com/user-attachments/assets/7e16b4a3-a9ca-47e1-b507-67cd0e865627)<br/>
 Signup Page<br/>
-<img width="548" alt="image" src="https://github.com/user-attachments/assets/f46a13fe-b8e6-4dfd-9632-f57212e77182" />
+![signup_page](https://github.com/user-attachments/assets/a422423a-b5bd-41be-bc91-1dd95c105219) <br/>
+Landing Page<br/>
+![landing_page](https://github.com/user-attachments/assets/844e4ae4-03cd-4f1a-8a18-cfca53df151c)
+
+
 
