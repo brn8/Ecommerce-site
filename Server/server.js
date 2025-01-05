@@ -6,8 +6,6 @@ const prisma = require("../Server/prisma");
 require("dotenv").config();
 app.use(express.json());
 
-console.log("prisma: ", prisma);
-
 app.post("/api/register/user", async (req, res, next) => {
   try {
     const user_data = req.body;
@@ -33,7 +31,7 @@ app.post("/api/register/user", async (req, res, next) => {
       });
       return res.send("Congratulations!! You are registered!");
     } else {
-      res.send("User already exist with this email!!");
+      res.send("This user already exists!!");
     }
   } catch (error) {
     next(error);
