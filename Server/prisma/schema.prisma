@@ -19,10 +19,10 @@ model Users{
   lastName String
   username String
   password String
-  address Address @relation(fields: [addressId], references: [id])
-  addressId Int
-  payment Payment @relation(fields: [paymentId], references: [id])
-  paymentId Int
+  address Address? @relation(fields: [addressId], references: [id])
+  addressId Int?
+  payment Payment? @relation(fields: [paymentId], references: [id])
+  paymentId Int?
   orders Orders[]
   review Review[]
 }
