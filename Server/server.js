@@ -14,6 +14,8 @@ const JWT = process.env.JWT;
 app.post("/api/register/user", async (req, res, next) => {
   try {
     const user_data = req.body;
+    console.log("Length of user data: ", user_data.length);
+
     const firstName = user_data.firstName;
     const lastName = user_data.lastName;
     const username = user_data.username;
@@ -35,9 +37,9 @@ app.post("/api/register/user", async (req, res, next) => {
           password: hashedPassword,
         },
       });
-      return res.send("Congratulations!! You are registered!");
+      return res.status(200).json("Congratulations!! You are registered!");
     } else {
-      res.send("This user already exists!!");
+      res.status(409).json("This user already exists!!");
     }
   } catch (error) {
     next(error);

@@ -3,10 +3,10 @@ import SignupPage from "./Components/SignupPage";
 import "./App.css";
 
 function App() {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [firstName, setFirstName] = useState(undefined);
+  const [lastName, setLastName] = useState(undefined);
+  const [username, setUsername] = useState(undefined);
+  const [password, setPassword] = useState(undefined);
 
   return (
     <>

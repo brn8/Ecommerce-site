@@ -11,6 +11,10 @@ const SignupPage = ({
   async function submitHandler(e) {
     e.preventDefault();
     console.log(firstName, " ", lastName, " ", username, " ", password);
+    if (!firstName || !lastName || !username || !password) {
+      alert("All fields are required!!");
+      return;
+    }
     const obj = {
       firstName: firstName,
       lastName: lastName,
@@ -23,11 +27,13 @@ const SignupPage = ({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(obj),
       });
-      const data = await response.status;
+      const data = await response.json();
       console.log("after register: ", data);
-      if (data == 200) {
-        alert("Congratulations!! You are registered successfully!");
-      }
+      setFirstName("");
+      setLastName("");
+      setUsername("");
+      setPassword("");
+      alert(data);
     } catch (error) {
       console.log("Error while registering a user ", error);
     }
@@ -40,6 +46,7 @@ const SignupPage = ({
       </div>
       <h1>Create Account</h1>
       <input
+        value={firstName}
         required
         onChange={(e) => setFirstName(e.target.value)}
         placeholder="First Name"
@@ -47,6 +54,7 @@ const SignupPage = ({
       />
 
       <input
+        value={lastName}
         required
         onChange={(e) => setLastName(e.target.value)}
         placeholder="Last Name"
@@ -54,6 +62,7 @@ const SignupPage = ({
       />
 
       <input
+        value={username}
         required
         onChange={(e) => setUsername(e.target.value)}
         placeholder="Username"
@@ -61,6 +70,7 @@ const SignupPage = ({
       />
 
       <input
+        value={password}
         required
         onChange={(e) => setPassword(e.target.value)}
         placeholder="Password"
