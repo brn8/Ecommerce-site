@@ -57,6 +57,7 @@ CREATE TABLE "OrderItem" (
 CREATE TABLE "Product" (
     "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
+    "img" TEXT NOT NULL,
     "description" TEXT NOT NULL,
     "price" DECIMAL(65,30) NOT NULL,
     "discountAmount" DECIMAL(65,30) NOT NULL,
