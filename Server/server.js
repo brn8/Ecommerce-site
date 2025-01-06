@@ -1,24 +1,15 @@
-require("dotenv").config();
+
 const express = require("express");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 const app = express();
-
-const prisma = require("./prisma");
-
+const PORT = 3000;
+const prisma = require("../Server/prisma");
+require("dotenv").config();
 app.use(express.json());
 app.use(require("morgan")("dev"));
 
-// app.post("/api/user", async (req, res, next) => {
-//   const { firstName, lastName, username, password } = req.body;
-//   const response = await prisma.users.createMany({
-//     data: {
-//       firstName,
-//       lastName,
-//       username,
-//       password,
-//     },
-//   });
-//   res.status(201).send(response);
-// });
+const JWT = process.env.JWT;
 
 app.post("/api/product", async (req, res, next) => {
   try {
@@ -119,7 +110,39 @@ app.use((err, req, res, next) => {
   res.status(status).json({ message });
 });
 
-app.listen(
-  process.env.PORT,
-  console.log(`Listening to the port ${process.env.PORT}`)
-);
+
+
+
+app.post("/api/register/user", async (req, res, next) => {
+  try {
+    const user_data = req.body;
+    const firstName = user_data.firstName;
+    const lastName = user_data.lastName;
+    const username = user_data.username;
+    const password = user_data.password;
+
+    const salt = await bcrypt.genSalt();
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    const ifExist = await prisma.users.findMany({
+      where: { username },
+    });
+
+    if (ifExist.length == 0) {
+      await prisma.users.create({
+        data: {
+          firstName: firstName,
+          lastName: lastName,
+          username: username,
+          password: hashedPassword,
+        },
+      });
+      return res.send("Congratulations!! You are registered!");
+    } else {
+      res.send("This user already exists!!");
+    }
+  } catch (error) {
+    next(error);
+  }
+});
+app.listen(PORT, () => console.log(`Listening to the port ${PORT}`));
