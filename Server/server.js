@@ -1,4 +1,3 @@
-
 const express = require("express");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -18,7 +17,6 @@ app.use(morgan("dev"));
 app.use(cors());
 
 app.use(require("morgan")("dev"));
-
 
 const JWT = process.env.JWT;
 
@@ -107,8 +105,43 @@ app.get("/api/OrderItem", async (req, res, next) => {
           },
         },
       },
+      orderBy: {
+        id: "asc",
+      },
     });
     res.status(200).json(orderItems);
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.delete("/api/orderItem/:id", async (req, res, next) => {
+  try {
+    const id = +req.params.id;
+    const response = await prisma.orderItem.delete({
+      where: {
+        id: id,
+      },
+    });
+    res.status(204).send(response);
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.patch("/api/orderItem/:id", async (req, res, next) => {
+  try {
+    const id = +req.params.id;
+    const { quantity } = req.body;
+    const response = await prisma.orderItem.update({
+      where: {
+        id: id,
+      },
+      data: {
+        quantity: quantity,
+      },
+    });
+    res.send(response);
   } catch (err) {
     next(err);
   }
@@ -120,9 +153,6 @@ app.use((err, req, res, next) => {
   const message = err.message ?? "Internal server error.";
   res.status(status).json({ message });
 });
-
-
-
 
 app.post("/api/register/user", async (req, res, next) => {
   try {
