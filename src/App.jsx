@@ -1,35 +1,60 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState, useEffect } from "react";
+import SignupPage from "./Components/SignupPage";
+import "./App.css";
+import Product from "./Components/Product";
+import CartButton from "./Components/CartButton";
+import { Route, Routes } from "react-router-dom";
+import Cart from "./Components/Cart";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [firstName, setFirstName] = useState(undefined);
+  const [lastName, setLastName] = useState(undefined);
+  const [username, setUsername] = useState(undefined);
+  const [password, setPassword] = useState(undefined);
+
+  const [cart, setCart] = useState(true);
+  const [cartItem, setCartItem] = useState([]);
+
+  useEffect(() => {
+    const currentOrder = async () => {
+      const response = await fetch("/api/orderItem");
+      const fetchOrderItem = await response.json();
+      setCartItem(fetchOrderItem);
+    };
+    currentOrder();
+  }, [cart]);
 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <>
+              <CartButton cart={cart} cartItem={cartItem} />
+              <Product cart={cart} setCart={setCart} />
+            </>
+          }
+        />
+        <Route path="/cart" element={<Cart cartItem={cartItem} />} />
+        <Route
+          path="/signup"
+          element={
+            <SignupPage
+              firstName={firstName}
+              lastName={lastName}
+              username={username}
+              password={password}
+              setFirstName={setFirstName}
+              setLastName={setLastName}
+              setUsername={setUsername}
+              setPassword={setPassword}
+            />
+          }
+        />
+      </Routes>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
