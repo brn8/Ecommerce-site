@@ -5,6 +5,8 @@ import Product from "./Components/Product";
 import CartButton from "./Components/CartButton";
 import { Route, Routes } from "react-router-dom";
 import Cart from "./Components/Cart";
+import Account from "./Components/Account";
+import AccountButton from "./Components/AccountButton";
 
 function App() {
   const [firstName, setFirstName] = useState(undefined);
@@ -33,6 +35,7 @@ function App() {
             <>
               <CartButton cart={cart} cartItem={cartItem} />
               <Product cart={cart} setCart={setCart} />
+              <AccountButton />
             </>
           }
         />
@@ -52,6 +55,7 @@ function App() {
             />
           }
         />
+        <Route path="/account" element={<Account />} />
       </Routes>
     </>
   );
