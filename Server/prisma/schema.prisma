@@ -64,6 +64,7 @@ model OrderItem {
 model Product{
   id Int @id @default(autoincrement())
   name String
+  img String
   description String
   price Decimal
   discountAmount Decimal
