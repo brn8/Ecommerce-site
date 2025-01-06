@@ -1,6 +1,13 @@
 import { useNavigate } from "react-router-dom";
 
-const LoginPage = ({ username, password, setUsername, setPassword }) => {
+const LoginPage = ({
+  active,
+  setActive,
+  username,
+  password,
+  setUsername,
+  setPassword,
+}) => {
   const navigate = useNavigate();
 
   async function submitHandler(e) {
@@ -35,12 +42,28 @@ const LoginPage = ({ username, password, setUsername, setPassword }) => {
       console.log("Error while registering a user ", error);
     }
   }
+  function handleClick(option) {
+    setActive(option);
+    if (option == "signup") {
+      navigate("/signup");
+    }
+  }
 
   return (
     <form>
       <div className="option-container">
-        <h3>SignIn</h3>
-        <h3 onClick={() => navigate("/signup")}>SignUp</h3>
+        <h3
+          className={active === "signin" ? "active" : ""}
+          onClick={() => handleClick("signin")}
+        >
+          SignIn
+        </h3>
+        <h3
+          className={active === "signup" ? "active" : ""}
+          onClick={() => handleClick("signup")}
+        >
+          SignUp
+        </h3>
       </div>
       <h1>Welcome Back!</h1>
 

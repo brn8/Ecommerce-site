@@ -1,3 +1,4 @@
+/*CSS for Login and Signup page*/
 html,
 body {
   height: 100%;
@@ -18,7 +19,7 @@ form .option-container {
   display: flex;
 }
 form .option-container h3 {
-  border: 2px solid white;
+  /* border: 2px solid white; */
   border-radius: 5px;
   font-size: larger;
   padding: 5px 70px;
@@ -27,6 +28,10 @@ form .option-container h3 {
 form .option-container h3:hover {
   cursor: pointer;
 }
+form .option-container h3.active {
+  background-color: #87c5ea;
+}
+
 form h1 {
   color: #184d92;
 }
@@ -39,6 +44,10 @@ form input {
   border: none;
   background-color: white;
   color: black;
+}
+form button {
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 /*CSS for product page*/

@@ -12,6 +12,7 @@ function App() {
   const [lastName, setLastName] = useState(undefined);
   const [username, setUsername] = useState(undefined);
   const [password, setPassword] = useState(undefined);
+  const [active, setActive] = useState("");
 
   const [cart, setCart] = useState(true);
   const [cartItem, setCartItem] = useState([]);
@@ -42,6 +43,8 @@ function App() {
           path="/signup"
           element={
             <SignupPage
+              active={active}
+              setActive={setActive}
               firstName={firstName}
               lastName={lastName}
               username={username}
@@ -57,6 +60,8 @@ function App() {
           path="/login"
           element={
             <LoginPage
+              active={active}
+              setActive={setActive}
               username={username}
               password={password}
               setUsername={setUsername}
