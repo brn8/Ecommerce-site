@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Product = ({ setCart, cart }) => {
+  const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [filterProduct, setFilterProduct] = useState([]);
   const filterElectorics = () => {
@@ -44,6 +46,7 @@ const Product = ({ setCart, cart }) => {
 
   return (
     <>
+      <button onClick={() => navigate("/signup")}>SignUp</button>
       <div className="itemByCategory">
         <button onClick={filterElectorics}>
           <img src="https://pricenmore.com/wp-content/uploads/2019/03/PRICEnMORE-Banner-All-Electronics-Gadgets-price-1170x500.jpg" />
