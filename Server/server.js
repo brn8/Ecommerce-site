@@ -1,10 +1,12 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 const app = express();
 const PORT = 3000;
 const prisma = require("../Server/prisma");
 require("dotenv").config();
 app.use(express.json());
+const JWT = process.env.JWT;
 
 app.post("/api/register/user", async (req, res, next) => {
   try {
@@ -17,17 +19,18 @@ app.post("/api/register/user", async (req, res, next) => {
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    const ifExist = await prisma.users.findMany({ where: { firstName } });
-    if (ifExist == false) {
-      await prisma.users.createMany({
-        data: [
-          {
-            firstName: firstName,
-            lastName: lastName,
-            username: username,
-            password: hashedPassword,
-          },
-        ],
+    const ifExist = await prisma.users.findMany({
+      where: { username },
+    });
+
+    if (ifExist.length == 0) {
+      await prisma.users.create({
+        data: {
+          firstName: firstName,
+          lastName: lastName,
+          username: username,
+          password: hashedPassword,
+        },
       });
       return res.send("Congratulations!! You are registered!");
     } else {
@@ -37,4 +40,5 @@ app.post("/api/register/user", async (req, res, next) => {
     next(error);
   }
 });
+
 app.listen(PORT, () => console.log(`Listening to the port ${PORT}`));
