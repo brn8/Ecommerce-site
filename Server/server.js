@@ -44,7 +44,7 @@ app.post("/api/register/user", async (req, res, next) => {
     next(error);
   }
 });
-const aunthenticate = async (user_data) => {
+const aunthenticate = async (user_data, res) => {
   const username = user_data.username;
   const password = user_data.password;
   const ifExist = await prisma.users.findMany({ where: { username } });
@@ -55,20 +55,25 @@ const aunthenticate = async (user_data) => {
     // console.log("Result of password verification: ", verifyPassword);
 
     if (verifyPassword == false) {
-      return `Your password doesn't match!`;
+      res.status(401).json(`Your password doesn't match!`);
+      return null;
     } else {
       const token = await jwt.sign(username, JWT);
       console.log("token: ", token);
       return token;
     }
   }
-  return `User not found`;
+  res.status(404).json(`User not found`);
+  return null;
 };
 
 app.post("/api/login/user", async (req, res, next) => {
   try {
     const user_data = req.body;
-    res.send(await aunthenticate(user_data));
+    const token = await aunthenticate(user_data, res);
+    if (token) {
+      res.send(token);
+    }
   } catch (ex) {
     next(ex);
   }
