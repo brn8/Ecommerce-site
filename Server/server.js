@@ -1,4 +1,3 @@
-
 const express = require("express");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -18,7 +17,6 @@ app.use(morgan("dev"));
 app.use(cors());
 
 app.use(require("morgan")("dev"));
-
 
 const JWT = process.env.JWT;
 
@@ -121,9 +119,6 @@ app.use((err, req, res, next) => {
   res.status(status).json({ message });
 });
 
-
-
-
 app.post("/api/register/user", async (req, res, next) => {
   try {
     const user_data = req.body;
@@ -169,7 +164,7 @@ const aunthenticate = async (user_data, res) => {
     // console.log("Result of password verification: ", verifyPassword);
 
     if (verifyPassword == false) {
-      res.status(401).json(`Your password doesn't match!`);
+      res.status(401).json({ message: `Your password doesn't match!` });
       return null;
     } else {
       const token = await jwt.sign(username, JWT);
@@ -177,7 +172,7 @@ const aunthenticate = async (user_data, res) => {
       return token;
     }
   }
-  res.status(404).json(`User not found`);
+  res.status(404).json({ message: `User not found` });
   return null;
 };
 
@@ -186,7 +181,9 @@ app.post("/api/login/user", async (req, res, next) => {
     const user_data = req.body;
     const token = await aunthenticate(user_data, res);
     if (token) {
-      res.send(token);
+      res
+        .status(200)
+        .json({ message: "You are sucessfully logged In!!", token: token });
     }
   } catch (ex) {
     next(ex);

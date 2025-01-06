@@ -47,6 +47,7 @@ const Product = ({ setCart, cart }) => {
   return (
     <>
       <button onClick={() => navigate("/signup")}>SignUp</button>
+      <button onClick={() => navigate("/login")}>Login</button>
       <div className="itemByCategory">
         <button onClick={filterElectorics}>
           <img src="https://pricenmore.com/wp-content/uploads/2019/03/PRICEnMORE-Banner-All-Electronics-Gadgets-price-1170x500.jpg" />

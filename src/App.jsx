@@ -5,6 +5,7 @@ import Product from "./Components/Product";
 import CartButton from "./Components/CartButton";
 import { Route, Routes } from "react-router-dom";
 import Cart from "./Components/Cart";
+import LoginPage from "./Components/LoginPage";
 
 function App() {
   const [firstName, setFirstName] = useState(undefined);
@@ -47,6 +48,17 @@ function App() {
               password={password}
               setFirstName={setFirstName}
               setLastName={setLastName}
+              setUsername={setUsername}
+              setPassword={setPassword}
+            />
+          }
+        />
+        <Route
+          path="/login"
+          element={
+            <LoginPage
+              username={username}
+              password={password}
               setUsername={setUsername}
               setPassword={setPassword}
             />

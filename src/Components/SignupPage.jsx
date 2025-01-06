@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 const SignupPage = ({
   firstName,
   lastName,
@@ -8,6 +9,7 @@ const SignupPage = ({
   setUsername,
   setPassword,
 }) => {
+  const navigate = useNavigate();
   async function submitHandler(e) {
     e.preventDefault();
     // console.log(firstName, " ", lastName, " ", username, " ", password);
@@ -41,7 +43,7 @@ const SignupPage = ({
   return (
     <form>
       <div className="option-container">
-        <h3>SignIn</h3>
+        <h3 onClick={() => navigate("/login")}>SignIn</h3>
         <h3>SignUp</h3>
       </div>
       <h1>Create Account</h1>
