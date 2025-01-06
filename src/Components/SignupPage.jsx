@@ -10,7 +10,7 @@ const SignupPage = ({
 }) => {
   async function submitHandler(e) {
     e.preventDefault();
-    console.log(firstName, " ", lastName, " ", username, " ", password);
+    // console.log(firstName, " ", lastName, " ", username, " ", password);
     if (!firstName || !lastName || !username || !password) {
       alert("All fields are required!!");
       return;
