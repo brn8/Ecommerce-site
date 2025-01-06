@@ -2,11 +2,14 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const cors = require("cors");
 const app = express();
 const PORT = 3000;
 const prisma = require("../Server/prisma");
 require("dotenv").config();
 app.use(express.json());
+app.use(cors());
+
 app.use(require("morgan")("dev"));
 
 const JWT = process.env.JWT;
@@ -116,6 +119,8 @@ app.use((err, req, res, next) => {
 app.post("/api/register/user", async (req, res, next) => {
   try {
     const user_data = req.body;
+    console.log("Length of user data: ", user_data.length);
+
     const firstName = user_data.firstName;
     const lastName = user_data.lastName;
     const username = user_data.username;
@@ -137,9 +142,9 @@ app.post("/api/register/user", async (req, res, next) => {
           password: hashedPassword,
         },
       });
-      return res.send("Congratulations!! You are registered!");
+      return res.status(200).json("Congratulations!! You are registered!");
     } else {
-      res.send("This user already exists!!");
+      res.status(409).json("This user already exists!!");
     }
   } catch (error) {
     next(error);
