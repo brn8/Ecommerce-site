@@ -1,11 +1,14 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const cors = require("cors");
 const app = express();
 const PORT = 3000;
 const prisma = require("../Server/prisma");
 require("dotenv").config();
 app.use(express.json());
+app.use(cors());
+
 const JWT = process.env.JWT;
 
 app.post("/api/register/user", async (req, res, next) => {
