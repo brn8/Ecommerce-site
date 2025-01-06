@@ -40,5 +40,4 @@ app.post("/api/register/user", async (req, res, next) => {
     next(error);
   }
 });
-
 app.listen(PORT, () => console.log(`Listening to the port ${PORT}`));
