@@ -5,8 +5,10 @@ import Product from "./Components/Product";
 import CartButton from "./Components/CartButton";
 import { Route, Routes } from "react-router-dom";
 import Cart from "./Components/Cart";
+import Account from "./Components/Account";
 import LoginPage from "./Components/LoginPage";
 import NavBar from "./Components/NavBar";
+
 
 function App() {
   const [firstName, setFirstName] = useState(undefined);
@@ -115,6 +117,7 @@ function App() {
             </div>
           }
         />
+        <Route path="/account" element={<Account />} />
       </Routes>
     </>
   );

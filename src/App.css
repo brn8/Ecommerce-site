@@ -309,3 +309,39 @@ td:nth-child(1) {
 .navbar-3 button {
   background-color: #def4fd;
 }
+
+.account {
+  display: flex;
+  justify-content: space-between;
+}
+
+.account-headers {
+  color: #184d92;
+}
+
+.account-links {
+  color: #ae6c1f;
+}
+
+.account-orders {
+  padding-left: 50px;
+  padding-right: 50px;
+}
+
+.account-details {
+  padding-right: 50px;
+  display: flex;
+  flex-direction: column;
+}
+
+.address-form {
+  all: revert;
+}
+
+.orders {
+  text-align: left;
+  width: 100%;
+}
+.account-headers th {
+  border-bottom: 1px solid #000000;
+}
