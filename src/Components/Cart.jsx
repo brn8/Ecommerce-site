@@ -2,7 +2,15 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import NavBar from "./NavBar";
 
-const Cart = ({ cartItem, cart, setCart }) => {
+const Cart = ({
+  cartItem,
+  cart,
+  setCart,
+  token,
+  setToken,
+  active,
+  setActive,
+}) => {
   const navigate = useNavigate();
   const deleteOrderItem = async (orderItem) => {
     const response = await fetch(`/api/orderItem/${orderItem.id}`, {
@@ -35,71 +43,83 @@ const Cart = ({ cartItem, cart, setCart }) => {
 
   return (
     <>
-      <NavBar cartItem={cartItem} />
+      <NavBar
+        active={active}
+        setActive={setActive}
+        cartItem={cartItem}
+        token={token}
+        setToken={setToken}
+      />
       <h2>Cart</h2>
-      <div className="cartPageFlex">
-        <table style={{ borderCollapse: "collapse" }}>
-          <tr>
-            <th>Product</th>
-            <th>Quantity</th>
-            <th>Price</th>
-          </tr>
-          {cartItem.length == 0
-            ? navigate("/")
-            : cartItem.map((addedItem) => {
-                return (
-                  <tr>
-                    <td>
-                      <div className="cartPageItem">
-                        <img src={addedItem.products.img} />
-                        <div className="cartPageInfomation">
-                          <p>
-                            <b>{addedItem.products.name}</b>
-                          </p>
-                          <span>{addedItem.products.description}</span>
+      {token ? (
+        <div className="cartPageFlex">
+          <table style={{ borderCollapse: "collapse" }}>
+            <tr>
+              <th>Product</th>
+              <th>Quantity</th>
+              <th>Price</th>
+            </tr>
+            {cartItem.length == 0
+              ? navigate("/")
+              : cartItem.map((addedItem) => {
+                  return (
+                    <tr>
+                      <td>
+                        <div className="cartPageItem">
+                          <img src={addedItem.products.img} />
+                          <div className="cartPageInfomation">
+                            <p>
+                              <b>{addedItem.products.name}</b>
+                            </p>
+                            <span>{addedItem.products.description}</span>
+                          </div>
                         </div>
-                      </div>
-                    </td>
-                    <td>
-                      {" "}
-                      {addedItem.quantity < 2 ? (
-                        <button disabled={true}>-</button>
-                      ) : (
-                        <button onClick={() => subtractItem(addedItem)}>
-                          -
+                      </td>
+                      <td>
+                        {" "}
+                        {addedItem.quantity < 2 ? (
+                          <button disabled={true}>-</button>
+                        ) : (
+                          <button onClick={() => subtractItem(addedItem)}>
+                            -
+                          </button>
+                        )}
+                        <span>{addedItem.quantity} </span>
+                        <button onClick={() => addItem(addedItem)}>
+                          +
+                        </button>{" "}
+                        <button onClick={() => deleteOrderItem(addedItem)}>
+                          <i class="bi bi-trash"></i>
                         </button>
-                      )}
-                      <span>{addedItem.quantity} </span>
-                      <button onClick={() => addItem(addedItem)}>+</button>{" "}
-                      <button onClick={() => deleteOrderItem(addedItem)}>
-                        <i class="bi bi-trash"></i>
-                      </button>
-                    </td>
-                    <td>
-                      {" "}
-                      <b>
-                        $
-                        {Math.round(
-                          (addedItem.products.price -
-                            addedItem.products.discountAmount) *
-                            100
-                        ) / 100}
-                      </b>
-                    </td>
-                  </tr>
-                );
-              })}
-        </table>
-        <div className="cartPageOrder">
-          <textarea
-            placeholder="Order Instruction"
-            cols="35"
-            rows="12"
-          ></textarea>
-          <p>Total </p>
-          <button>Check Out</button>
+                      </td>
+                      <td>
+                        {" "}
+                        <b>
+                          $
+                          {Math.round(
+                            (addedItem.products.price -
+                              addedItem.products.discountAmount) *
+                              100
+                          ) / 100}
+                        </b>
+                      </td>
+                    </tr>
+                  );
+                })}
+          </table>
+          <div className="cartPageOrder">
+            <textarea
+              placeholder="Order Instruction"
+              cols="35"
+              rows="12"
+            ></textarea>
+            <p>Total </p>
+            <button>Check Out</button>
+          </div>
         </div>
-      </div>
+      ) : (
+        <h1>Your Are not LoggedIn!</h1>
+      )}
       {/* <div className="cartPageItems">
         <div>
           {cartItem.length == 0
