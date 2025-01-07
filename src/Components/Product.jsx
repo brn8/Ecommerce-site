@@ -61,6 +61,12 @@ const Product = ({ setCart, cart, cartItem }) => {
           placeholder="Search"
         />
       </div>
+      {/* <div className="navbar-3">
+        <button>Ads</button>
+        <button>Deals</button>
+        <button>Anything about the website</button>
+        <button>Coming up next...</button>
+      </div> */}
       <div className="itemByCategory">
         <button onClick={filterElectorics}>
           <img src="https://pricenmore.com/wp-content/uploads/2019/03/PRICEnMORE-Banner-All-Electronics-Gadgets-price-1170x500.jpg" />
@@ -106,6 +112,7 @@ const Product = ({ setCart, cart, cartItem }) => {
           );
         })}
       </div>
+
       <Footer />
     </>
   );

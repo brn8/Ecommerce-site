@@ -1,9 +1,18 @@
+import { useNavigate } from "react-router-dom";
 import CartButton from "./CartButton";
 const NavBar = ({ cartItem }) => {
+  const navigate = useNavigate();
+  const handleRoute = () => {
+    navigate("/");
+  };
   return (
     <>
       <div className="nav-bar">
-        <img src="https://marketplace.canva.com/EAFzjXx_i5w/1/0/1600w/canva-blue-illustrative-e-commerce-online-shop-logo-fZejT2DpGCw.jpg" />
+        <img
+          src="https://marketplace.canva.com/EAFzjXx_i5w/1/0/1600w/canva-blue-illustrative-e-commerce-online-shop-logo-fZejT2DpGCw.jpg"
+          style={{ cursor: "pointer" }}
+          onClick={handleRoute}
+        />
         <div className="nav-bar-button">
           <button>About Us</button>
           <button>Contact Us</button>
