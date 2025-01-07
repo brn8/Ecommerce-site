@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import NavBar from "./NavBar";
+import Footer from "./Footer";
 
-const Product = ({ setCart, cart }) => {
+const Product = ({ setCart, cart, cartItem }) => {
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [filterProduct, setFilterProduct] = useState([]);
@@ -46,7 +48,25 @@ const Product = ({ setCart, cart }) => {
 
   return (
     <>
-      <button onClick={() => navigate("/signup")}>SignUp</button>
+      <NavBar cartItem={cartItem} />
+      {/* <button onClick={() => navigate("/signup")}>SignUp</button> */}
+      <div className="search-container">
+        <input
+          style={{
+            width: "400px",
+            borderRadius: "10px",
+            padding: "5px",
+            backgroundColor: "#def4fd",
+          }}
+          placeholder="Search"
+        />
+      </div>
+      {/* <div className="navbar-3">
+        <button>Ads</button>
+        <button>Deals</button>
+        <button>Anything about the website</button>
+        <button>Coming up next...</button>
+      </div> */}
       <div className="itemByCategory">
         <button onClick={filterElectorics}>
           <img src="https://pricenmore.com/wp-content/uploads/2019/03/PRICEnMORE-Banner-All-Electronics-Gadgets-price-1170x500.jpg" />
@@ -92,6 +112,8 @@ const Product = ({ setCart, cart }) => {
           );
         })}
       </div>
+
+      <Footer />
     </>
   );
 };

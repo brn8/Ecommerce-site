@@ -19,6 +19,8 @@ model Users{
   lastName String
   username String @unique
   password String
+  email String @unique
+  contact String
   address Address? @relation(fields: [addressId], references: [id], onDelete: Cascade)
   addressId Int?
   payment Payment? @relation(fields: [paymentId], references: [id], onDelete: Cascade)
