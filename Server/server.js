@@ -1,4 +1,3 @@
-
 const express = require("express");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -18,7 +17,6 @@ app.use(morgan("dev"));
 app.use(cors());
 
 app.use(require("morgan")("dev"));
-
 
 const JWT = process.env.JWT;
 
@@ -121,11 +119,10 @@ app.use((err, req, res, next) => {
   res.status(status).json({ message });
 });
 
-
-
-
+/*Route for registering the user */
 app.post("/api/register/user", async (req, res, next) => {
   try {
+    /*Retriving the data that is provided by the user */
     const user_data = req.body;
     console.log("Length of user data: ", user_data.length);
 
@@ -134,9 +131,18 @@ app.post("/api/register/user", async (req, res, next) => {
     const username = user_data.username;
     const password = user_data.password;
 
+    /* 
+    -Using bcrypt library to hash the password
+    -genSalt(): crates a string that is being used to hash the password which can be used to verify the password
+    -hash(): create a hashed password
+    */
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(password, salt);
 
+    /*
+    -Checking if the user already exist into the db if exist send a appropriate message
+    -if the user doesn't exist, then creating a user using prism.users.create function; where users is table 
+     */
     const ifExist = await prisma.users.findMany({
       where: { username },
     });
@@ -158,13 +164,27 @@ app.post("/api/register/user", async (req, res, next) => {
     next(error);
   }
 });
+
+/*Function to authenticate the loggedIn user */
 const aunthenticate = async (user_data, res) => {
+  // console.log("user data: ", user_data);
+
+  /*Retriving username and password from user_data variable */
   const username = user_data.username;
   const password = user_data.password;
+
+  /*Checking if user exist wit that username into the database */
   const ifExist = await prisma.users.findMany({ where: { username } });
 
+  /*
+  -if the user exist then it retrives the user's id 
+  -verify the provided password with the one stored into the db 
+  -once the password matches generate a json web token using user's id and return it
+  */
   if (ifExist.length > 0) {
     const user = ifExist[0];
+    const id = user.id;
+    console.log("User id: ", id);
     const verifyPassword = await bcrypt.compare(password, user.password);
     // console.log("Result of password verification: ", verifyPassword);
 
@@ -172,7 +192,7 @@ const aunthenticate = async (user_data, res) => {
       res.status(401).json(`Your password doesn't match!`);
       return null;
     } else {
-      const token = await jwt.sign(username, JWT);
+      const token = await jwt.sign(id, JWT);
       console.log("token: ", token);
       return token;
     }
@@ -181,6 +201,10 @@ const aunthenticate = async (user_data, res) => {
   return null;
 };
 
+/*Route for user login 
+-Calling the authenticate function to authenticate the user
+-Returning a token once the user is verified
+*/
 app.post("/api/login/user", async (req, res, next) => {
   try {
     const user_data = req.body;
@@ -190,6 +214,62 @@ app.post("/api/login/user", async (req, res, next) => {
     }
   } catch (ex) {
     next(ex);
+  }
+});
+
+/*
+-isLoggedIn functioin to check whether a user is authenticated by verifying the provided token
+-jwt.verify(): verify the token using the same key, that is used to sign a token
+-Once the user is verified, retriving the user from db using the id,
+ and attaching user's data to the req.user object
+ -next(): makes the user data available for the further processing in other routes 
+ */
+const isLoggedIn = async (req, res, next) => {
+  try {
+    const token = req.headers.authtoken;
+
+    if (!token) {
+      res.status(401).json({ message: `You are not loggedIn!!` });
+    } else {
+      const verifyToken = await jwt.verify(token, JWT);
+      // console.log("verifytoken: ", verifyToken);
+
+      if (verifyToken) {
+        // console.log("After verifying token the username is: ", verifyToken);
+        const id = Number(verifyToken);
+        const userWithToken = await prisma.users.findMany({
+          where: { id },
+        });
+
+        if (userWithToken.length >= 0) {
+          // console.log("query result: ", userWithToken);
+          const verifiedUser = userWithToken[0];
+
+          req.user = verifiedUser;
+          next();
+        } else {
+          return res.status(404).json({ message: `User is not found!` });
+        }
+      } else {
+        return res.status(401).json({ message: `You are not authorized!!` });
+      }
+    }
+  } catch (error) {
+    console.error("Error in isLoggedIn middleware:", error.message);
+    return res.status(500).json({ message: "Internal server error!" });
+  }
+};
+
+/*
+-Route for retriving and sending the logged in user's data
+-Calling the isLoggedIn function to check the user's authenticity and retriving the user's data
+*/
+app.get("/api/auth/me", isLoggedIn, async (req, res, next) => {
+  try {
+    const userinfo = req.user;
+    res.status(200).send(userinfo);
+  } catch (error) {
+    next(error);
   }
 });
 
