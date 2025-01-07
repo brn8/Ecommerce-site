@@ -33,12 +33,14 @@ function App() {
           path="/"
           element={
             <>
-              <CartButton cart={cart} cartItem={cartItem} />
-              <Product cart={cart} setCart={setCart} />
+              <Product cart={cart} setCart={setCart} cartItem={cartItem} />
             </>
           }
         />
-        <Route path="/cart" element={<Cart cartItem={cartItem} />} />
+        <Route
+          path="/cart"
+          element={<Cart cartItem={cartItem} cart={cart} setCart={setCart} />}
+        />
         <Route
           path="/signup"
           element={
