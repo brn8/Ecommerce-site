@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import NavBar from "./NavBar";
 
 const Account = () => {
   const navigate = useNavigate();
@@ -26,6 +27,7 @@ const Account = () => {
   ];
 
   const filler_info = {
+    email: "some@email.com",
     first_name: "FirstName",
     last_name: "LastName",
     address: {
@@ -38,7 +40,7 @@ const Account = () => {
   };
 
   return (
-    <div className="account">
+    <>
       <Link to="/">Home</Link>
       <h1>My Account</h1>
       <div className="orders">
@@ -65,8 +67,10 @@ const Account = () => {
         </table>
       </div>
       <div className="account-details">
-        <h2>Account Detail</h2>
+        <h2>Account Details</h2>
         <p>
+          {`${filler_info.email}`}
+          <br></br>
           {`${filler_info.first_name} ${filler_info.last_name}`}
           <br></br>
           {`${filler_info.address.street}`}
@@ -77,7 +81,7 @@ const Account = () => {
           {filler_info.phone_number}
         </p>
       </div>
-    </div>
+    </>
   );
 };
 

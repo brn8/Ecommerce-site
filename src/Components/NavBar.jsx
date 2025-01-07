@@ -17,7 +17,14 @@ const NavBar = ({ cartItem }) => {
           <button>About Us</button>
           <button>Contact Us</button>
           <button>Category</button>
-          <button>Account</button>
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              navigate("/account");
+            }}
+          >
+            Account
+          </button>
         </div>
         <CartButton cartItem={cartItem} />
       </div>

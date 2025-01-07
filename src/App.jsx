@@ -6,7 +6,6 @@ import CartButton from "./Components/CartButton";
 import { Route, Routes } from "react-router-dom";
 import Cart from "./Components/Cart";
 import Account from "./Components/Account";
-import AccountButton from "./Components/AccountButton";
 
 function App() {
   const [firstName, setFirstName] = useState(undefined);
@@ -33,7 +32,6 @@ function App() {
           path="/"
           element={
             <>
-              <AccountButton />
               <Product cart={cart} setCart={setCart} cartItem={cartItem} />
             </>
           }
