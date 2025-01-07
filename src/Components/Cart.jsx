@@ -81,6 +81,7 @@ const Cart = ({ cartItem, cart, setCart }) => {
               );
             })}
       </div>
+      <button>Check Out</button>
     </>
   );
 };

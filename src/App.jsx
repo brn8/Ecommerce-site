@@ -31,8 +31,7 @@ function App() {
           path="/"
           element={
             <>
-              <CartButton cart={cart} cartItem={cartItem} />
-              <Product cart={cart} setCart={setCart} />
+              <Product cart={cart} setCart={setCart} cartItem={cartItem} />
             </>
           }
         />
