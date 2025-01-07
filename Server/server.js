@@ -105,8 +105,43 @@ app.get("/api/OrderItem", async (req, res, next) => {
           },
         },
       },
+      orderBy: {
+        id: "asc",
+      },
     });
     res.status(200).json(orderItems);
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.delete("/api/orderItem/:id", async (req, res, next) => {
+  try {
+    const id = +req.params.id;
+    const response = await prisma.orderItem.delete({
+      where: {
+        id: id,
+      },
+    });
+    res.status(204).send(response);
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.patch("/api/orderItem/:id", async (req, res, next) => {
+  try {
+    const id = +req.params.id;
+    const { quantity } = req.body;
+    const response = await prisma.orderItem.update({
+      where: {
+        id: id,
+      },
+      data: {
+        quantity: quantity,
+      },
+    });
+    res.send(response);
   } catch (err) {
     next(err);
   }
@@ -119,7 +154,9 @@ app.use((err, req, res, next) => {
   res.status(status).json({ message });
 });
 
+
 /*Route for registering the user */
+
 app.post("/api/register/user", async (req, res, next) => {
   try {
     /*Retriving the data that is provided by the user */
