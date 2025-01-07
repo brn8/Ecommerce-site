@@ -1,3 +1,21 @@
+/*CSS for Login and Signup page*/
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+.signup-page,
+.signin-page {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+}
 form {
   background-color: #b3e1f4;
   display: flex;
@@ -10,7 +28,7 @@ form .option-container {
   display: flex;
 }
 form .option-container h3 {
-  border: 2px solid white;
+  /* border: 2px solid white; */
   border-radius: 5px;
   font-size: larger;
   padding: 5px 70px;
@@ -19,6 +37,10 @@ form .option-container h3 {
 form .option-container h3:hover {
   cursor: pointer;
 }
+form .option-container h3.active {
+  background-color: #87c5ea;
+}
+
 form h1 {
   color: #184d92;
 }
@@ -32,7 +54,34 @@ form input {
   background-color: white;
   color: black;
 }
+form .register-info {
+  display: flex;
+  gap: 20px;
+}
+form .register-info .firstname-lastname-email-container {
+  display: flex;
+  flex-direction: column;
+}
+form .register-info .contact-username-password-container {
+  display: flex;
+  flex-direction: column;
+}
+form button {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.nav-bar {
+  top: 0%;
+}
 
+.custom-signup-page .nav-bar-2 {
+  margin-top: 5px;
+  margin-bottom: 20px;
+}
+.custom-signin-page .nav-bar-2 {
+  margin-top: -30px;
+  margin-bottom: 20px;
+}
 /*CSS for product page*/
 .individulProduct {
   width: 200px;
@@ -161,8 +210,9 @@ td:nth-child(1) {
   justify-content: flex-start;
   width: 100%;
   min-width: 900px; /* Prevent navbar from shrinking */
-
+  position: fixed;
   height: 70px;
+  /* top: 10%; */
 }
 .nav-bar button {
   background-color: #88d7f6;
@@ -170,6 +220,39 @@ td:nth-child(1) {
 .nav-bar-button {
   display: flex;
   margin-left: auto;
+}
+.nav-bar .nav-bar-button .account-button-wrapper {
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.nav-bar .nav-bar-button .account-button-wrapper button {
+  margin-bottom: 0;
+}
+.nav-bar .nav-bar-button .account-button-wrapper .account-dropdown {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  border: 1px solid black;
+  top: 80%;
+  left: 0%;
+  z-index: 10;
+  background-color: white;
+  padding: 10px 20px;
+  border-radius: 10px;
+}
+.nav-bar .nav-bar-button .account-button-wrapper .account-dropdown a {
+  text-align: center;
+  font-size: large;
+  margin-bottom: 5px;
+  color: black;
+}
+.nav-bar .nav-bar-button .account-button-wrapper .account-dropdown a:hover {
+  text-decoration: underline;
+  cursor: pointer;
 }
 
 .nav-bar-2 button {
@@ -182,6 +265,7 @@ td:nth-child(1) {
   width: 100%;
   height: 40px;
   background-color: #def4fd;
+  margin-top: 70px;
 }
 
 .nav-bar-2 button {
@@ -224,4 +308,40 @@ td:nth-child(1) {
 }
 .navbar-3 button {
   background-color: #def4fd;
+}
+
+.account {
+  display: flex;
+  justify-content: space-between;
+}
+
+.account-headers {
+  color: #184d92;
+}
+
+.account-links {
+  color: #ae6c1f;
+}
+
+.account-orders {
+  padding-left: 50px;
+  padding-right: 50px;
+}
+
+.account-details {
+  padding-right: 50px;
+  display: flex;
+  flex-direction: column;
+}
+
+.address-form {
+  all: revert;
+}
+
+.orders {
+  text-align: left;
+  width: 100%;
+}
+.account-headers th {
+  border-bottom: 1px solid #000000;
 }
