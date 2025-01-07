@@ -154,9 +154,6 @@ app.use((err, req, res, next) => {
   res.status(status).json({ message });
 });
 
-
-/*Route for registering the user */
-
 app.post("/api/register/user", async (req, res, next) => {
   try {
     /*Retriving the data that is provided by the user */
@@ -167,6 +164,8 @@ app.post("/api/register/user", async (req, res, next) => {
     const lastName = user_data.lastName;
     const username = user_data.username;
     const password = user_data.password;
+    const email = user_data.email;
+    const contact = user_data.contact;
 
     /* 
     -Using bcrypt library to hash the password
@@ -191,6 +190,8 @@ app.post("/api/register/user", async (req, res, next) => {
           lastName: lastName,
           username: username,
           password: hashedPassword,
+          email: email,
+          contact: contact,
         },
       });
       return res.status(200).json("Congratulations!! You are registered!");
@@ -226,7 +227,7 @@ const aunthenticate = async (user_data, res) => {
     // console.log("Result of password verification: ", verifyPassword);
 
     if (verifyPassword == false) {
-      res.status(401).json(`Your password doesn't match!`);
+      res.status(401).json({ message: `Your password doesn't match!` });
       return null;
     } else {
       const token = await jwt.sign(id, JWT);
@@ -234,7 +235,7 @@ const aunthenticate = async (user_data, res) => {
       return token;
     }
   }
-  res.status(404).json(`User not found`);
+  res.status(404).json({ message: `User not found` });
   return null;
 };
 
@@ -247,7 +248,9 @@ app.post("/api/login/user", async (req, res, next) => {
     const user_data = req.body;
     const token = await aunthenticate(user_data, res);
     if (token) {
-      res.send(token);
+      res
+        .status(200)
+        .json({ message: "You are sucessfully logged In!!", token: token });
     }
   } catch (ex) {
     next(ex);
