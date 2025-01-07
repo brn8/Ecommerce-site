@@ -3,10 +3,19 @@ import { useNavigate } from "react-router-dom";
 import NavBar from "./NavBar";
 import Footer from "./Footer";
 
-const Product = ({ setCart, cart, cartItem }) => {
+const Product = ({
+  active,
+  setActive,
+  setCart,
+  cart,
+  cartItem,
+  token,
+  setToken,
+}) => {
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [filterProduct, setFilterProduct] = useState([]);
+
   const filterElectorics = () => {
     setFilterProduct(
       products.filter(
@@ -23,18 +32,22 @@ const Product = ({ setCart, cart, cartItem }) => {
   };
 
   const addItemToCart = async (product) => {
-    const response = await fetch("/api/orderItem", {
-      method: "POST",
-      headers: {
-        "Content-type": "application/json",
-      },
-      body: JSON.stringify({
-        productId: product.id,
-        quantity: 1,
-        price: product.price,
-      }),
-    });
-    setCart(!cart);
+    if (token) {
+      const response = await fetch("/api/orderItem", {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify({
+          productId: product.id,
+          quantity: 1,
+          price: product.price,
+        }),
+      });
+      setCart(!cart);
+    } else {
+      alert("Please Login to add item into the cart!!");
+    }
   };
   useEffect(() => {
     const fetchProducts = async () => {
@@ -48,8 +61,14 @@ const Product = ({ setCart, cart, cartItem }) => {
 
   return (
     <>
-      <NavBar cartItem={cartItem} />
-      {/* <button onClick={() => navigate("/signup")}>SignUp</button> */}
+      <NavBar
+        active={active}
+        setActive={setActive}
+        cartItem={cartItem}
+        token={token}
+        setToken={setToken}
+      />
+
       <div className="search-container">
         <input
           style={{

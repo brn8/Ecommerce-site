@@ -1,10 +1,27 @@
 import { useNavigate } from "react-router-dom";
 import CartButton from "./CartButton";
-const NavBar = ({ cartItem }) => {
+import { useState, useEffect } from "react";
+const NavBar = ({ active, setActive, cartItem, token, setToken }) => {
+  const [showDropDown, setShowDropDown] = useState(false);
+
   const navigate = useNavigate();
   const handleRoute = () => {
     navigate("/");
   };
+  function handleClick(option) {
+    setActive(option);
+    if (option == "signup") {
+      navigate("/signup");
+    } else if (option == "signin") {
+      navigate("/login");
+    }
+  }
+
+  useEffect(() => {
+    const authtoken = sessionStorage.getItem("authToken");
+    setToken(authtoken);
+  }, []);
+
   return (
     <>
       <div className="nav-bar">
@@ -17,10 +34,24 @@ const NavBar = ({ cartItem }) => {
           <button>About Us</button>
           <button>Contact Us</button>
           <button>Category</button>
-          <button>Account</button>
+          <div
+            className="account-button-wrapper"
+            onMouseEnter={() => setShowDropDown(true)}
+            onMouseLeave={() => setShowDropDown(false)}
+          >
+            <button>My Account</button>
+            {showDropDown && !token && (
+              <div className="account-dropdown">
+                <a onClick={() => handleClick("signup")}>SignUp</a>
+
+                <a onClick={() => handleClick("signin")}>SignIn</a>
+              </div>
+            )}
+          </div>
         </div>
         <CartButton cartItem={cartItem} />
       </div>
+
       <div className="nav-bar-2">
         <button>
           <i class="bi bi-star-fill"></i>Electronics

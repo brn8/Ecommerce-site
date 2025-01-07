@@ -164,6 +164,8 @@ app.post("/api/register/user", async (req, res, next) => {
     const lastName = user_data.lastName;
     const username = user_data.username;
     const password = user_data.password;
+    const email = user_data.email;
+    const contact = user_data.contact;
 
     /* 
     -Using bcrypt library to hash the password
@@ -188,6 +190,8 @@ app.post("/api/register/user", async (req, res, next) => {
           lastName: lastName,
           username: username,
           password: hashedPassword,
+          email: email,
+          contact: contact,
         },
       });
       return res.status(200).json("Congratulations!! You are registered!");
