@@ -5,12 +5,7 @@ import Footer from "./Footer";
 import NavBar from "./NavBar";
 
 const Account = () => {
-  const navigate = useNavigate();
-  const [orders, setOrders] = useState(null);
-  const [addresses, setAddresses] = useState(null);
-  const [showForm, setShowForm] = useState(false);
-
-  //placeholders until backend ready
+  //---------placeholders until backend ready
   const filler_orders = [
     {
       order: "#0001",
@@ -31,16 +26,8 @@ const Account = () => {
   const filler_info = {
     email: "some@email.com",
     name: "FirstName LastName",
-    address: {
-      street: "1234 Some Address Road",
-      city: "Basic City",
-      state: "AState",
-      country: "United States",
-      zip: 12345,
-    },
     phone_number: "+1 012-345-6789",
   };
-
   const filler_addresses = [
     {
       street: "1234 Some Address Road",
@@ -56,35 +43,92 @@ const Account = () => {
       country: "United States",
       zip: 67890,
     },
+    {
+      name: "Another Name",
+      street: "5678 Another Address Road",
+      city: "Simple City",
+      state: "State2",
+      country: "United States",
+      zip: 67890,
+      phone_number: "+1 987-654-3210",
+    },
   ];
+  // --------------end of placeholders
+
+  const navigate = useNavigate();
+  // --- states containing user account details
+  const [info, setInfo] = useState(filler_info);
+  const [orders, setOrders] = useState(filler_orders);
+  const [addresses, setAddresses] = useState(filler_addresses);
+
+  //--- states for address form
+  const [name, setName] = useState("");
+  const [street, setStreet] = useState("");
+  const [zip, setZip] = useState("");
+  const [city, setCity] = useState("");
+  const [state, setState] = useState("");
+  const [country, setCountry] = useState("");
+  const [phone, setPhone] = useState("");
+
+  const [showForm, setShowForm] = useState(false);
+  const [showAddresses, setShowAddresses] = useState(false);
+
+  // make async function once backend done
+  function handleSubmit(e) {
+    e.preventDefault();
+    const newAddress = {
+      name: name,
+      street: street,
+      city: city,
+      state: state,
+      country: country,
+      zip: zip,
+      phone_number: phone,
+    };
+    setAddresses([...addresses, newAddress]);
+
+    setName("");
+    setStreet("");
+    setCity("");
+    setState("");
+    setCountry("");
+    setZip("");
+    setPhone("");
+    setShowForm(false);
+  }
 
   return (
     <>
       <NavBar cartItem="" />
-      <h1 className="account-headers">My Account</h1>
+      <h1 className="account-headers" style={{ paddingLeft: "50px" }}>
+        My Account
+      </h1>
       <p
         onClick={() => {
           navigate("/");
           //   log out user (remove token) here
         }}
         className="account-links"
+        style={{ paddingLeft: "50px" }}
       >
         {`Log Out >`}
       </p>
       <div className="account">
         <div className="account-orders">
           <h2 className="account-headers">Order History</h2>
-          <table>
+
+          <table className="orders">
             <tr className="account-headers">
-              <th>Order</th>
+              <th style={{ width: "15%" }}>Order</th>
               <th>Date</th>
               <th>Payment</th>
               <th>Status</th>
               <th>Total</th>
             </tr>
-            {filler_orders.map((val, key) => {
+            {orders.map((val, key) => {
               return (
                 <tr key={key}>
+                  {/*make this a link/navigate to specific order page*/}
                   <td>{val.order}</td>
                   <td>{val.date}</td>
                   <td>{val.payment}</td>
@@ -96,74 +140,137 @@ const Account = () => {
           </table>
         </div>
         <div className="account-details">
-          <h2 className="account-headers">Account Details</h2>
-          <address>
-            {`${filler_info.email}`}
-            <br />
-            {`${filler_info.name}`}
-            <br />
-            {filler_addresses[0].country}
-            <br />
-            {`${filler_addresses[0].street}`}
-            <br />
-            {`${filler_addresses[0].city}, ${filler_addresses[0].state} ${filler_addresses[0].zip}`}
-            <br />
+          <div>
+            <h2 className="account-headers">Account Details</h2>
+            <address>
+              {`${info.email}`}
+              <br />
+              {`${info.name}`}
+              <br />
+              {`${addresses[0].country}`}
+              <br />
+              {`${addresses[0].street}`}
+              <br />
+              {`${addresses[0].city}, ${addresses[0].state} ${addresses[0].zip}`}
+              <br />
+              {info.phone_number}
+            </address>
 
-            {filler_info.phone_number}
-          </address>
-          <p
-            onClick={() => {
-              setShowForm(true);
-            }}
-            className="account-links"
-          >
-            {`View/Add Addresses >`}
-          </p>
+            {addresses.length > 1 && (
+              <p
+                className="account-links"
+                onClick={() => {
+                  if (showAddresses) {
+                    setShowAddresses(false);
+                  } else {
+                    setShowAddresses(true);
+                  }
+                }}
+              >{`View Addresses (${addresses.length - 1}) >`}</p>
+            )}
+            {showAddresses &&
+              addresses.slice(1).map((val, key) => {
+                return (
+                  <>
+                    <address>
+                      {val.name} <br />
+                      {val.country} <br />
+                      {val.street} <br />
+                      {val.city}, {val.state} {val.zip} <br />
+                      {val.phone_number}
+                    </address>
+                    <br />
+                  </>
+                );
+              })}
+
+            <p
+              onClick={() => {
+                if (showForm) {
+                  setShowForm(false);
+                } else {
+                  setShowForm(true);
+                }
+              }}
+              className="account-links"
+            >
+              {`+ Add Addresses`}
+            </p>
+          </div>
           {showForm && (
-            /*add check for exisiting addresses and display */
-            <div className="address-form">
+            <form className="address-form" onSubmit={handleSubmit}>
               <label>
                 Name:
                 <br />
-                <input type="text" />
+                <input value={name} onChange={(e) => setName(e.target.value)} />
               </label>
               <br />
 
               <label>
-                Street Address:
+                *Street Address:
                 <br />
-                <input type="text" />
+                <input
+                  required
+                  value={street}
+                  onChange={(e) => setStreet(e.target.value)}
+                />
               </label>
               <br />
 
               <label>
                 ZIP:
                 <br />
-                <input />
+                <input value={zip} onChange={(e) => setZip(e.target.value)} />
               </label>
               <br />
 
               <label>
-                City:
+                *City:
                 <br />
-                <input />
+                <input
+                  required
+                  value={city}
+                  onChange={(e) => setCity(e.target.value)}
+                />
               </label>
               <br />
 
               <label>
-                Country:
+                *State:
                 <br />
-                <input />
+                <input
+                  required
+                  value={state}
+                  onChange={(e) => setState(e.target.value)}
+                />
+              </label>
+              <br />
+
+              <label>
+                *Country:
+                <br />
+                <input
+                  required
+                  value={country}
+                  onChange={(e) => setCountry(e.target.value)}
+                />
               </label>
               <br />
 
               <label>
                 Phone Number:
                 <br />
-                <input type="tel" />
+                <input
+                  type="tel"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                />
               </label>
               <br />
-            </div>
+              <em>* Required fields</em>
+              <br />
+              <button>Submit</button>
+            </form>
           )}
         </div>
       </div>

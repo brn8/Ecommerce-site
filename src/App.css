@@ -241,8 +241,23 @@ td:nth-child(1) {
 
 .account-orders {
   padding-left: 50px;
+  padding-right: 50px;
 }
 
 .account-details {
   padding-right: 50px;
+  display: flex;
+  flex-direction: column;
+}
+
+.address-form {
+  all: revert;
+}
+
+.orders {
+  text-align: left;
+  width: 100%;
+}
+.account-headers th {
+  border-bottom: 1px solid #000000;
 }
