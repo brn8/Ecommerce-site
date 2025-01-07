@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import Footer from "./Footer";
 import NavBar from "./NavBar";
 
-const Account = () => {
+const Account = ({ token, setToken }) => {
   //---------placeholders until backend ready
   const filler_orders = [
     {
@@ -99,7 +99,7 @@ const Account = () => {
 
   return (
     <>
-      <NavBar cartItem="" />
+      <NavBar token={token} setToken={setToken} cartItem="" />
       <h1 className="account-headers" style={{ paddingLeft: "50px" }}>
         My Account
       </h1>

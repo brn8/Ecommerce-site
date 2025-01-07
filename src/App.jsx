@@ -9,7 +9,6 @@ import Account from "./Components/Account";
 import LoginPage from "./Components/LoginPage";
 import NavBar from "./Components/NavBar";
 
-
 function App() {
   const [firstName, setFirstName] = useState(undefined);
   const [lastName, setLastName] = useState(undefined);
@@ -117,7 +116,10 @@ function App() {
             </div>
           }
         />
-        <Route path="/account" element={<Account />} />
+        <Route
+          path="/account"
+          element={<Account token={token} setToken={setToken} />}
+        />
       </Routes>
     </>
   );
