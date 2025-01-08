@@ -19,7 +19,6 @@ function App() {
   const [email, setEmail] = useState(undefined);
   const [contact, setContact] = useState(undefined);
   const [token, setToken] = useState(undefined);
-
   const [cart, setCart] = useState(true);
   const [cartItem, setCartItem] = useState([]);
 
@@ -121,7 +120,10 @@ function App() {
           path="/account"
           element={<Account token={token} setToken={setToken} />}
         />
-        <Route path="/shipping" element={<Shipping />} />
+        <Route
+          path="/shipping"
+          element={<Shipping token={token} setToken={setToken} />}
+        />
       </Routes>
     </>
   );

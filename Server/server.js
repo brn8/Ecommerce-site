@@ -266,7 +266,7 @@ app.post("/api/login/user", async (req, res, next) => {
  */
 const isLoggedIn = async (req, res, next) => {
   try {
-    const token = req.headers.authtoken;
+    const token = req.headers.authorization?.split(" ")[1]; // Extract token part
 
     if (!token) {
       res.status(401).json({ message: `You are not loggedIn!!` });
@@ -300,34 +300,6 @@ const isLoggedIn = async (req, res, next) => {
   }
 };
 
-app.post("/api/address", isLoggedIn, async (req, res, next) => {
-  try {
-    const userId = req.user.id;
-    const { streetAddress, city, state, zipCode, country } = req.body;
-    const address = await prisma.address.create({
-      data: {
-        streetAddress,
-        city,
-        state,
-        zipCode,
-        country,
-      },
-    });
-
-    await prisma.users.update({
-      where: {
-        id: userId,
-      },
-      data: {
-        addressId: address.id,
-      },
-    });
-    res.status(201).json(address);
-  } catch (err) {
-    next(err);
-  }
-});
-
 app.get("/api/address", isLoggedIn, async (req, res, next) => {
   try {
     const userId = req.user.id;
@@ -355,17 +327,51 @@ app.patch("/api/address", isLoggedIn, async (req, res, next) => {
         address: true,
       },
     });
-    const updateAddress = await prisma.address.update({
-      where: { id: user.address.id },
+    if (user.address == null) {
+      const updateAddress = await prisma.address.create({
+        data: {
+          streetAddress,
+          city,
+          state,
+          zipCode,
+          country,
+          users: { connect: { id: userId } },
+        },
+      });
+      res.send(updateAddress);
+    } else {
+      const updateAddress = await prisma.address.update({
+        where: { id: user.address.id },
+        data: {
+          streetAddress: streetAddress || user.address.streetAddress,
+          city: city || user.address.city,
+          state: state || user.address.state,
+          zipCode: zipCode || user.address.zipCode,
+          country: country || user.address.country,
+        },
+      });
+      res.send(updateAddress);
+    }
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.patch("/api/user", isLoggedIn, async (req, res, next) => {
+  try {
+    const userId = req.user.id;
+    const { firstName, lastName, email, contact } = req.body;
+
+    const updateUser = await prisma.users.update({
+      where: { id: userId },
       data: {
-        streetAddress: streetAddress || user.address.streetAddress,
-        city: city || user.address.city,
-        state: state || user.address.state,
-        zipCode: zipCode || user.address.zipCode,
-        country: country || user.address.country,
+        firstName,
+        lastName,
+        email,
+        contact,
       },
     });
-    res.send(updateAddress);
+    res.send(updateUser);
   } catch (err) {
     next(err);
   }
