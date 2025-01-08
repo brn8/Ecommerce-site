@@ -16,6 +16,8 @@ const Product = ({
   const [products, setProducts] = useState([]);
   const [filterProduct, setFilterProduct] = useState([]);
 
+  console.log("token: ", token);
+
   const filterElectorics = () => {
     setFilterProduct(
       products.filter(
@@ -32,6 +34,7 @@ const Product = ({
   };
 
   const addItemToCart = async (product) => {
+    console.log("Caret Item: ", cartItem);
     if (token) {
       // const response = await fetch("/api/orderItem", {
       //   method: "POST",
@@ -53,6 +56,8 @@ const Product = ({
         });
         const data = await response;
         console.log("After adding an item: ", data);
+        setCart(!cart);
+        // fetchOrderItem();
       } catch (error) {
         console.log("Error while adding item to the cart is ", error);
       }
@@ -68,6 +73,7 @@ const Product = ({
       setFilterProduct(fetchProduct);
     };
     fetchProducts();
+    // fetchOrderItem();
   }, []);
 
   return (

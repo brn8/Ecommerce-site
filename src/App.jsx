@@ -21,6 +21,8 @@ function App() {
 
   const [cart, setCart] = useState(true);
   const [cartItem, setCartItem] = useState([]);
+  const [quantity, setQuantity] = useState([]);
+  const [orderItemId, setOrderItemId] = useState([]);
 
   useEffect(() => {
     const currentOrder = async () => {
@@ -39,6 +41,7 @@ function App() {
           element={
             <>
               <Product
+                setCartItem={setCartItem}
                 active={active}
                 setActive={setActive}
                 cart={cart}
@@ -54,6 +57,10 @@ function App() {
           path="/cart"
           element={
             <Cart
+              quantity={quantity}
+              setQuantity={setQuantity}
+              orderItemId={orderItemId}
+              setOrderItemId={setOrderItemId}
               cartItem={cartItem}
               setCartItem={setCartItem}
               cart={cart}

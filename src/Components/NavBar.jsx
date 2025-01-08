@@ -49,7 +49,7 @@ const NavBar = ({ active, setActive, cartItem, token, setToken }) => {
             )}
           </div>
         </div>
-        <CartButton cartItem={cartItem} />
+        <CartButton cartItem={token ? cartItem : []} />
       </div>
 
       <div className="nav-bar-2">

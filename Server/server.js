@@ -115,20 +115,6 @@ app.get("/api/OrderItem", async (req, res, next) => {
   }
 });
 
-app.delete("/api/orderItem/:id", async (req, res, next) => {
-  try {
-    const id = +req.params.id;
-    const response = await prisma.orderItem.delete({
-      where: {
-        id: id,
-      },
-    });
-    res.status(204).send(response);
-  } catch (err) {
-    next(err);
-  }
-});
-
 // Simple error handling middleware
 app.use((err, req, res, next) => {
   console.error(err);
@@ -308,7 +294,7 @@ app.post("/api/user/additem", isLoggedIn, async (req, res, next) => {
       const createOrderItem = await prisma.OrderItem.create({
         data: {
           productId: product.id,
-          quantity: product.quantity,
+          quantity: 1,
           price: product.price,
         },
       });
@@ -471,6 +457,47 @@ app.patch("/api/orderItem/:id", isLoggedIn, async (req, res, next) => {
         res.send(response);
       }
     }
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.delete("/api/orderItem/:id", isLoggedIn, async (req, res, next) => {
+  try {
+    const user_data = req.user;
+    const userId = user_data.id;
+    let id = +req.params.id;
+    let orderItemId = id;
+    console.log("OrderItemID: ", orderItemId);
+
+    const findUserfrmOrder = await prisma.Orders.findMany({
+      where: { userId },
+    });
+    console.log("findUserfrmOrder: ", findUserfrmOrder);
+
+    if (findUserfrmOrder.length >= 0) {
+      const itemid = findUserfrmOrder.find((order) => order.orderItemId == id);
+      console.log("itemid length: ", itemid);
+      id = itemid.id;
+
+      if (Object.keys(itemid).length >= 0) {
+        const findOrderItemfrmOrders = await prisma.Orders.delete({
+          where: { id },
+        });
+        return res.json({ deletedOrderItemId: findOrderItemfrmOrders });
+      } else {
+        return res.json({ message: `Order item is not found!` });
+      }
+    } else {
+      return res.json({ message: `User is not found!` });
+    }
+
+    // const response = await prisma.orderItem.delete({
+    //   where: {
+    //     id: id,
+    //   },
+    // });
+    // res.status(204).send(response);
   } catch (err) {
     next(err);
   }

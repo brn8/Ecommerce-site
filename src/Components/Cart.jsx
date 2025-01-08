@@ -4,6 +4,10 @@ import NavBar from "./NavBar";
 // import { orderItem } from "../../Server/prisma";
 
 const Cart = ({
+  quantity,
+  setQuantity,
+  orderItemId,
+  setOrderItemId,
   cartItem,
   setCartItem,
   cart,
@@ -17,8 +21,8 @@ const Cart = ({
   let products = [];
   let productQuantity = [];
   let orderItemIds = [];
-  const [quantity, setQuantity] = useState([]);
-  const [orderItemId, setOrderItemId] = useState([]);
+  // const [quantity, setQuantity] = useState([]);
+  // const [orderItemId, setOrderItemId] = useState([]);
 
   const fetchOrderItem = async () => {
     if (token) {
@@ -52,10 +56,13 @@ const Cart = ({
   }, []);
 
   const deleteOrderItem = async (orderItem) => {
-    const response = await fetch(`/api/orderItem/${orderItem.id}`, {
+    console.log("OrderItem in delete: ", orderItem);
+    const response = await fetch(`/api/orderItem/${orderItem}`, {
       method: "DELETE",
+      headers: { "Content-Type": "application/json", authtoken: token },
     });
     setCart(!cart);
+    fetchOrderItem();
   };
 
   const subtractItem = async (orderItem, index) => {
@@ -147,7 +154,9 @@ const Cart = ({
                           )}
                           +
                         </button>{" "}
-                        <button onClick={() => deleteOrderItem(addedItem)}>
+                        <button
+                          onClick={() => deleteOrderItem(orderItemId[index])}
+                        >
                           <i class="bi bi-trash"></i>
                         </button>
                       </td>
