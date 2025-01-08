@@ -28,9 +28,10 @@ CREATE TABLE "Address" (
 -- CreateTable
 CREATE TABLE "Payment" (
     "id" SERIAL NOT NULL,
-    "cardNumber" INTEGER NOT NULL,
+    "cardNumber" TEXT NOT NULL,
     "nameOnCard" TEXT NOT NULL,
     "expiration" TEXT NOT NULL,
+    "securityCode" TEXT NOT NULL,
 
     CONSTRAINT "Payment_pkey" PRIMARY KEY ("id")
 );

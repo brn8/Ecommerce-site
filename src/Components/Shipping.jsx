@@ -3,9 +3,9 @@ import NavBar from "./NavBar";
 import Footer from "./Footer";
 
 const Shipping = ({ token, setToken }) => {
-  const [userDetail, setUserDetail] = useState({});
   const [disableInformation, setdisableInformation] = useState(true);
   const [disableAddress, setdisableAddress] = useState(true);
+  const [disablePayment, setdisablePayment] = useState(true);
   const [firstName, setFirstName] = useState(null);
   const [lastName, setLastName] = useState(null);
   const [email, setEmail] = useState(null);
@@ -15,12 +15,20 @@ const Shipping = ({ token, setToken }) => {
   const [state, setState] = useState(null);
   const [zipCode, setZipcode] = useState(null);
   const [country, setCountry] = useState(null);
+  const [cardNumber, setCardNumber] = useState(null);
+  const [nameOncard, setNameOnCard] = useState(null);
+  const [expiration1, setExpiration1] = useState(null);
+  const [expiration2, setExpiration2] = useState(null);
+  const [securityCode, setSecurityCode] = useState(null);
 
   const editInformationHandler = () => {
     setdisableInformation(false);
   };
   const editAddressInformationHandler = () => {
     setdisableAddress(false);
+  };
+  const editpaymentInformationHandler = () => {
+    setdisablePayment(false);
   };
   const doneEditingHandler = async () => {
     const response = await fetch("/api/user", {
@@ -38,7 +46,7 @@ const Shipping = ({ token, setToken }) => {
     });
     if (response.ok) {
       const data = await response.json();
-      console.log("Address updated successfully!");
+      console.log("UserDetails are updated successfully!");
     }
     setdisableInformation(true);
   };
@@ -60,12 +68,30 @@ const Shipping = ({ token, setToken }) => {
     });
     if (response.ok) {
       const data = await response.json();
-      console.log("Address updated successfully!");
+      console.log("Address details are updated successfully!");
     }
     setdisableAddress(true);
   };
-
-  doneEditingHandler;
+  const donepaymentEditingHandler = async () => {
+    const response = await fetch("/api/payment", {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${sessionStorage.getItem("authToken")}`,
+      },
+      body: JSON.stringify({
+        cardNumber,
+        nameOnCard: nameOncard,
+        expiration: expiration1 + "/" + expiration2,
+        securityCode,
+      }),
+    });
+    if (response.ok) {
+      const data = await response.json();
+      console.log("Payment detail are updated successfully!");
+    }
+    setdisablePayment(true);
+  };
   useEffect(() => {
     const userInfo = async () => {
       const response = await fetch("/api/address", {
@@ -75,8 +101,6 @@ const Shipping = ({ token, setToken }) => {
         },
       });
       const userData = await response.json();
-      console.log(userData);
-      setUserDetail(userData);
       setFirstName(userData.firstName);
       setLastName(userData.lastName);
       setEmail(userData.email);
@@ -87,6 +111,13 @@ const Shipping = ({ token, setToken }) => {
         setState(userData.address.state);
         setZipcode(userData.address.zipCode);
         setCountry(userData.address.country);
+      }
+      if (userData.payment != null) {
+        setCardNumber(userData.payment.cardNumber);
+        setNameOnCard(userData.payment.nameOnCard);
+        setExpiration1(userData.payment.expiration?.split("/")[0]);
+        setExpiration2(userData.payment.expiration?.split("/")[1]);
+        setSecurityCode(userData.payment.securityCode);
       }
     };
     userInfo();
@@ -153,8 +184,8 @@ const Shipping = ({ token, setToken }) => {
             <br />
             <input type="text" />
             <br />
-            <br />
-            <input type="text" /> <br />
+            {/* <br />
+            <input type="text" /> <br /> */}
             <label>City</label>
             <br />
             <input type="text" /> <br />
@@ -179,9 +210,9 @@ const Shipping = ({ token, setToken }) => {
               disabled={disableAddress}
               onChange={(e) => setAddress(e.target.value)}
             />{" "}
-            <br />
-            <br />
-            <input type="text" />
+            {/* <br /> */}
+            {/* <br />
+            <input type="text" /> */}
             <br />
             <label>City</label>
             <br />
@@ -231,7 +262,67 @@ const Shipping = ({ token, setToken }) => {
             )}
           </div>
         </div>
+        <h3>Payment Method </h3>
+        <div className="shipping-flex-2-container">
+          <br />
+          <div>
+            <label>Card Number</label>
+            <br />
+            <input
+              type="text"
+              disabled={disablePayment}
+              value={cardNumber}
+              onChange={(e) => setCardNumber(e.target.value)}
+            />
+            <br />
+            <label>Name on Card</label>
+            <br />
+            <input
+              type="text"
+              disabled={disablePayment}
+              onChange={(e) => setNameOnCard(e.target.value)}
+              value={nameOncard}
+            />{" "}
+            <br />
+            <label>Expiration Date</label>
+            <br />
+            <input
+              type="text"
+              disabled={disablePayment}
+              value={expiration1}
+              onChange={(e) => setExpiration1(e.target.value)}
+              style={{ width: "140px", marginRight: "10px" }}
+            />
+            <input
+              type="text"
+              value={expiration2}
+              onChange={(e) => setExpiration2(e.target.value)}
+              disabled={disablePayment}
+              style={{ width: "140px" }}
+            />
+            <br />
+            <label>Security Code</label> <br />
+            <input
+              type="password"
+              disabled={disablePayment}
+              value={securityCode}
+              onChange={(e) => setSecurityCode(e.target.value)}
+            />
+          </div>
+          <div className="shipping-editUseButton">
+            {disablePayment ? (
+              <button onClick={editpaymentInformationHandler}>
+                Edit your Address
+              </button>
+            ) : (
+              <button onClick={donepaymentEditingHandler}>
+                Use this Address
+              </button>
+            )}
+          </div>
+        </div>
       </div>
+
       <div className="shipping-button">
         <div>
           <button>Previous</button>

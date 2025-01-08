@@ -40,9 +40,10 @@ model Address{
 }
 model Payment{
   id Int @id @default(autoincrement())
-  cardNumber Int
+  cardNumber String
   nameOnCard String
   expiration String
+  securityCode String
   users Users[]
 }
 model Orders {

@@ -307,7 +307,7 @@ app.get("/api/address", isLoggedIn, async (req, res, next) => {
       where: {
         id: userId,
       },
-      include: { address: true },
+      include: { address: true, payment: true },
     });
     res.send(response);
   } catch (err) {
@@ -351,6 +351,47 @@ app.patch("/api/address", isLoggedIn, async (req, res, next) => {
         },
       });
       res.send(updateAddress);
+    }
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.patch("/api/payment", isLoggedIn, async (req, res, next) => {
+  try {
+    const { cardNumber, nameOnCard, expiration, securityCode } = req.body;
+
+    const userId = req.user.id;
+    const user = await prisma.users.findUnique({
+      where: {
+        id: userId,
+      },
+      include: {
+        payment: true,
+      },
+    });
+    if (user.payment == null) {
+      const updatePayment = await prisma.payment.create({
+        data: {
+          cardNumber,
+          nameOnCard,
+          expiration,
+          securityCode,
+          users: { connect: { id: userId } },
+        },
+      });
+      res.send(updatePayment);
+    } else {
+      const updatePayment = await prisma.payment.update({
+        where: { id: user.payment.id },
+        data: {
+          cardNumber: cardNumber || user.payment.cardNumber,
+          nameOnCard: nameOnCard || user.payment.nameOnCard,
+          expiration: expiration || user.payment.expiration,
+          securityCode: securityCode || user.payment.securityCode,
+        },
+      });
+      res.send(updatePayment);
     }
   } catch (err) {
     next(err);
