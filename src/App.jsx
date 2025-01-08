@@ -8,6 +8,7 @@ import Cart from "./Components/Cart";
 import Account from "./Components/Account";
 import LoginPage from "./Components/LoginPage";
 import NavBar from "./Components/NavBar";
+import Shipping from "./Components/Shipping";
 
 function App() {
   const [firstName, setFirstName] = useState(undefined);
@@ -18,7 +19,6 @@ function App() {
   const [email, setEmail] = useState(undefined);
   const [contact, setContact] = useState(undefined);
   const [token, setToken] = useState(undefined);
-
   const [cart, setCart] = useState(true);
   const [cartItem, setCartItem] = useState([]);
   const [quantity, setQuantity] = useState([]);
@@ -127,6 +127,10 @@ function App() {
         <Route
           path="/account"
           element={<Account token={token} setToken={setToken} />}
+        />
+        <Route
+          path="/shipping"
+          element={<Shipping token={token} setToken={setToken} />}
         />
       </Routes>
     </>

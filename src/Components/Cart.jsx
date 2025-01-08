@@ -182,7 +182,13 @@ const Cart = ({
               rows="12"
             ></textarea>
             <p>Total </p>
-            <button>Check Out</button>
+            <button
+              onClick={() =>
+                cartItem.length != 0 ? navigate("/shipping") : ""
+              }
+            >
+              Check Out
+            </button>
           </div>
         </div>
       ) : (

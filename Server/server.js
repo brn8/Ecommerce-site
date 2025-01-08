@@ -235,7 +235,7 @@ app.post("/api/login/user", async (req, res, next) => {
  */
 const isLoggedIn = async (req, res, next) => {
   try {
-    const token = req.headers.authtoken;
+    const token = req.headers.authorization?.split(" ")[1]; // Extract token part
 
     if (!token) {
       res.status(401).json({ message: `You are not loggedIn!!` });
@@ -269,6 +269,123 @@ const isLoggedIn = async (req, res, next) => {
   }
 };
 
+app.get("/api/address", isLoggedIn, async (req, res, next) => {
+  try {
+    const userId = req.user.id;
+    const response = await prisma.users.findFirst({
+      where: {
+        id: userId,
+      },
+      include: { address: true, payment: true },
+    });
+    res.send(response);
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.patch("/api/address", isLoggedIn, async (req, res, next) => {
+  try {
+    const { streetAddress, city, state, zipCode, country } = req.body;
+    const userId = req.user.id;
+    const user = await prisma.users.findUnique({
+      where: {
+        id: userId,
+      },
+      include: {
+        address: true,
+      },
+    });
+    if (user.address == null) {
+      const updateAddress = await prisma.address.create({
+        data: {
+          streetAddress,
+          city,
+          state,
+          zipCode,
+          country,
+          users: { connect: { id: userId } },
+        },
+      });
+      res.send(updateAddress);
+    } else {
+      const updateAddress = await prisma.address.update({
+        where: { id: user.address.id },
+        data: {
+          streetAddress: streetAddress || user.address.streetAddress,
+          city: city || user.address.city,
+          state: state || user.address.state,
+          zipCode: zipCode || user.address.zipCode,
+          country: country || user.address.country,
+        },
+      });
+      res.send(updateAddress);
+    }
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.patch("/api/payment", isLoggedIn, async (req, res, next) => {
+  try {
+    const { cardNumber, nameOnCard, expiration, securityCode } = req.body;
+
+    const userId = req.user.id;
+    const user = await prisma.users.findUnique({
+      where: {
+        id: userId,
+      },
+      include: {
+        payment: true,
+      },
+    });
+    if (user.payment == null) {
+      const updatePayment = await prisma.payment.create({
+        data: {
+          cardNumber,
+          nameOnCard,
+          expiration,
+          securityCode,
+          users: { connect: { id: userId } },
+        },
+      });
+      res.send(updatePayment);
+    } else {
+      const updatePayment = await prisma.payment.update({
+        where: { id: user.payment.id },
+        data: {
+          cardNumber: cardNumber || user.payment.cardNumber,
+          nameOnCard: nameOnCard || user.payment.nameOnCard,
+          expiration: expiration || user.payment.expiration,
+          securityCode: securityCode || user.payment.securityCode,
+        },
+      });
+      res.send(updatePayment);
+    }
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.patch("/api/user", isLoggedIn, async (req, res, next) => {
+  try {
+    const userId = req.user.id;
+    const { firstName, lastName, email, contact } = req.body;
+
+    const updateUser = await prisma.users.update({
+      where: { id: userId },
+      data: {
+        firstName,
+        lastName,
+        email,
+        contact,
+      },
+    });
+    res.send(updateUser);
+  } catch (err) {
+    next(err);
+  }
+});
 /*
 -Route for retriving and sending the logged in user's data
 -Calling the isLoggedIn function to check the user's authenticity and retriving the user's data
