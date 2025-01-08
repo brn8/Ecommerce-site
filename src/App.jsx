@@ -8,6 +8,7 @@ import Cart from "./Components/Cart";
 import Account from "./Components/Account";
 import LoginPage from "./Components/LoginPage";
 import NavBar from "./Components/NavBar";
+import Shipping from "./Components/Shipping";
 
 function App() {
   const [firstName, setFirstName] = useState(undefined);
@@ -120,6 +121,7 @@ function App() {
           path="/account"
           element={<Account token={token} setToken={setToken} />}
         />
+        <Route path="/shipping" element={<Shipping />} />
       </Routes>
     </>
   );
