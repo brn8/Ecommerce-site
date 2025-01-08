@@ -55,6 +55,7 @@ function App() {
           element={
             <Cart
               cartItem={cartItem}
+              setCartItem={setCartItem}
               cart={cart}
               setCart={setCart}
               token={token}

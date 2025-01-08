@@ -33,18 +33,29 @@ const Product = ({
 
   const addItemToCart = async (product) => {
     if (token) {
-      const response = await fetch("/api/orderItem", {
-        method: "POST",
-        headers: {
-          "Content-type": "application/json",
-        },
-        body: JSON.stringify({
-          productId: product.id,
-          quantity: 1,
-          price: product.price,
-        }),
-      });
-      setCart(!cart);
+      // const response = await fetch("/api/orderItem", {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-type": "application/json",
+      //   },
+      //   body: JSON.stringify({
+      //     productId: product.id,
+      //     quantity: 1,
+      //     price: product.price,
+      //   }),
+      // });
+      // setCart(!cart);
+      try {
+        const response = await fetch("http://localhost:3000/api/user/additem", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", authtoken: token },
+          body: JSON.stringify(product),
+        });
+        const data = await response;
+        console.log("After adding an item: ", data);
+      } catch (error) {
+        console.log("Error while adding item to the cart is ", error);
+      }
     } else {
       alert("Please Login to add item into the cart!!");
     }
