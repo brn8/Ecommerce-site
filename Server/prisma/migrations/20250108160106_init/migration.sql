@@ -5,6 +5,8 @@ CREATE TABLE "Users" (
     "lastName" TEXT NOT NULL,
     "username" TEXT NOT NULL,
     "password" TEXT NOT NULL,
+    "email" TEXT NOT NULL,
+    "contact" TEXT NOT NULL,
     "addressId" INTEGER,
     "paymentId" INTEGER,
 
@@ -26,9 +28,10 @@ CREATE TABLE "Address" (
 -- CreateTable
 CREATE TABLE "Payment" (
     "id" SERIAL NOT NULL,
-    "cardNumber" INTEGER NOT NULL,
+    "cardNumber" TEXT NOT NULL,
     "nameOnCard" TEXT NOT NULL,
     "expiration" TEXT NOT NULL,
+    "securityCode" TEXT NOT NULL,
 
     CONSTRAINT "Payment_pkey" PRIMARY KEY ("id")
 );
@@ -57,6 +60,7 @@ CREATE TABLE "OrderItem" (
 CREATE TABLE "Product" (
     "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
+    "img" TEXT NOT NULL,
     "description" TEXT NOT NULL,
     "price" DECIMAL(65,30) NOT NULL,
     "discountAmount" DECIMAL(65,30) NOT NULL,
@@ -89,6 +93,9 @@ CREATE TABLE "Review" (
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Users_username_key" ON "Users"("username");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Users_email_key" ON "Users"("email");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "ProductCategory_name_key" ON "ProductCategory"("name");

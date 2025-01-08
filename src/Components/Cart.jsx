@@ -1,9 +1,15 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import NavBar from "./NavBar";
+// import { orderItem } from "../../Server/prisma";
 
 const Cart = ({
+  quantity,
+  setQuantity,
+  orderItemId,
+  setOrderItemId,
   cartItem,
+  setCartItem,
   cart,
   setCart,
   token,
@@ -12,34 +18,85 @@ const Cart = ({
   setActive,
 }) => {
   const navigate = useNavigate();
+  let products = [];
+  let productQuantity = [];
+  let orderItemIds = [];
+  // const [quantity, setQuantity] = useState([]);
+  // const [orderItemId, setOrderItemId] = useState([]);
+
+  const fetchOrderItem = async () => {
+    console.log("token: ", token);
+    if (token) {
+      try {
+        const response = await fetch("http://localhost:3000/api/user/orders", {
+          headers: { "Content-Type": "application/json", authtoken: token },
+        });
+        const data = await response.json();
+        console.log("data length: ", data.products.length);
+        console.log("orderItem IDs: ", data.orderItemIds);
+        console.log("data: ", data);
+        for (let i = 0; i < data.products.length; i++) {
+          products.push(data.products[i]);
+          productQuantity.push(data.orderItemQuantity[i]);
+          orderItemIds.push(data.orderItemIds[i]);
+        }
+        console.log("Products are: ", products);
+        console.log("Orderitem ids are: ", orderItemIds);
+        setCartItem(products);
+        setQuantity(productQuantity);
+        setOrderItemId(orderItemIds);
+      } catch (error) {
+        console.log("Error while getting your order items is ", error);
+      }
+    }
+  };
+
+  useEffect(() => {
+    fetchOrderItem();
+    // setCart(!cart);
+  }, []);
+
   const deleteOrderItem = async (orderItem) => {
-    const response = await fetch(`/api/orderItem/${orderItem.id}`, {
+    console.log("OrderItem in delete: ", orderItem);
+    const response = await fetch(`/api/orderItem/${orderItem}`, {
       method: "DELETE",
+      headers: { "Content-Type": "application/json", authtoken: token },
     });
     setCart(!cart);
+    fetchOrderItem();
   };
 
-  const subtractItem = async (orderItem) => {
-    const response = await fetch(`/api/orderItem/${orderItem.id}`, {
+  const subtractItem = async (orderItem, index) => {
+    const response = await fetch(`/api/orderItem/${orderItem}`, {
       method: "PATCH",
       headers: {
         "content-type": "application/json",
+        authtoken: token,
       },
-      body: JSON.stringify({ quantity: orderItem.quantity - 1 }),
+      body: JSON.stringify({ quantity: quantity[index] - 1 }),
     });
+    const data = await response.json();
+    console.log("after adding data: ", data);
+    fetchOrderItem();
     setCart(!cart);
   };
 
-  const addItem = async (orderItem) => {
-    const response = await fetch(`/api/orderItem/${orderItem.id}`, {
+  const addItem = async (orderItem, index) => {
+    console.log("orderitem: ", orderItem);
+    const response = await fetch(`/api/orderItem/${orderItem}`, {
       method: "PATCH",
       headers: {
         "content-type": "application/json",
+        authtoken: token,
       },
-      body: JSON.stringify({ quantity: orderItem.quantity + 1 }),
+      body: JSON.stringify({ quantity: quantity[index] + 1 }),
     });
+    const data = await response.json();
+    console.log("after adding data: ", data);
+    fetchOrderItem();
     setCart(!cart);
   };
+  console.log("token: ", token);
 
   return (
     <>
@@ -61,34 +118,46 @@ const Cart = ({
             </tr>
             {cartItem.length == 0
               ? navigate("/")
-              : cartItem.map((addedItem) => {
+              : cartItem.map((addedItem, index) => {
                   return (
-                    <tr>
+                    <tr key={index}>
                       <td>
                         <div className="cartPageItem">
-                          <img src={addedItem.products.img} />
+                          <img src={addedItem.img} />
                           <div className="cartPageInfomation">
                             <p>
-                              <b>{addedItem.products.name}</b>
+                              <b>{addedItem.name}</b>
                             </p>
-                            <span>{addedItem.products.description}</span>
+                            <span>{addedItem.description}</span>
                           </div>
                         </div>
                       </td>
                       <td>
                         {" "}
-                        {addedItem.quantity < 2 ? (
+                        {productQuantity[index] < 2 ? (
                           <button disabled={true}>-</button>
                         ) : (
-                          <button onClick={() => subtractItem(addedItem)}>
+                          <button
+                            onClick={() =>
+                              subtractItem(orderItemId[index], index)
+                            }
+                          >
                             -
                           </button>
                         )}
-                        <span>{addedItem.quantity} </span>
-                        <button onClick={() => addItem(addedItem)}>
+                        <span>{quantity[index]} </span>
+                        <button
+                          onClick={() => addItem(orderItemId[index], index)}
+                        >
+                          {console.log(
+                            "order item id index: ",
+                            orderItemId[index]
+                          )}
                           +
                         </button>{" "}
-                        <button onClick={() => deleteOrderItem(addedItem)}>
+                        <button
+                          onClick={() => deleteOrderItem(orderItemId[index])}
+                        >
                           <i class="bi bi-trash"></i>
                         </button>
                       </td>
@@ -97,8 +166,8 @@ const Cart = ({
                         <b>
                           $
                           {Math.round(
-                            (addedItem.products.price -
-                              addedItem.products.discountAmount) *
+                            (addedItem.price * quantity[index] -
+                              addedItem.discountAmount) *
                               100
                           ) / 100}
                         </b>
@@ -114,7 +183,13 @@ const Cart = ({
               rows="12"
             ></textarea>
             <p>Total </p>
-            <button>Check Out</button>
+            <button
+              onClick={() =>
+                cartItem.length != 0 ? navigate("/shipping") : ""
+              }
+            >
+              Check Out
+            </button>
           </div>
         </div>
       ) : (

@@ -115,37 +115,6 @@ app.get("/api/OrderItem", async (req, res, next) => {
   }
 });
 
-app.delete("/api/orderItem/:id", async (req, res, next) => {
-  try {
-    const id = +req.params.id;
-    const response = await prisma.orderItem.delete({
-      where: {
-        id: id,
-      },
-    });
-    res.status(204).send(response);
-  } catch (err) {
-    next(err);
-  }
-});
-
-app.patch("/api/orderItem/:id", async (req, res, next) => {
-  try {
-    const id = +req.params.id;
-    const { quantity } = req.body;
-    const response = await prisma.orderItem.update({
-      where: {
-        id: id,
-      },
-      data: {
-        quantity: quantity,
-      },
-    });
-    res.send(response);
-  } catch (err) {
-    next(err);
-  }
-});
 // Simple error handling middleware
 app.use((err, req, res, next) => {
   console.error(err);
@@ -266,7 +235,7 @@ app.post("/api/login/user", async (req, res, next) => {
  */
 const isLoggedIn = async (req, res, next) => {
   try {
-    const token = req.headers.authtoken;
+    const token = req.headers.authtoken; // Extract token part
 
     if (!token) {
       res.status(401).json({ message: `You are not loggedIn!!` });
@@ -300,6 +269,123 @@ const isLoggedIn = async (req, res, next) => {
   }
 };
 
+app.get("/api/address", isLoggedIn, async (req, res, next) => {
+  try {
+    const userId = req.user.id;
+    const response = await prisma.users.findFirst({
+      where: {
+        id: userId,
+      },
+      include: { address: true, payment: true },
+    });
+    res.send(response);
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.patch("/api/address", isLoggedIn, async (req, res, next) => {
+  try {
+    const { streetAddress, city, state, zipCode, country } = req.body;
+    const userId = req.user.id;
+    const user = await prisma.users.findUnique({
+      where: {
+        id: userId,
+      },
+      include: {
+        address: true,
+      },
+    });
+    if (user.address == null) {
+      const updateAddress = await prisma.address.create({
+        data: {
+          streetAddress,
+          city,
+          state,
+          zipCode,
+          country,
+          users: { connect: { id: userId } },
+        },
+      });
+      res.send(updateAddress);
+    } else {
+      const updateAddress = await prisma.address.update({
+        where: { id: user.address.id },
+        data: {
+          streetAddress: streetAddress || user.address.streetAddress,
+          city: city || user.address.city,
+          state: state || user.address.state,
+          zipCode: zipCode || user.address.zipCode,
+          country: country || user.address.country,
+        },
+      });
+      res.send(updateAddress);
+    }
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.patch("/api/payment", isLoggedIn, async (req, res, next) => {
+  try {
+    const { cardNumber, nameOnCard, expiration, securityCode } = req.body;
+
+    const userId = req.user.id;
+    const user = await prisma.users.findUnique({
+      where: {
+        id: userId,
+      },
+      include: {
+        payment: true,
+      },
+    });
+    if (user.payment == null) {
+      const updatePayment = await prisma.payment.create({
+        data: {
+          cardNumber,
+          nameOnCard,
+          expiration,
+          securityCode,
+          users: { connect: { id: userId } },
+        },
+      });
+      res.send(updatePayment);
+    } else {
+      const updatePayment = await prisma.payment.update({
+        where: { id: user.payment.id },
+        data: {
+          cardNumber: cardNumber || user.payment.cardNumber,
+          nameOnCard: nameOnCard || user.payment.nameOnCard,
+          expiration: expiration || user.payment.expiration,
+          securityCode: securityCode || user.payment.securityCode,
+        },
+      });
+      res.send(updatePayment);
+    }
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.patch("/api/user", isLoggedIn, async (req, res, next) => {
+  try {
+    const userId = req.user.id;
+    const { firstName, lastName, email, contact } = req.body;
+
+    const updateUser = await prisma.users.update({
+      where: { id: userId },
+      data: {
+        firstName,
+        lastName,
+        email,
+        contact,
+      },
+    });
+    res.send(updateUser);
+  } catch (err) {
+    next(err);
+  }
+});
 /*
 -Route for retriving and sending the logged in user's data
 -Calling the isLoggedIn function to check the user's authenticity and retriving the user's data
@@ -310,6 +396,227 @@ app.get("/api/auth/me", isLoggedIn, async (req, res, next) => {
     res.status(200).send(userinfo);
   } catch (error) {
     next(error);
+  }
+});
+
+app.post("/api/user/additem", isLoggedIn, async (req, res, next) => {
+  try {
+    const loggedinUser = req.user;
+    const product = req.body;
+    console.log("Product is: ", product);
+    console.log("user ID: ", loggedinUser.id);
+    console.log("Product id: ", product.id);
+
+    if (Object.keys(product).length >= 0) {
+      const createOrderItem = await prisma.OrderItem.create({
+        data: {
+          productId: product.id,
+          quantity: 1,
+          price: product.price,
+        },
+      });
+      if (createOrderItem) {
+        const totalPrice = product.quantity * product.price;
+        console.log(createOrderItem.id);
+        const createOrder = await prisma.Orders.create({
+          data: {
+            userId: loggedinUser.id,
+            orderItemId: createOrderItem.id,
+            totalPrice: totalPrice,
+          },
+        });
+
+        res.json({
+          message: "Your product has been added to the cart!",
+          orderItem: createOrderItem,
+          createdOrder: createOrder,
+        });
+      } else {
+        return res.json({
+          message: `Error while creating your order into db!`,
+        });
+      }
+    } else {
+      return res.json({ message: `Your product has not been received!` });
+    }
+  } catch (error) {
+    next(error);
+  }
+});
+const findProductId = async (id) => {
+  const findProductId = await prisma.OrderItem.findMany({
+    where: { id },
+  });
+  return findProductId[0].productId;
+};
+const findProductQuantity = async (id) => {
+  const findProductId = await prisma.OrderItem.findMany({
+    where: { id },
+  });
+  return findProductId[0].quantity;
+};
+const findProducts = async (id) => {
+  const findProductId = await prisma.Product.findMany({
+    where: { id },
+  });
+  return findProductId[0];
+};
+
+const findProductPrice = async (id) => {
+  const findProductId = await prisma.Product.findMany({
+    where: { id },
+  });
+  return findProductId[0].price;
+};
+
+app.get("/api/user/orders", isLoggedIn, async (req, res, next) => {
+  try {
+    let orderItemIds = [];
+    let orderItemQuantity = [];
+    let productIds = [];
+    let products = [];
+    let productPrices = [];
+    const loggedinUser = req.user;
+    const userId = loggedinUser.id;
+    const findOrders = await prisma.Orders.findMany({ where: { userId } });
+    let id = 1;
+
+    console.log("Order Item ID: ", findOrders);
+    for (let i = 0; i < findOrders.length; i++) {
+      orderItemIds.push(findOrders[i].orderItemId);
+    }
+    console.log("Order item ids are: ", orderItemIds);
+
+    // const findProductId = await prisma.OrderItem.findMany({
+    //   where: { id },
+    // });
+
+    for (let i = 0; i < orderItemIds.length; i++) {
+      productIds.push(await findProductId(orderItemIds[i]));
+      orderItemQuantity.push(await findProductQuantity(orderItemIds[i]));
+    }
+    // console.log("find product id: ", findProductId);
+    // console.log("Product id is: ", findProductId[0].productId);
+    console.log("Product ids are: ", productIds);
+    console.log("Product quantities: ", orderItemQuantity);
+    // const productId = findProductId.id;
+
+    for (let i = 0; i < productIds.length; i++) {
+      products.push(await findProducts(productIds[i]));
+    }
+
+    const findProduct = await prisma.Product.findMany({ where: { id } });
+    console.log("Product is: ", findProduct);
+    console.log("Prodcts are: ", products);
+
+    for (let i = 0; i < productIds.length; i++) {
+      productPrices.push(await findProductPrice(productIds[i]));
+    }
+    console.log("Product prices are: ", productPrices);
+
+    // if (findProduct.length >= 0) {
+    //   return res.send(findProduct);
+    // } else {
+    //   res.json({ message: "You don't have any orders!" });
+    // }
+    res.json({
+      products: products,
+      orderItemQuantity: orderItemQuantity,
+      orderItemIds: orderItemIds,
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+app.patch("/api/orderItem/:id", isLoggedIn, async (req, res, next) => {
+  try {
+    const user_data = req.user;
+    const userId = user_data.id;
+    const orderItemId = +req.params.id;
+    const { quantity } = req.body;
+    console.log("Quantity: ", quantity);
+    let id;
+
+    const findUserFrmOrders = await prisma.Orders.findMany({
+      where: { userId },
+    });
+    console.log("findUserFrmOrders", findUserFrmOrders);
+
+    // for (let i = 0; i < findUserFrmOrders.length; i++) {
+    //   ids.push(findUserFrmOrders[i].orderItemId);
+    // }
+    // console.log("ids: ", ids);
+
+    const orderitemid = findUserFrmOrders.find(
+      (order) => order.orderItemId === orderItemId
+    );
+
+    console.log("orderitemid: ", orderitemid.orderItemId);
+    id = orderitemid.orderItemId;
+
+    if (findUserFrmOrders.length >= 0) {
+      const findItemIdfromOrderItem = await prisma.orderItem.findMany({
+        where: { id },
+      });
+      console.log("findItemIdfromOrderItem: ", findItemIdfromOrderItem);
+
+      if (findItemIdfromOrderItem.length >= 0) {
+        const response = await prisma.orderItem.update({
+          where: {
+            id: id,
+          },
+          data: {
+            quantity: Number(quantity),
+          },
+        });
+
+        res.send(response);
+      }
+    }
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.delete("/api/orderItem/:id", isLoggedIn, async (req, res, next) => {
+  try {
+    const user_data = req.user;
+    const userId = user_data.id;
+    let id = +req.params.id;
+    let orderItemId = id;
+    console.log("OrderItemID: ", orderItemId);
+
+    const findUserfrmOrder = await prisma.Orders.findMany({
+      where: { userId },
+    });
+    console.log("findUserfrmOrder: ", findUserfrmOrder);
+
+    if (findUserfrmOrder.length >= 0) {
+      const itemid = findUserfrmOrder.find((order) => order.orderItemId == id);
+      console.log("itemid length: ", itemid);
+      id = itemid.id;
+
+      if (Object.keys(itemid).length >= 0) {
+        const findOrderItemfrmOrders = await prisma.Orders.delete({
+          where: { id },
+        });
+        return res.json({ deletedOrderItemId: findOrderItemfrmOrders });
+      } else {
+        return res.json({ message: `Order item is not found!` });
+      }
+    } else {
+      return res.json({ message: `User is not found!` });
+    }
+
+    // const response = await prisma.orderItem.delete({
+    //   where: {
+    //     id: id,
+    //   },
+    // });
+    // res.status(204).send(response);
+  } catch (err) {
+    next(err);
   }
 });
 
