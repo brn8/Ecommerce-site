@@ -280,6 +280,17 @@ td:nth-child(1) {
   margin-top: 20px;
   margin-bottom: 20px;
 }
+.search-filter {
+  margin-left: auto;
+  margin-right: auto;
+  width: 400px;
+  height: 100px;
+  overflow-y: auto;
+}
+.search-filter li {
+  background-color: white;
+  height: 30px;
+}
 
 .footer {
   width: 100%;
@@ -344,4 +355,53 @@ td:nth-child(1) {
 }
 .account-headers th {
   border-bottom: 1px solid #000000;
+}
+
+/*For Shipping page*/
+.shipping-all-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.shipping-flex-2-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: left;
+  gap: 50px;
+}
+.shipping-flex-1-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: left;
+  gap: 50px;
+}
+.shipping-flex-1-container input {
+  background-color: #def4fd;
+  border-radius: 10px;
+  width: 300px;
+  height: 30px;
+  border: none;
+}
+.shipping-flex-2-container input {
+  background-color: #def4fd;
+  border-radius: 10px;
+  width: 300px;
+  height: 30px;
+  border: none;
+}
+
+.shipping-button button {
+  background-color: #def4fd;
+}
+.shipping-button {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  justify-content: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+.shipping-editUseButton {
+  margin-bottom: auto;
+  margin-top: auto;
 }
