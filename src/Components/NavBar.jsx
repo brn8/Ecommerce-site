@@ -1,7 +1,14 @@
 import { useNavigate } from "react-router-dom";
 import CartButton from "./CartButton";
 import { useState, useEffect } from "react";
-const NavBar = ({ active, setActive, cartItem, token, setToken }) => {
+const NavBar = ({
+  numItemCart,
+  active,
+  setActive,
+  cartItem,
+  token,
+  setToken,
+}) => {
   const [showDropDown, setShowDropDown] = useState(false);
 
   const navigate = useNavigate();
@@ -49,7 +56,10 @@ const NavBar = ({ active, setActive, cartItem, token, setToken }) => {
             )}
           </div>
         </div>
-        <CartButton cartItem={token ? cartItem : []} />
+        <CartButton
+          numItemCart={numItemCart}
+          cartItem={token ? cartItem : []}
+        />
       </div>
 
       <div className="nav-bar-2">

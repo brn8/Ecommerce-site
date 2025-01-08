@@ -23,6 +23,36 @@ function App() {
   const [cartItem, setCartItem] = useState([]);
   const [quantity, setQuantity] = useState([]);
   const [orderItemId, setOrderItemId] = useState([]);
+  const [numItemCart, setNumItemCart] = useState([]);
+
+  const fetchOrderItem = async () => {
+    console.log("token: ", token);
+    if (token) {
+      try {
+        const response = await fetch("http://localhost:3000/api/user/orders", {
+          headers: { "Content-Type": "application/json", authtoken: token },
+        });
+        const data = await response.json();
+        console.log("data length: ", data.products.length);
+        // console.log("orderItem IDs: ", data.orderItemIds);
+        console.log("data: ", data);
+        // for (let i = 0; i < data.products.length; i++) {
+        //   products.push(data.products[i]);
+        //   productQuantity.push(data.orderItemQuantity[i]);
+        //   orderItemIds.push(data.orderItemIds[i]);
+        // }
+        console.log("data.products: ", data.products);
+        // console.log("Products are: ", products);
+        // console.log("Orderitem ids are: ", data.orderItemIds);
+        // setCartItem(products);
+        setNumItemCart(data.products);
+        // setQuantity(data.orderItemQuantity);
+        // setOrderItemId(data.orderItemIds);
+      } catch (error) {
+        console.log("Error while getting your order items is ", error);
+      }
+    }
+  };
 
   useEffect(() => {
     const currentOrder = async () => {
@@ -31,6 +61,8 @@ function App() {
       setCartItem(fetchOrderItem);
     };
     currentOrder();
+    console.log("Total Cart Item: ", numItemCart);
+    // fetchOrderItem();
   }, [cart]);
 
   return (
@@ -49,6 +81,8 @@ function App() {
                 cartItem={cartItem}
                 token={token}
                 setToken={setToken}
+                numItemCart={numItemCart}
+                setNumItemCart={setNumItemCart}
               />
             </>
           }
@@ -69,6 +103,8 @@ function App() {
               setToken={setToken}
               active={active}
               setActive={setActive}
+              numItemCart={numItemCart}
+              setNumItemCart={setNumItemCart}
             />
           }
         />

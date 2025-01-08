@@ -21,6 +21,10 @@ const Shipping = ({ token, setToken }) => {
   const [expiration2, setExpiration2] = useState(null);
   const [securityCode, setSecurityCode] = useState(null);
 
+  setToken(sessionStorage.setItem("authtoken", token));
+
+  console.log("token: ", token);
+
   const editInformationHandler = () => {
     setdisableInformation(false);
   };
@@ -35,7 +39,7 @@ const Shipping = ({ token, setToken }) => {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${sessionStorage.getItem("authToken")}`,
+        authtoken: token,
       },
       body: JSON.stringify({
         firstName,
@@ -56,7 +60,7 @@ const Shipping = ({ token, setToken }) => {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${sessionStorage.getItem("authToken")}`,
+        authtoken: token,
       },
       body: JSON.stringify({
         streetAddress: address,
@@ -77,7 +81,7 @@ const Shipping = ({ token, setToken }) => {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${sessionStorage.getItem("authToken")}`,
+        authtoken: token,
       },
       body: JSON.stringify({
         cardNumber,
@@ -97,7 +101,7 @@ const Shipping = ({ token, setToken }) => {
       const response = await fetch("/api/address", {
         method: "GET",
         headers: {
-          Authorization: `Bearer ${sessionStorage.getItem("authToken")}`,
+          authtoken: token,
         },
       });
       const userData = await response.json();

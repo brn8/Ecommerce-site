@@ -16,6 +16,8 @@ const Cart = ({
   setToken,
   active,
   setActive,
+  numItemCart,
+  setNumItemCart,
 }) => {
   const navigate = useNavigate();
   let products = [];
@@ -35,16 +37,18 @@ const Cart = ({
         console.log("data length: ", data.products.length);
         console.log("orderItem IDs: ", data.orderItemIds);
         console.log("data: ", data);
-        for (let i = 0; i < data.products.length; i++) {
-          products.push(data.products[i]);
-          productQuantity.push(data.orderItemQuantity[i]);
-          orderItemIds.push(data.orderItemIds[i]);
-        }
-        console.log("Products are: ", products);
-        console.log("Orderitem ids are: ", orderItemIds);
-        setCartItem(products);
-        setQuantity(productQuantity);
-        setOrderItemId(orderItemIds);
+        // for (let i = 0; i < data.products.length; i++) {
+        //   products.push(data.products[i]);
+        //   productQuantity.push(data.orderItemQuantity[i]);
+        //   orderItemIds.push(data.orderItemIds[i]);
+        // }
+        console.log("data.products: ", data.products);
+        // console.log("Products are: ", products);
+        console.log("Orderitem ids are: ", data.orderItemIds);
+        // setCartItem(products);
+        setNumItemCart(data.products);
+        setQuantity(data.orderItemQuantity);
+        setOrderItemId(data.orderItemIds);
       } catch (error) {
         console.log("Error while getting your order items is ", error);
       }
@@ -106,6 +110,7 @@ const Cart = ({
         cartItem={cartItem}
         token={token}
         setToken={setToken}
+        numItemCart={numItemCart}
       />
       <h2>Cart</h2>
       {token ? (
@@ -116,9 +121,9 @@ const Cart = ({
               <th>Quantity</th>
               <th>Price</th>
             </tr>
-            {cartItem.length == 0
+            {numItemCart.length == 0
               ? navigate("/")
-              : cartItem.map((addedItem, index) => {
+              : numItemCart.map((addedItem, index) => {
                   return (
                     <tr key={index}>
                       <td>
