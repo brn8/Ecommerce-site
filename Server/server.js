@@ -235,7 +235,7 @@ app.post("/api/login/user", async (req, res, next) => {
  */
 const isLoggedIn = async (req, res, next) => {
   try {
-    const token = req.headers.authorization?.split(" ")[1]; // Extract token part
+    const token = req.headers.authtoken; // Extract token part
 
     if (!token) {
       res.status(401).json({ message: `You are not loggedIn!!` });

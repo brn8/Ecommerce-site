@@ -25,6 +25,7 @@ const Cart = ({
   // const [orderItemId, setOrderItemId] = useState([]);
 
   const fetchOrderItem = async () => {
+    console.log("token: ", token);
     if (token) {
       try {
         const response = await fetch("http://localhost:3000/api/user/orders", {
