@@ -61,7 +61,7 @@ const Cart = ({
         }, 0);
         console.log("total: ", total);
 
-        setGrandtotal(total);
+        setGrandtotal(total.toFixed(2));
       } catch (error) {
         console.log("Error while getting your order items is ", error);
       }
