@@ -11,17 +11,51 @@ const Product = ({
   cartItem,
   token,
   setToken,
+  numItemCart,
+  setNumItemCart,
 }) => {
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [filterProduct, setFilterProduct] = useState([]);
 
-
-  console.log("token: ", token);
-
+  console.log("product token: ", token);
 
   const [search, setSearch] = useState("");
   const [catergory, setCategoty] = useState(true);
+
+  const fetchOrderItem = async () => {
+    console.log("token: ", token);
+    if (token) {
+      try {
+        const response = await fetch("http://localhost:3000/api/user/orders", {
+          headers: { "Content-Type": "application/json", authtoken: token },
+        });
+        const data = await response.json();
+        console.log("data length: ", data.products.length);
+        // console.log("orderItem IDs: ", data.orderItemIds);
+        console.log("data: ", data);
+        // for (let i = 0; i < data.products.length; i++) {
+        //   products.push(data.products[i]);
+        //   productQuantity.push(data.orderItemQuantity[i]);
+        //   orderItemIds.push(data.orderItemIds[i]);
+        // }
+        console.log("data.products: ", data.products);
+        // console.log("Products are: ", products);
+        // console.log("Orderitem ids are: ", data.orderItemIds);
+        // setCartItem(products);
+        setNumItemCart(data.products);
+        // setQuantity(data.orderItemQuantity);
+        // setOrderItemId(data.orderItemIds);
+      } catch (error) {
+        console.log("Error while getting your order items is ", error);
+      }
+    }
+  };
+
+  useEffect(() => {
+    fetchOrderItem();
+  }, [token]);
+
   const filterElectorics = () => {
     setFilterProduct(
       products.filter(
@@ -77,8 +111,8 @@ const Product = ({
         });
         const data = await response;
         console.log("After adding an item: ", data);
+        fetchOrderItem();
         setCart(!cart);
-        // fetchOrderItem();
       } catch (error) {
         console.log("Error while adding item to the cart is ", error);
       }
@@ -93,8 +127,8 @@ const Product = ({
       setProducts(fetchProduct);
       setFilterProduct(fetchProduct);
     };
+    fetchOrderItem();
     fetchProducts();
-    // fetchOrderItem();
   }, []);
 
   return (
@@ -105,6 +139,7 @@ const Product = ({
         cartItem={cartItem}
         token={token}
         setToken={setToken}
+        numItemCart={numItemCart}
       />
 
       <div className="search-container">

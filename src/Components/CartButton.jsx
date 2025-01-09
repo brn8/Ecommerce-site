@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
-const CartButton = ({ cartItem = [] }) => {
+const CartButton = ({ cartItem = [], numItemCart = [] }) => {
   const navigate = useNavigate();
   const addToCartItem = () => {
     navigate("/cart");
@@ -22,7 +22,7 @@ const CartButton = ({ cartItem = [] }) => {
               position: "absolute",
             }}
           >
-            {cartItem.length}
+            {numItemCart.length}
           </span>
         ) : (
           ""

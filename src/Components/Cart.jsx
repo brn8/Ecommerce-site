@@ -16,6 +16,8 @@ const Cart = ({
   setToken,
   active,
   setActive,
+  numItemCart,
+  setNumItemCart,
 }) => {
   const navigate = useNavigate();
   let products = [];
@@ -35,16 +37,18 @@ const Cart = ({
         console.log("data length: ", data.products.length);
         console.log("orderItem IDs: ", data.orderItemIds);
         console.log("data: ", data);
-        for (let i = 0; i < data.products.length; i++) {
-          products.push(data.products[i]);
-          productQuantity.push(data.orderItemQuantity[i]);
-          orderItemIds.push(data.orderItemIds[i]);
-        }
-        console.log("Products are: ", products);
-        console.log("Orderitem ids are: ", orderItemIds);
-        setCartItem(products);
-        setQuantity(productQuantity);
-        setOrderItemId(orderItemIds);
+        // for (let i = 0; i < data.products.length; i++) {
+        //   products.push(data.products[i]);
+        //   productQuantity.push(data.orderItemQuantity[i]);
+        //   orderItemIds.push(data.orderItemIds[i]);
+        // }
+        console.log("data.products: ", data.products);
+        // console.log("Products are: ", products);
+        console.log("Orderitem ids are: ", data.orderItemIds);
+        // setCartItem(products);
+        setNumItemCart(data.products);
+        setQuantity(data.orderItemQuantity);
+        setOrderItemId(data.orderItemIds);
       } catch (error) {
         console.log("Error while getting your order items is ", error);
       }
@@ -106,6 +110,7 @@ const Cart = ({
         cartItem={cartItem}
         token={token}
         setToken={setToken}
+        numItemCart={numItemCart}
       />
       <h2>Cart</h2>
       {token ? (
@@ -116,65 +121,68 @@ const Cart = ({
               <th>Quantity</th>
               <th>Price</th>
             </tr>
-            {cartItem.length == 0
-              ? navigate("/")
-              : cartItem.map((addedItem, index) => {
-                  return (
-                    <tr key={index}>
-                      <td>
-                        <div className="cartPageItem">
-                          <img src={addedItem.img} />
-                          <div className="cartPageInfomation">
-                            <p>
-                              <b>{addedItem.name}</b>
-                            </p>
-                            <span>{addedItem.description}</span>
-                          </div>
+            {numItemCart.length == 0 ? (
+              //navigate("/")
+              <h1>Your cart is empty!</h1>
+            ) : (
+              numItemCart.map((addedItem, index) => {
+                return (
+                  <tr key={index}>
+                    <td>
+                      <div className="cartPageItem">
+                        <img src={addedItem.img} />
+                        <div className="cartPageInfomation">
+                          <p>
+                            <b>{addedItem.name}</b>
+                          </p>
+                          <span>{addedItem.description}</span>
                         </div>
-                      </td>
-                      <td>
-                        {" "}
-                        {productQuantity[index] < 2 ? (
-                          <button disabled={true}>-</button>
-                        ) : (
-                          <button
-                            onClick={() =>
-                              subtractItem(orderItemId[index], index)
-                            }
-                          >
-                            -
-                          </button>
-                        )}
-                        <span>{quantity[index]} </span>
+                      </div>
+                    </td>
+                    <td>
+                      {" "}
+                      {productQuantity[index] < 2 ? (
+                        <button disabled={true}>-</button>
+                      ) : (
                         <button
-                          onClick={() => addItem(orderItemId[index], index)}
+                          onClick={() =>
+                            subtractItem(orderItemId[index], index)
+                          }
                         >
-                          {console.log(
-                            "order item id index: ",
-                            orderItemId[index]
-                          )}
-                          +
-                        </button>{" "}
-                        <button
-                          onClick={() => deleteOrderItem(orderItemId[index])}
-                        >
-                          <i class="bi bi-trash"></i>
+                          -
                         </button>
-                      </td>
-                      <td>
-                        {" "}
-                        <b>
-                          $
-                          {Math.round(
-                            (addedItem.price * quantity[index] -
-                              addedItem.discountAmount) *
-                              100
-                          ) / 100}
-                        </b>
-                      </td>
-                    </tr>
-                  );
-                })}
+                      )}
+                      <span>{quantity[index]} </span>
+                      <button
+                        onClick={() => addItem(orderItemId[index], index)}
+                      >
+                        {console.log(
+                          "order item id index: ",
+                          orderItemId[index]
+                        )}
+                        +
+                      </button>{" "}
+                      <button
+                        onClick={() => deleteOrderItem(orderItemId[index])}
+                      >
+                        <i class="bi bi-trash"></i>
+                      </button>
+                    </td>
+                    <td>
+                      {" "}
+                      <b>
+                        $
+                        {Math.round(
+                          (addedItem.price * quantity[index] -
+                            addedItem.discountAmount) *
+                            100
+                        ) / 100}
+                      </b>
+                    </td>
+                  </tr>
+                );
+              })
+            )}
           </table>
           <div className="cartPageOrder">
             <textarea
