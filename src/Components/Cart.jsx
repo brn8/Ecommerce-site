@@ -58,7 +58,7 @@ const Cart = ({
   useEffect(() => {
     fetchOrderItem();
     // setCart(!cart);
-  }, []);
+  }, [token]);
 
   const deleteOrderItem = async (orderItem) => {
     console.log("OrderItem in delete: ", orderItem);
