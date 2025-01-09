@@ -58,7 +58,7 @@ const NavBar = ({
         </div>
         <CartButton
           numItemCart={numItemCart}
-          cartItem={token ? cartItem : []}
+          cartItem={token ? numItemCart : []}
         />
       </div>
 

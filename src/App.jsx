@@ -166,7 +166,14 @@ function App() {
         />
         <Route
           path="/shipping"
-          element={<Shipping token={token} setToken={setToken} />}
+          element={
+            <Shipping
+              token={token}
+              setToken={setToken}
+              numItemCart={numItemCart}
+              setNumItemCart={setNumItemCart}
+            />
+          }
         />
       </Routes>
     </>

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import NavBar from "./NavBar";
 import Footer from "./Footer";
 
-const Shipping = ({ token, setToken }) => {
+const Shipping = ({ token, setToken, numItemCart, setNumItemCart }) => {
   const [disableInformation, setdisableInformation] = useState(true);
   const [disableAddress, setdisableAddress] = useState(true);
   const [disablePayment, setdisablePayment] = useState(true);
@@ -21,9 +21,42 @@ const Shipping = ({ token, setToken }) => {
   const [expiration2, setExpiration2] = useState(null);
   const [securityCode, setSecurityCode] = useState(null);
 
-  setToken(sessionStorage.setItem("authtoken", token));
+  // setToken(sessionStorage.setItem("authtoken", token));
 
   console.log("token: ", token);
+
+  const fetchOrderItem = async () => {
+    console.log("token: ", token);
+    if (token) {
+      try {
+        const response = await fetch("http://localhost:3000/api/user/orders", {
+          headers: { "Content-Type": "application/json", authtoken: token },
+        });
+        const data = await response.json();
+        console.log("data length: ", data.products.length);
+        // console.log("orderItem IDs: ", data.orderItemIds);
+        console.log("data: ", data);
+        // for (let i = 0; i < data.products.length; i++) {
+        //   products.push(data.products[i]);
+        //   productQuantity.push(data.orderItemQuantity[i]);
+        //   orderItemIds.push(data.orderItemIds[i]);
+        // }
+        console.log("data.products: ", data.products);
+        // console.log("Products are: ", products);
+        // console.log("Orderitem ids are: ", data.orderItemIds);
+        // setCartItem(products);
+        setNumItemCart(data.products);
+        // setQuantity(data.orderItemQuantity);
+        // setOrderItemId(data.orderItemIds);
+      } catch (error) {
+        console.log("Error while getting your order items is ", error);
+      }
+    }
+  };
+
+  useEffect(() => {
+    fetchOrderItem();
+  }, [token]);
 
   const editInformationHandler = () => {
     setdisableInformation(false);
@@ -125,11 +158,11 @@ const Shipping = ({ token, setToken }) => {
       }
     };
     userInfo();
-  }, []);
+  }, [token]);
 
   return (
     <>
-      <NavBar token={token} setToken={setToken} />
+      <NavBar token={token} setToken={setToken} numItemCart={numItemCart} />
       <div className="shipping-all-container">
         <h3>Your Information</h3>
         <div className="shipping-flex-1-container">

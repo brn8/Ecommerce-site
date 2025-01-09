@@ -18,7 +18,7 @@ const Product = ({
   const [products, setProducts] = useState([]);
   const [filterProduct, setFilterProduct] = useState([]);
 
-  console.log("token: ", token);
+  console.log("product token: ", token);
 
   const [search, setSearch] = useState("");
   const [catergory, setCategoty] = useState(true);
@@ -51,6 +51,10 @@ const Product = ({
       }
     }
   };
+
+  useEffect(() => {
+    fetchOrderItem();
+  }, [token]);
 
   const filterElectorics = () => {
     setFilterProduct(

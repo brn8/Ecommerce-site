@@ -121,65 +121,68 @@ const Cart = ({
               <th>Quantity</th>
               <th>Price</th>
             </tr>
-            {numItemCart.length == 0
-              ? navigate("/")
-              : numItemCart.map((addedItem, index) => {
-                  return (
-                    <tr key={index}>
-                      <td>
-                        <div className="cartPageItem">
-                          <img src={addedItem.img} />
-                          <div className="cartPageInfomation">
-                            <p>
-                              <b>{addedItem.name}</b>
-                            </p>
-                            <span>{addedItem.description}</span>
-                          </div>
+            {numItemCart.length == 0 ? (
+              //navigate("/")
+              <h1>Your cart is empty!</h1>
+            ) : (
+              numItemCart.map((addedItem, index) => {
+                return (
+                  <tr key={index}>
+                    <td>
+                      <div className="cartPageItem">
+                        <img src={addedItem.img} />
+                        <div className="cartPageInfomation">
+                          <p>
+                            <b>{addedItem.name}</b>
+                          </p>
+                          <span>{addedItem.description}</span>
                         </div>
-                      </td>
-                      <td>
-                        {" "}
-                        {productQuantity[index] < 2 ? (
-                          <button disabled={true}>-</button>
-                        ) : (
-                          <button
-                            onClick={() =>
-                              subtractItem(orderItemId[index], index)
-                            }
-                          >
-                            -
-                          </button>
-                        )}
-                        <span>{quantity[index]} </span>
+                      </div>
+                    </td>
+                    <td>
+                      {" "}
+                      {productQuantity[index] < 2 ? (
+                        <button disabled={true}>-</button>
+                      ) : (
                         <button
-                          onClick={() => addItem(orderItemId[index], index)}
+                          onClick={() =>
+                            subtractItem(orderItemId[index], index)
+                          }
                         >
-                          {console.log(
-                            "order item id index: ",
-                            orderItemId[index]
-                          )}
-                          +
-                        </button>{" "}
-                        <button
-                          onClick={() => deleteOrderItem(orderItemId[index])}
-                        >
-                          <i class="bi bi-trash"></i>
+                          -
                         </button>
-                      </td>
-                      <td>
-                        {" "}
-                        <b>
-                          $
-                          {Math.round(
-                            (addedItem.price * quantity[index] -
-                              addedItem.discountAmount) *
-                              100
-                          ) / 100}
-                        </b>
-                      </td>
-                    </tr>
-                  );
-                })}
+                      )}
+                      <span>{quantity[index]} </span>
+                      <button
+                        onClick={() => addItem(orderItemId[index], index)}
+                      >
+                        {console.log(
+                          "order item id index: ",
+                          orderItemId[index]
+                        )}
+                        +
+                      </button>{" "}
+                      <button
+                        onClick={() => deleteOrderItem(orderItemId[index])}
+                      >
+                        <i class="bi bi-trash"></i>
+                      </button>
+                    </td>
+                    <td>
+                      {" "}
+                      <b>
+                        $
+                        {Math.round(
+                          (addedItem.price * quantity[index] -
+                            addedItem.discountAmount) *
+                            100
+                        ) / 100}
+                      </b>
+                    </td>
+                  </tr>
+                );
+              })
+            )}
           </table>
           <div className="cartPageOrder">
             <textarea
