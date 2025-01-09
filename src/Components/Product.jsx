@@ -167,6 +167,7 @@ const Product = ({
           .map((product) => {
             return (
               <li
+                key={product.id}
                 style={{ listStyleType: "none", cursor: "pointer" }}
                 onClick={() => filterBySearch(product.name)}
               >
@@ -198,7 +199,7 @@ const Product = ({
       <div className="products">
         {filterProduct.map((product) => {
           return (
-            <div className="individulProduct">
+            <div key={product.id} className="individulProduct">
               <h3>{product.name}</h3>
               <img
                 src={product.img}

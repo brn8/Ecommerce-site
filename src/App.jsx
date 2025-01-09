@@ -24,6 +24,8 @@ function App() {
   const [quantity, setQuantity] = useState([]);
   const [orderItemId, setOrderItemId] = useState([]);
   const [numItemCart, setNumItemCart] = useState([]);
+  const [productPrice, setProductPrice] = useState([]);
+  const [grandTotal, setGrandtotal] = useState(null);
 
   const fetchOrderItem = async () => {
     console.log("token: ", token);
@@ -105,6 +107,10 @@ function App() {
               setActive={setActive}
               numItemCart={numItemCart}
               setNumItemCart={setNumItemCart}
+              productPrice={productPrice}
+              setProductPrice={setProductPrice}
+              grandTotal={grandTotal}
+              setGrandtotal={setGrandtotal}
             />
           }
         />
@@ -168,6 +174,7 @@ function App() {
           path="/shipping"
           element={
             <Shipping
+              setActive={setActive}
               token={token}
               setToken={setToken}
               numItemCart={numItemCart}
