@@ -2,7 +2,13 @@ import { useEffect, useState } from "react";
 import NavBar from "./NavBar";
 import Footer from "./Footer";
 
-const Shipping = ({ token, setToken, numItemCart, setNumItemCart }) => {
+const Shipping = ({
+  setActive,
+  token,
+  setToken,
+  numItemCart,
+  setNumItemCart,
+}) => {
   const [disableInformation, setdisableInformation] = useState(true);
   const [disableAddress, setdisableAddress] = useState(true);
   const [disablePayment, setdisablePayment] = useState(true);
@@ -162,7 +168,12 @@ const Shipping = ({ token, setToken, numItemCart, setNumItemCart }) => {
 
   return (
     <>
-      <NavBar token={token} setToken={setToken} numItemCart={numItemCart} />
+      <NavBar
+        setActive={setActive}
+        token={token}
+        setToken={setToken}
+        numItemCart={numItemCart}
+      />
       <div className="shipping-all-container">
         <h3>Your Information</h3>
         <div className="shipping-flex-1-container">
