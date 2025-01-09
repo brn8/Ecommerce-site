@@ -21,6 +21,10 @@ const NavBar = ({
       navigate("/signup");
     } else if (option == "signin") {
       navigate("/login");
+    } else {
+      sessionStorage.removeItem("authToken");
+      setToken("");
+      navigate("/");
     }
   }
 
@@ -47,11 +51,12 @@ const NavBar = ({
             onMouseLeave={() => setShowDropDown(false)}
           >
             <button>My Account</button>
-            {showDropDown && !token && (
+            {showDropDown && (
               <div className="account-dropdown">
                 <a onClick={() => handleClick("signup")}>SignUp</a>
 
                 <a onClick={() => handleClick("signin")}>SignIn</a>
+                <a onClick={() => handleClick("logout")}>Logout</a>
               </div>
             )}
           </div>

@@ -18,13 +18,18 @@ const Cart = ({
   setActive,
   numItemCart,
   setNumItemCart,
+  productPrice,
+  setProductPrice,
+  grandTotal,
+  setGrandtotal,
 }) => {
   const navigate = useNavigate();
-  let products = [];
-  let productQuantity = [];
-  let orderItemIds = [];
+  // let products = [];
+  // let productQuantity = [];
+  // let orderItemIds = [];
   // const [quantity, setQuantity] = useState([]);
   // const [orderItemId, setOrderItemId] = useState([]);
+  // const [grandTotal, setGrandtotal] = useState(null);
 
   const fetchOrderItem = async () => {
     console.log("token: ", token);
@@ -49,6 +54,14 @@ const Cart = ({
         setNumItemCart(data.products);
         setQuantity(data.orderItemQuantity);
         setOrderItemId(data.orderItemIds);
+        setProductPrice(data.productPrices);
+
+        const total = data.productPrices.reduce((accumulator, currentValue) => {
+          return Number(accumulator) + Number(currentValue);
+        }, 0);
+        console.log("total: ", total);
+
+        setGrandtotal(total);
       } catch (error) {
         console.log("Error while getting your order items is ", error);
       }
@@ -141,7 +154,7 @@ const Cart = ({
                     </td>
                     <td>
                       {" "}
-                      {productQuantity[index] < 2 ? (
+                      {quantity[index] < 2 ? (
                         <button disabled={true}>-</button>
                       ) : (
                         <button
@@ -171,12 +184,12 @@ const Cart = ({
                     <td>
                       {" "}
                       <b>
-                        $
-                        {Math.round(
-                          (addedItem.price * quantity[index] -
-                            addedItem.discountAmount) *
+                        ${productPrice[index]}
+                        {/* {Math.round(
+                          (addedItem.price - addedItem.discountAmount) *
+                            quantity[index] *
                             100
-                        ) / 100}
+                        ) / 100} */}
                       </b>
                     </td>
                   </tr>
@@ -190,7 +203,8 @@ const Cart = ({
               cols="35"
               rows="12"
             ></textarea>
-            <p>Total </p>
+            <p>Total: ${grandTotal}</p>
+
             <button
               onClick={() =>
                 cartItem.length != 0 ? navigate("/shipping") : ""
