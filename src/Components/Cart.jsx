@@ -125,95 +125,113 @@ const Cart = ({
         setToken={setToken}
         numItemCart={numItemCart}
       />
-      <h2>Cart</h2>
       {token ? (
-        <div className="cartPageFlex">
-          <table style={{ borderCollapse: "collapse" }}>
-            <tr>
-              <th>Product</th>
-              <th>Quantity</th>
-              <th>Price</th>
-            </tr>
-            {numItemCart.length == 0 ? (
-              //navigate("/")
-              <h1>Your cart is empty!</h1>
-            ) : (
-              numItemCart.map((addedItem, index) => {
-                return (
-                  <tr key={index}>
-                    <td>
-                      <div className="cartPageItem">
-                        <img src={addedItem.img} />
-                        <div className="cartPageInfomation">
-                          <p>
-                            <b>{addedItem.name}</b>
-                          </p>
-                          <span>{addedItem.description}</span>
-                        </div>
-                      </div>
-                    </td>
-                    <td>
-                      {" "}
-                      {quantity[index] < 2 ? (
-                        <button disabled={true}>-</button>
-                      ) : (
-                        <button
-                          onClick={() =>
-                            subtractItem(orderItemId[index], index)
-                          }
-                        >
-                          -
-                        </button>
-                      )}
-                      <span>{quantity[index]} </span>
-                      <button
-                        onClick={() => addItem(orderItemId[index], index)}
-                      >
-                        {console.log(
-                          "order item id index: ",
-                          orderItemId[index]
-                        )}
-                        +
-                      </button>{" "}
-                      <button
-                        onClick={() => deleteOrderItem(orderItemId[index])}
-                      >
-                        <i class="bi bi-trash"></i>
-                      </button>
-                    </td>
-                    <td>
-                      {" "}
-                      <b>
-                        ${productPrice[index]}
-                        {/* {Math.round(
+        <>
+          {numItemCart.length == 0 ? (
+            <div className="cartEmptyFlex">
+              <img
+                src="https://cdni.iconscout.com/illustration/premium/thumb/empty-cart-illustration-download-in-svg-png-gif-file-formats--shopping-ecommerce-simple-error-state-pack-user-interface-illustrations-6024626.png"
+                style={{ width: "300px", height: "300px" }}
+              />
+              <h2>
+                Your Cart is <span style={{ color: "red" }}>Empty!</span>
+              </h2>
+              <span>Must add items on cart before you proceed to checkout</span>
+              <button onClick={() => navigate("/")}>Return Home</button>
+            </div>
+          ) : (
+            <>
+              <h2>Cart</h2>
+
+              <div className="cartPageFlex">
+                <table style={{ borderCollapse: "collapse" }}>
+                  <tbody>
+                    <tr>
+                      <th>Product</th>
+                      <th>Quantity</th>
+                      <th>Price</th>
+                    </tr>
+                    {numItemCart.map((addedItem, index) => {
+                      return (
+                        <tr key={index}>
+                          <td>
+                            <div className="cartPageItem">
+                              <img src={addedItem.img} />
+                              <div className="cartPageInfomation">
+                                <p>
+                                  <b>{addedItem.name}</b>
+                                </p>
+                                <span>{addedItem.description}</span>
+                              </div>
+                            </div>
+                          </td>
+                          <td>
+                            {" "}
+                            {quantity[index] < 2 ? (
+                              <button disabled={true}>-</button>
+                            ) : (
+                              <button
+                                onClick={() =>
+                                  subtractItem(orderItemId[index], index)
+                                }
+                              >
+                                -
+                              </button>
+                            )}
+                            <span>{quantity[index]} </span>
+                            <button
+                              onClick={() => addItem(orderItemId[index], index)}
+                            >
+                              {console.log(
+                                "order item id index: ",
+                                orderItemId[index]
+                              )}
+                              +
+                            </button>{" "}
+                            <button
+                              onClick={() =>
+                                deleteOrderItem(orderItemId[index])
+                              }
+                            >
+                              <i className="bi bi-trash"></i>
+                            </button>
+                          </td>
+                          <td>
+                            {" "}
+                            <b>
+                              ${productPrice[index]}
+                              {/* {Math.round(
                           (addedItem.price - addedItem.discountAmount) *
                             quantity[index] *
                             100
                         ) / 100} */}
-                      </b>
-                    </td>
-                  </tr>
-                );
-              })
-            )}
-          </table>
-          <div className="cartPageOrder">
-            <textarea
-              placeholder="Order Instruction"
-              cols="35"
-              rows="12"
-            ></textarea>
-            <p>Total: ${grandTotal}</p>
+                            </b>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+                <div className="cartPageOrder">
+                  <textarea
+                    placeholder="Order Instruction"
+                    cols="35"
+                    rows="12"
+                  ></textarea>
+                  <p>Total: ${grandTotal}</p>
 
-            <button
-              onClick={() =>
-                cartItem.length != 0 ? navigate("/shipping") : ""
-              }
-            >
-              Check Out
-            </button>
-          </div>
-        </div>
+                  <button
+                    onClick={() =>
+                      cartItem.length != 0 ? navigate("/shipping") : ""
+                    }
+                  >
+                    Check Out
+                  </button>
+                </div>
+              </div>
+            </>
+          )}
+        </>
       ) : (
         <h1>Your Are not LoggedIn!</h1>
       )}
@@ -254,7 +272,7 @@ const Cart = ({
                           +
                         </button> |{" "}
                         <button onClick={() => deleteOrderItem(addedItem)}>
-                          <i class="bi bi-trash"></i>
+                          <i className="bi bi-trash"></i>
                         </button>
                       </div>
                     </div>

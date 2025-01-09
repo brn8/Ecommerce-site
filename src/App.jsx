@@ -11,14 +11,14 @@ import NavBar from "./Components/NavBar";
 import Shipping from "./Components/Shipping";
 
 function App() {
-  const [firstName, setFirstName] = useState(undefined);
-  const [lastName, setLastName] = useState(undefined);
-  const [username, setUsername] = useState(undefined);
-  const [password, setPassword] = useState(undefined);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [active, setActive] = useState("");
-  const [email, setEmail] = useState(undefined);
-  const [contact, setContact] = useState(undefined);
-  const [token, setToken] = useState(undefined);
+  const [email, setEmail] = useState();
+  const [contact, setContact] = useState("");
+  const [token, setToken] = useState("");
   const [cart, setCart] = useState(true);
   const [cartItem, setCartItem] = useState([]);
   const [quantity, setQuantity] = useState([]);

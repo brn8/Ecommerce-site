@@ -69,22 +69,22 @@ const NavBar = ({
 
       <div className="nav-bar-2">
         <button>
-          <i class="bi bi-star-fill"></i>Electronics
+          <i className="bi bi-star-fill"></i>Electronics
         </button>
         <button>
-          <i class="bi bi-star-fill"></i>Office Supplies
+          <i className="bi bi-star-fill"></i>Office Supplies
         </button>
         <button>
-          <i class="bi bi-star-fill"></i>Electronics
+          <i className="bi bi-star-fill"></i>Electronics
         </button>
         <button>
-          <i class="bi bi-star-fill"></i>Office Supplies
+          <i className="bi bi-star-fill"></i>Office Supplies
         </button>
         <button>
-          <i class="bi bi-star-fill"></i>Electronics
+          <i className="bi bi-star-fill"></i>Electronics
         </button>
         <button>
-          <i class="bi bi-star-fill"></i>Office Supplies
+          <i className="bi bi-star-fill"></i>Office Supplies
         </button>
       </div>
     </>
