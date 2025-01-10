@@ -9,19 +9,37 @@ const Shipping = ({
   setToken,
   numItemCart,
   setNumItemCart,
+  setFirstName,
+  setLastName,
+  setEmail,
+  setContact,
+  firstName,
+  lastName,
+  email,
+  contact,
+  setAddress,
+  setCity,
+  setState,
+  setZipcode,
+  setCountry,
+  address,
+  city,
+  state,
+  zipCode,
+  country,
 }) => {
   const [disableInformation, setdisableInformation] = useState(true);
   const [disableAddress, setdisableAddress] = useState(true);
   const [disablePayment, setdisablePayment] = useState(true);
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
-  const [contact, setContact] = useState("");
-  const [address, setAddress] = useState("");
-  const [city, setCity] = useState("");
-  const [state, setState] = useState("");
-  const [zipCode, setZipcode] = useState("");
-  const [country, setCountry] = useState("");
+  // const [firstName, setFirstName] = useState("");
+  // const [lastName, setLastName] = useState("");
+  // const [email, setEmail] = useState("");
+  // const [contact, setContact] = useState("");
+  // const [address, setAddress] = useState("");
+  // const [city, setCity] = useState("");
+  // const [state, setState] = useState("");
+  // const [zipCode, setZipcode] = useState("");
+  // const [country, setCountry] = useState("");
   const [cardNumber, setCardNumber] = useState("");
   const [nameOncard, setNameOnCard] = useState("");
   const [expiration1, setExpiration1] = useState("");
@@ -158,6 +176,7 @@ const Shipping = ({
       doneEditingHandler();
       doneAddressEditingHandler();
       donepaymentEditingHandler();
+      navigate("/orderSummary");
     }
   };
   useEffect(() => {

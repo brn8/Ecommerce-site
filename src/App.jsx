@@ -9,6 +9,7 @@ import Account from "./Components/Account";
 import LoginPage from "./Components/LoginPage";
 import NavBar from "./Components/NavBar";
 import Shipping from "./Components/Shipping";
+import OrderSummary from "./Components/OrderSummary";
 
 function App() {
   const [firstName, setFirstName] = useState("");
@@ -16,8 +17,13 @@ function App() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [active, setActive] = useState("");
-  const [email, setEmail] = useState();
+  const [email, setEmail] = useState("");
   const [contact, setContact] = useState("");
+  const [address, setAddress] = useState("");
+  const [city, setCity] = useState("");
+  const [state, setState] = useState("");
+  const [zipCode, setZipcode] = useState("");
+  const [country, setCountry] = useState("");
   const [token, setToken] = useState("");
   const [cart, setCart] = useState(true);
   const [cartItem, setCartItem] = useState([]);
@@ -170,6 +176,28 @@ function App() {
           path="/account"
           element={<Account token={token} setToken={setToken} />}
         />
+
+        <Route
+          path="/orderSummary"
+          element={
+            <OrderSummary
+              token={token}
+              setToken={setToken}
+              numItemCart={numItemCart}
+              quantity={quantity}
+              grandTotal={grandTotal}
+              productPrice={productPrice}
+              firstName={firstName}
+              lastName={lastName}
+              address={address}
+              city={city}
+              state={state}
+              zipCode={zipCode}
+              country={country}
+              setNumItemCart={setNumItemCart}
+            />
+          }
+        />
         <Route
           path="/shipping"
           element={
@@ -179,6 +207,24 @@ function App() {
               setToken={setToken}
               numItemCart={numItemCart}
               setNumItemCart={setNumItemCart}
+              setFirstName={setFirstName}
+              setLastName={setLastName}
+              setEmail={setEmail}
+              setContact={setContact}
+              firstName={firstName}
+              lastName={lastName}
+              email={email}
+              contact={contact}
+              setAddress={setAddress}
+              setCity={setCity}
+              setState={setState}
+              setZipcode={setZipcode}
+              setCountry={setCountry}
+              address={address}
+              city={city}
+              state={state}
+              zipCode={zipCode}
+              country={country}
             />
           }
         />
