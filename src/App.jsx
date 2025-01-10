@@ -9,21 +9,32 @@ import Account from "./Components/Account";
 import LoginPage from "./Components/LoginPage";
 import NavBar from "./Components/NavBar";
 import Shipping from "./Components/Shipping";
+import OrderSummary from "./Components/OrderSummary";
+import SearchProduct from "./Components/SearchProduct";
 
 function App() {
-  const [firstName, setFirstName] = useState(undefined);
-  const [lastName, setLastName] = useState(undefined);
-  const [username, setUsername] = useState(undefined);
-  const [password, setPassword] = useState(undefined);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [active, setActive] = useState("");
-  const [email, setEmail] = useState(undefined);
-  const [contact, setContact] = useState(undefined);
-  const [token, setToken] = useState(undefined);
+  const [email, setEmail] = useState("");
+  const [contact, setContact] = useState("");
+  const [address, setAddress] = useState("");
+  const [city, setCity] = useState("");
+  const [state, setState] = useState("");
+  const [zipCode, setZipcode] = useState("");
+  const [country, setCountry] = useState("");
+  const [token, setToken] = useState("");
   const [cart, setCart] = useState(true);
   const [cartItem, setCartItem] = useState([]);
   const [quantity, setQuantity] = useState([]);
   const [orderItemId, setOrderItemId] = useState([]);
   const [numItemCart, setNumItemCart] = useState([]);
+  const [productPrice, setProductPrice] = useState([]);
+  const [grandTotal, setGrandtotal] = useState(null);
+  const [products, setProducts] = useState([]);
+  const [search, setSearch] = useState("");
 
   const fetchOrderItem = async () => {
     console.log("token: ", token);
@@ -83,6 +94,10 @@ function App() {
                 setToken={setToken}
                 numItemCart={numItemCart}
                 setNumItemCart={setNumItemCart}
+                setProducts={setProducts}
+                products={products}
+                search={search}
+                setSearch={setSearch}
               />
             </>
           }
@@ -105,6 +120,11 @@ function App() {
               setActive={setActive}
               numItemCart={numItemCart}
               setNumItemCart={setNumItemCart}
+              productPrice={productPrice}
+              setProductPrice={setProductPrice}
+              grandTotal={grandTotal}
+              setGrandtotal={setGrandtotal}
+              setSearch={setSearch}
             />
           }
         />
@@ -173,15 +193,71 @@ function App() {
             </div>
           }
         />
+
+        <Route
+          path="/searchItem"
+          element={
+            <SearchProduct
+              token={token}
+              setToken={setToken}
+              numItemCart={numItemCart}
+              search={search}
+              setSearch={setSearch}
+              products={products}
+              setNumItemCart={setNumItemCart}
+            />
+          }
+        />
+        <Route
+          path="/orderSummary"
+          element={
+            <OrderSummary
+              token={token}
+              setToken={setToken}
+              numItemCart={numItemCart}
+              quantity={quantity}
+              grandTotal={grandTotal}
+              productPrice={productPrice}
+              firstName={firstName}
+              lastName={lastName}
+              address={address}
+              city={city}
+              state={state}
+              zipCode={zipCode}
+              country={country}
+              setNumItemCart={setNumItemCart}
+              setSearch={setSearch}
+            />
+          }
+        />
         <Route
           path="/shipping"
           element={
             <Shipping
+              setActive={setActive}
               token={token}
               setToken={setToken}
               numItemCart={numItemCart}
               setNumItemCart={setNumItemCart}
-              setActive={setActive}
+              setFirstName={setFirstName}
+              setLastName={setLastName}
+              setEmail={setEmail}
+              setContact={setContact}
+              firstName={firstName}
+              lastName={lastName}
+              email={email}
+              contact={contact}
+              setAddress={setAddress}
+              setCity={setCity}
+              setState={setState}
+              setZipcode={setZipcode}
+              setCountry={setCountry}
+              address={address}
+              city={city}
+              state={state}
+              zipCode={zipCode}
+              country={country}
+              setSearch={setSearch}
             />
           }
         />

@@ -8,6 +8,7 @@ const cors = require("cors");
 const app = express();
 const PORT = 3000;
 const prisma = require("../Server/prisma");
+const { data } = require("react-router-dom");
 
 require("dotenv").config();
 app.use(express.json());
@@ -412,11 +413,12 @@ app.post("/api/user/additem", isLoggedIn, async (req, res, next) => {
         data: {
           productId: product.id,
           quantity: 1,
-          price: product.price,
+          price: product.price - product.discountAmount,
         },
       });
       if (createOrderItem) {
-        const totalPrice = product.quantity * product.price;
+        const totalPrice = 1 * product.price - product.discountAmount;
+        console.log("totalPrice: ", totalPrice);
         console.log(createOrderItem.id);
         const createOrder = await prisma.Orders.create({
           data: {
@@ -466,7 +468,7 @@ const findProductPrice = async (id) => {
   const findProductId = await prisma.Product.findMany({
     where: { id },
   });
-  return findProductId[0].price;
+  return findProductId[0].price - findProductId[0].discountAmount;
 };
 
 app.get("/api/user/orders", isLoggedIn, async (req, res, next) => {
@@ -513,6 +515,14 @@ app.get("/api/user/orders", isLoggedIn, async (req, res, next) => {
       productPrices.push(await findProductPrice(productIds[i]));
     }
     console.log("Product prices are: ", productPrices);
+    let totalProductPrices = [];
+
+    for (let i = 0; i < productPrices.length; i++) {
+      totalProductPrices.push(
+        (orderItemQuantity[i] * productPrices[i]).toFixed(2)
+      );
+    }
+    console.log("totalProductPrices: ", totalProductPrices);
 
     // if (findProduct.length >= 0) {
     //   return res.send(findProduct);
@@ -523,6 +533,7 @@ app.get("/api/user/orders", isLoggedIn, async (req, res, next) => {
       products: products,
       orderItemQuantity: orderItemQuantity,
       orderItemIds: orderItemIds,
+      productPrices: totalProductPrices,
     });
   } catch (error) {
     next(error);
@@ -536,6 +547,7 @@ app.patch("/api/orderItem/:id", isLoggedIn, async (req, res, next) => {
     const orderItemId = +req.params.id;
     const { quantity } = req.body;
     console.log("Quantity: ", quantity);
+    console.log("orderItemId: ", orderItemId);
     let id;
 
     const findUserFrmOrders = await prisma.Orders.findMany({
@@ -554,12 +566,15 @@ app.patch("/api/orderItem/:id", isLoggedIn, async (req, res, next) => {
 
     console.log("orderitemid: ", orderitemid.orderItemId);
     id = orderitemid.orderItemId;
+    const orderid = orderitemid.id;
+    console.log("orderid: ", orderid);
 
     if (findUserFrmOrders.length >= 0) {
       const findItemIdfromOrderItem = await prisma.orderItem.findMany({
         where: { id },
       });
       console.log("findItemIdfromOrderItem: ", findItemIdfromOrderItem);
+      let price = findItemIdfromOrderItem[0].price;
 
       if (findItemIdfromOrderItem.length >= 0) {
         const response = await prisma.orderItem.update({
@@ -570,8 +585,19 @@ app.patch("/api/orderItem/:id", isLoggedIn, async (req, res, next) => {
             quantity: Number(quantity),
           },
         });
+        if (Object.keys(response).length >= 0) {
+          console.log("Response: ", response);
+          id = orderid;
 
-        res.send(response);
+          const findorderitemidfromorders = await prisma.Orders.update({
+            where: { id },
+            data: {
+              totalPrice: price * Number(quantity),
+            },
+          });
+
+          res.send(response);
+        }
       }
     }
   } catch (err) {
@@ -601,6 +627,25 @@ app.delete("/api/orderItem/:id", isLoggedIn, async (req, res, next) => {
         const findOrderItemfrmOrders = await prisma.Orders.delete({
           where: { id },
         });
+        console.log("findOrderItemfrmOrders: ", findOrderItemfrmOrders);
+        if (Object.keys(findOrderItemfrmOrders).length >= 0) {
+          id = findOrderItemfrmOrders.orderItemId;
+          console.log("findOrderItemfrmOrders.id: ", id);
+
+          const findorderitemfrmorderitem = await prisma.OrderItem.findMany({
+            where: { id },
+          });
+          console.log("findorderitemfrmorderitem: ", findorderitemfrmorderitem);
+          if (findorderitemfrmorderitem.length >= 0) {
+            const findorderitemfrmorderitem = await prisma.OrderItem.delete({
+              where: { id },
+            });
+          } else {
+            res.json({ message: `Order Item is not found in orderItem!` });
+          }
+        } else {
+          res.json({ message: `Order Item is not found in Orders!` });
+        }
         return res.json({ deletedOrderItemId: findOrderItemfrmOrders });
       } else {
         return res.json({ message: `Order item is not found!` });

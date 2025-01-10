@@ -7,12 +7,14 @@ const NavBar = ({
   setActive,
   cartItem,
   token,
+  setSearch,
   setToken,
 }) => {
   const [showDropDown, setShowDropDown] = useState(false);
 
   const navigate = useNavigate();
   const handleRoute = () => {
+    setSearch("");
     navigate("/");
   };
   function handleClick(option) {
@@ -23,6 +25,10 @@ const NavBar = ({
       navigate("/login");
     } else if (option == "account") {
       navigate("/account");
+    } else {
+      sessionStorage.removeItem("authToken");
+      setToken("");
+      navigate("/");
     }
   }
 
@@ -49,10 +55,17 @@ const NavBar = ({
             onMouseLeave={() => setShowDropDown(false)}
           >
             <button>My Account</button>
-            {showDropDown && !token && (
+            {showDropDown && (
               <div className="account-dropdown">
-                <a onClick={() => handleClick("signup")}>SignUp</a>
-                <a onClick={() => handleClick("signin")}>SignIn</a>
+                {token ? (
+                  <a onClick={() => handleClick("logout")}>Logout</a>
+                ) : (
+                  <>
+                    {" "}
+                    <a onClick={() => handleClick("signup")}>SignUp</a>
+                    <a onClick={() => handleClick("signin")}>SignIn</a>
+                  </>
+                )}
               </div>
             )}
             {showDropDown && token && (
@@ -70,22 +83,22 @@ const NavBar = ({
 
       <div className="nav-bar-2">
         <button>
-          <i class="bi bi-star-fill"></i>Electronics
+          <i className="bi bi-star-fill"></i>Electronics
         </button>
         <button>
-          <i class="bi bi-star-fill"></i>Office Supplies
+          <i className="bi bi-star-fill"></i>Office Supplies
         </button>
         <button>
-          <i class="bi bi-star-fill"></i>Electronics
+          <i className="bi bi-star-fill"></i>Electronics
         </button>
         <button>
-          <i class="bi bi-star-fill"></i>Office Supplies
+          <i className="bi bi-star-fill"></i>Office Supplies
         </button>
         <button>
-          <i class="bi bi-star-fill"></i>Electronics
+          <i className="bi bi-star-fill"></i>Electronics
         </button>
         <button>
-          <i class="bi bi-star-fill"></i>Office Supplies
+          <i className="bi bi-star-fill"></i>Office Supplies
         </button>
       </div>
     </>

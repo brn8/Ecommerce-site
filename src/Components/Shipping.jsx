@@ -1,35 +1,54 @@
 import { useEffect, useState } from "react";
 import NavBar from "./NavBar";
 import Footer from "./Footer";
+import { useNavigate } from "react-router-dom";
 
 const Shipping = ({
+  setActive,
   token,
   setToken,
   numItemCart,
   setNumItemCart,
-  setActive,
+  setFirstName,
+  setLastName,
+  setEmail,
+  setContact,
+  firstName,
+  lastName,
+  email,
+  contact,
+  setAddress,
+  setCity,
+  setState,
+  setZipcode,
+  setCountry,
+  address,
+  city,
+  state,
+  zipCode,
+  country,
+  setSearch,
 }) => {
   const [disableInformation, setdisableInformation] = useState(true);
   const [disableAddress, setdisableAddress] = useState(true);
   const [disablePayment, setdisablePayment] = useState(true);
-  const [firstName, setFirstName] = useState(null);
-  const [lastName, setLastName] = useState(null);
-  const [email, setEmail] = useState(null);
-  const [contact, setContact] = useState(null);
-  const [address, setAddress] = useState(null);
-  const [city, setCity] = useState(null);
-  const [state, setState] = useState(null);
-  const [zipCode, setZipcode] = useState(null);
-  const [country, setCountry] = useState(null);
-  const [cardNumber, setCardNumber] = useState(null);
-  const [nameOncard, setNameOnCard] = useState(null);
-  const [expiration1, setExpiration1] = useState(null);
-  const [expiration2, setExpiration2] = useState(null);
-  const [securityCode, setSecurityCode] = useState(null);
+  // const [firstName, setFirstName] = useState("");
+  // const [lastName, setLastName] = useState("");
+  // const [email, setEmail] = useState("");
+  // const [contact, setContact] = useState("");
+  // const [address, setAddress] = useState("");
+  // const [city, setCity] = useState("");
+  // const [state, setState] = useState("");
+  // const [zipCode, setZipcode] = useState("");
+  // const [country, setCountry] = useState("");
+  const [cardNumber, setCardNumber] = useState("");
+  const [nameOncard, setNameOnCard] = useState("");
+  const [expiration1, setExpiration1] = useState("");
+  const [expiration2, setExpiration2] = useState("");
+  const [securityCode, setSecurityCode] = useState("");
+  const navigate = useNavigate();
 
   // setToken(sessionStorage.setItem("authtoken", token));
-
-  console.log("token: ", token);
 
   const fetchOrderItem = async () => {
     console.log("token: ", token);
@@ -59,7 +78,6 @@ const Shipping = ({
       }
     }
   };
-
   useEffect(() => {
     fetchOrderItem();
   }, [token]);
@@ -95,6 +113,8 @@ const Shipping = ({
   };
 
   const doneAddressEditingHandler = async () => {
+    console.log(zipCode, "jj");
+
     const response = await fetch("/api/address", {
       method: "PATCH",
       headers: {
@@ -135,32 +155,59 @@ const Shipping = ({
     }
     setdisablePayment(true);
   };
+  const handleShipping = () => {
+    if (
+      firstName === "" ||
+      lastName === "" ||
+      email === "" ||
+      contact === "" ||
+      address === "" ||
+      city === "" ||
+      state === "" ||
+      zipCode === "" ||
+      country === "" ||
+      cardNumber === "" ||
+      nameOncard === "" ||
+      expiration1 === "" ||
+      expiration2 === "" ||
+      securityCode === ""
+    ) {
+      alert("Please fill in the required fields (*)");
+    } else {
+      doneEditingHandler();
+      doneAddressEditingHandler();
+      donepaymentEditingHandler();
+      navigate("/orderSummary");
+    }
+  };
   useEffect(() => {
     const userInfo = async () => {
-      const response = await fetch("/api/address", {
-        method: "GET",
-        headers: {
-          authtoken: token,
-        },
-      });
-      const userData = await response.json();
-      setFirstName(userData.firstName);
-      setLastName(userData.lastName);
-      setEmail(userData.email);
-      setContact(userData.contact);
-      if (userData.address != null) {
-        setAddress(userData.address.streetAddress);
-        setCity(userData.address.city);
-        setState(userData.address.state);
-        setZipcode(userData.address.zipCode);
-        setCountry(userData.address.country);
-      }
-      if (userData.payment != null) {
-        setCardNumber(userData.payment.cardNumber);
-        setNameOnCard(userData.payment.nameOnCard);
-        setExpiration1(userData.payment.expiration?.split("/")[0]);
-        setExpiration2(userData.payment.expiration?.split("/")[1]);
-        setSecurityCode(userData.payment.securityCode);
+      if (token) {
+        const response = await fetch("/api/address", {
+          method: "GET",
+          headers: {
+            authtoken: token,
+          },
+        });
+        const userData = await response.json();
+        setFirstName(userData.firstName);
+        setLastName(userData.lastName);
+        setEmail(userData.email);
+        setContact(userData.contact);
+        if (userData.address != null) {
+          setAddress(userData.address.streetAddress);
+          setCity(userData.address.city);
+          setState(userData.address.state);
+          setZipcode(userData.address.zipCode);
+          setCountry(userData.address.country);
+        }
+        if (userData.payment != null) {
+          setCardNumber(userData.payment.cardNumber);
+          setNameOnCard(userData.payment.nameOnCard);
+          setExpiration1(userData.payment.expiration?.split("/")[0]);
+          setExpiration2(userData.payment.expiration?.split("/")[1]);
+          setSecurityCode(userData.payment.securityCode);
+        }
       }
     };
     userInfo();
@@ -169,53 +216,66 @@ const Shipping = ({
   return (
     <>
       <NavBar
+        setActive={setActive}
         token={token}
         setToken={setToken}
         numItemCart={numItemCart}
-        setActive={setActive}
+        setSearch={setSearch}
       />
       <div className="shipping-all-container">
         <h3>Your Information</h3>
         <div className="shipping-flex-1-container">
           <div>
-            <label>First Name</label>
+            <label>
+              First Name{" "}
+              {firstName == "" ? <span style={{ color: "red" }}>*</span> : ""}
+            </label>
             <br />
             <input
               type="text"
-              value={firstName}
-              disabled={disableInformation}
+              value={firstName || ""}
+              // disabled={disableInformation}
               onChange={(e) => setFirstName(e.target.value)}
             />
             <br />
-            <label>Last Name</label>
+            <label>
+              Last Name{" "}
+              {lastName == "" ? <span style={{ color: "red" }}>*</span> : ""}
+            </label>
             <br />
             <input
               type="text"
-              value={lastName}
-              disabled={disableInformation}
+              value={lastName || ""}
+              // disabled={disableInformation}
               onChange={(e) => setLastName(e.target.value)}
             />
           </div>
           <div>
-            <label>Email Address</label>
+            <label>
+              Email Address{" "}
+              {email == "" ? <span style={{ color: "red" }}>*</span> : ""}
+            </label>
             <br />
             <input
               type="text"
-              value={email}
-              disabled={disableInformation}
+              value={email || ""}
+              // disabled={disableInformation}
               onChange={(e) => setEmail(e.target.value)}
             />{" "}
             <br />
-            <label>Contact Number</label>
+            <label>
+              Contact Number{" "}
+              {contact == "" ? <span style={{ color: "red" }}>*</span> : ""}
+            </label>
             <br />
             <input
               type="text"
-              value={contact}
-              disabled={disableInformation}
+              value={contact || ""}
+              // disabled={disableInformation}
               onChange={(e) => setContact(e.target.value)}
             />
           </div>
-          <div className="shipping-editUseButton">
+          {/* <div className="shipping-editUseButton">
             {disableInformation ? (
               <button onClick={editInformationHandler}>
                 Edit your information
@@ -223,7 +283,7 @@ const Shipping = ({
             ) : (
               <button onClick={doneEditingHandler}>Use this Information</button>
             )}
-          </div>
+          </div> */}
         </div>
         <div className="shipping-flex-2-container">
           <div>
@@ -250,55 +310,68 @@ const Shipping = ({
           </div>
           <div>
             <h3>Shipping Address</h3>
-            <label>Address</label>
+            <label>
+              Address{" "}
+              {address == "" ? <span style={{ color: "red" }}>*</span> : ""}
+            </label>
             <br />
             <input
               type="text"
-              value={address}
-              disabled={disableAddress}
+              value={address || ""}
+              // disabled={disableAddress}
               onChange={(e) => setAddress(e.target.value)}
             />{" "}
             {/* <br /> */}
             {/* <br />
             <input type="text" /> */}
             <br />
-            <label>City</label>
+            <label>
+              City {city == "" ? <span style={{ color: "red" }}>*</span> : ""}
+            </label>
             <br />
             <input
               type="text"
-              disabled={disableAddress}
-              value={city}
+              // disabled={disableAddress}
+              value={city || ""}
               onChange={(e) => setCity(e.target.value)}
             />{" "}
             <br />
-            <label>State</label>
+            <label>
+              State {state == "" ? <span style={{ color: "red" }}>*</span> : ""}
+            </label>
             <br />
             <input
               type="text"
-              value={state}
-              disabled={disableAddress}
+              value={state || ""}
+              // disabled={disableAddress}
               onChange={(e) => setState(e.target.value)}
             />{" "}
             <br />
-            <label>Zipcode</label>
+            <label>
+              Zipcode{" "}
+              {zipCode == "" ? <span style={{ color: "red" }}>*</span> : ""}
+            </label>
             <br />
             <input
               type="text"
-              value={zipCode}
-              disabled={disableAddress}
+              value={zipCode || ""}
+              // disabled={disableAddress}
               onChange={(e) => setZipcode(e.target.value)}
             />
             <br />
-            <label>Country</label>
+            <label>
+              Country{" "}
+              {country == "" ? <span style={{ color: "red" }}>*</span> : ""}
+            </label>
             <br />
             <input
               type="text"
-              value={country}
-              disabled={disableAddress}
+              value={country || ""}
+              // disabled={disableAddress}
               onChange={(e) => setCountry(e.target.value)}
             />
           </div>
-          <div className="shipping-editUseButton">
+          {/* <div className="shipping-editUseButton">
             {disableAddress ? (
               <button onClick={editAddressInformationHandler}>
                 Edit your Address
@@ -308,56 +381,77 @@ const Shipping = ({
                 Use this Address
               </button>
             )}
-          </div>
+          </div> */}
         </div>
         <h3>Payment Method </h3>
         <div className="shipping-flex-2-container">
           <br />
           <div>
-            <label>Card Number</label>
+            <label>
+              Card Number{" "}
+              {cardNumber == "" ? <span style={{ color: "red" }}>*</span> : ""}
+            </label>
             <br />
             <input
               type="text"
-              disabled={disablePayment}
-              value={cardNumber}
+              // disabled={disablePayment}
+              value={cardNumber || ""}
               onChange={(e) => setCardNumber(e.target.value)}
             />
             <br />
-            <label>Name on Card</label>
+            <label>
+              Name on Card{" "}
+              {nameOncard == "" ? <span style={{ color: "red" }}>*</span> : ""}
+            </label>
             <br />
             <input
               type="text"
-              disabled={disablePayment}
+              // disabled={disablePayment}
               onChange={(e) => setNameOnCard(e.target.value)}
-              value={nameOncard}
+              value={nameOncard || ""}
             />{" "}
             <br />
-            <label>Expiration Date</label>
+            <label>
+              Expiration Date{" "}
+              {expiration1 == "" || expiration2 == "" ? (
+                <span style={{ color: "red" }}>*</span>
+              ) : (
+                ""
+              )}
+            </label>
             <br />
             <input
               type="text"
-              disabled={disablePayment}
-              value={expiration1}
+              // disabled={disablePayment}
+              value={expiration1 || ""}
               onChange={(e) => setExpiration1(e.target.value)}
               style={{ width: "140px", marginRight: "10px" }}
             />
             <input
               type="text"
-              value={expiration2}
+              value={expiration2 || ""}
               onChange={(e) => setExpiration2(e.target.value)}
-              disabled={disablePayment}
+              // disabled={disablePayment}
               style={{ width: "140px" }}
             />
             <br />
-            <label>Security Code</label> <br />
+            <label>
+              Security Code{" "}
+              {securityCode == "" ? (
+                <span style={{ color: "red" }}>*</span>
+              ) : (
+                ""
+              )}
+            </label>{" "}
+            <br />
             <input
               type="password"
-              disabled={disablePayment}
-              value={securityCode}
+              // disabled={disablePayment}
+              value={securityCode || ""}
               onChange={(e) => setSecurityCode(e.target.value)}
             />
           </div>
-          <div className="shipping-editUseButton">
+          {/* <div className="shipping-editUseButton">
             {disablePayment ? (
               <button onClick={editpaymentInformationHandler}>
                 Edit your Address
@@ -367,16 +461,16 @@ const Shipping = ({
                 Use this Address
               </button>
             )}
-          </div>
+          </div> */}
         </div>
       </div>
 
       <div className="shipping-button">
         <div>
-          <button>Previous</button>
+          <button onClick={() => navigate("/cart")}>Previous</button>
         </div>
         <div>
-          <button>Next</button>
+          <button onClick={handleShipping}>Next</button>
         </div>
       </div>
       <Footer />
