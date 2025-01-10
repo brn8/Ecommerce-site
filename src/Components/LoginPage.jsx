@@ -1,4 +1,7 @@
 import { useNavigate } from "react-router-dom";
+import { GoogleLogin } from "@react-oauth/google";
+import { jwtDecode } from "jwt-decode";
+// import * as jwt_decode from "jwt-decode";
 
 const LoginPage = ({
   active,
@@ -9,6 +12,8 @@ const LoginPage = ({
   setPassword,
 }) => {
   const navigate = useNavigate();
+
+  //console.log("jwt_decode: ", jwt_decode); // Check what is being exported
 
   async function submitHandler(e) {
     e.preventDefault();
@@ -50,42 +55,54 @@ const LoginPage = ({
   }
 
   return (
-    <form>
-      <div className="option-container">
-        <h3
-          className={active === "signin" ? "active" : ""}
-          onClick={() => handleClick("signin")}
-        >
-          SignIn
-        </h3>
-        <h3
-          className={active === "signup" ? "active" : ""}
-          onClick={() => handleClick("signup")}
-        >
-          SignUp
-        </h3>
-      </div>
-      <h1>Welcome Back!</h1>
+    <>
+      <form>
+        <div className="option-container">
+          <h3
+            className={active === "signin" ? "active" : ""}
+            onClick={() => handleClick("signin")}
+          >
+            SignIn
+          </h3>
+          <h3
+            className={active === "signup" ? "active" : ""}
+            onClick={() => handleClick("signup")}
+          >
+            SignUp
+          </h3>
+        </div>
+        <h1>Welcome Back!</h1>
 
-      <input
-        value={username}
-        required
-        onChange={(e) => setUsername(e.target.value)}
-        placeholder="Username"
-        type="text"
-      />
+        <input
+          value={username}
+          required
+          onChange={(e) => setUsername(e.target.value)}
+          placeholder="Username"
+          type="text"
+        />
 
-      <input
-        value={password}
-        required
-        onChange={(e) => setPassword(e.target.value)}
-        placeholder="Password"
-        type="password"
-      />
+        <input
+          value={password}
+          required
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="Password"
+          type="password"
+        />
 
-      <button onClick={submitHandler}>Sign In</button>
-      <a href="">Forgot Password</a>
-    </form>
+        <button onClick={submitHandler}>Sign In</button>
+        <a href="">Forgot Password</a>
+
+        <GoogleLogin
+          onSuccess={(credentialResponse) => {
+            console.log("credentialResponse: ", credentialResponse);
+            console.log(jwtDecode(credentialResponse.credential));
+          }}
+          onError={() => {
+            console.log("Login failed!!");
+          }}
+        />
+      </form>
+    </>
   );
 };
 
