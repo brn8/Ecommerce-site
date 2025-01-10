@@ -321,6 +321,7 @@ td:nth-child(1) {
   background-color: #def4fd;
 }
 
+/*Account Page*/
 .account {
   display: flex;
   justify-content: space-between;
@@ -347,6 +348,7 @@ td:nth-child(1) {
 
 .address-form {
   all: revert;
+  padding-right: 50px;
 }
 
 .orders {
