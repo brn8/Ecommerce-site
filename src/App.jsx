@@ -10,6 +10,7 @@ import LoginPage from "./Components/LoginPage";
 import NavBar from "./Components/NavBar";
 import Shipping from "./Components/Shipping";
 import OrderSummary from "./Components/OrderSummary";
+import SearchProduct from "./Components/SearchProduct";
 
 function App() {
   const [firstName, setFirstName] = useState("");
@@ -32,6 +33,8 @@ function App() {
   const [numItemCart, setNumItemCart] = useState([]);
   const [productPrice, setProductPrice] = useState([]);
   const [grandTotal, setGrandtotal] = useState(null);
+  const [products, setProducts] = useState([]);
+  const [search, setSearch] = useState("");
 
   const fetchOrderItem = async () => {
     console.log("token: ", token);
@@ -91,6 +94,10 @@ function App() {
                 setToken={setToken}
                 numItemCart={numItemCart}
                 setNumItemCart={setNumItemCart}
+                setProducts={setProducts}
+                products={products}
+                search={search}
+                setSearch={setSearch}
               />
             </>
           }
@@ -117,6 +124,7 @@ function App() {
               setProductPrice={setProductPrice}
               grandTotal={grandTotal}
               setGrandtotal={setGrandtotal}
+              setSearch={setSearch}
             />
           }
         />
@@ -178,6 +186,20 @@ function App() {
         />
 
         <Route
+          path="/searchItem"
+          element={
+            <SearchProduct
+              token={token}
+              setToken={setToken}
+              numItemCart={numItemCart}
+              search={search}
+              setSearch={setSearch}
+              products={products}
+              setNumItemCart={setNumItemCart}
+            />
+          }
+        />
+        <Route
           path="/orderSummary"
           element={
             <OrderSummary
@@ -195,6 +217,7 @@ function App() {
               zipCode={zipCode}
               country={country}
               setNumItemCart={setNumItemCart}
+              setSearch={setSearch}
             />
           }
         />
@@ -225,6 +248,7 @@ function App() {
               state={state}
               zipCode={zipCode}
               country={country}
+              setSearch={setSearch}
             />
           }
         />

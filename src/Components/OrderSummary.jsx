@@ -16,6 +16,7 @@ const OrderSummary = ({
   state,
   zipCode,
   country,
+  setSearch,
 }) => {
   const [userData, setUserData] = useState([]);
   const navigate = useNavigate();
@@ -26,7 +27,12 @@ const OrderSummary = ({
         navigate("/cart")
       ) : (
         <>
-          <NavBar token={token} setToken={setToken} numItemCart={numItemCart} />
+          <NavBar
+            token={token}
+            setToken={setToken}
+            numItemCart={numItemCart}
+            setSearch={setSearch}
+          />
           <h2 style={{ textAlign: "center" }}>Order Summary</h2>
           <div style={{ marginLeft: "20px" }}>
             <span>
@@ -87,11 +93,12 @@ const OrderSummary = ({
               </tbody>
             </table>
           </div>
-          <div className="cartPageOrder" style={{ border: "none" }}>
+          <div className="summaryPageOrder" style={{ border: "none" }}>
             <button onClick={() => navigate("/shipping")}>Previous</button>
             <button
               onClick={() => {
                 alert("Order has been Placed!");
+                setSearch("");
                 navigate("/");
               }}
             >

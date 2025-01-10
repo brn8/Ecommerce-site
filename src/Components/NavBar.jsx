@@ -7,12 +7,14 @@ const NavBar = ({
   setActive,
   cartItem,
   token,
+  setSearch,
   setToken,
 }) => {
   const [showDropDown, setShowDropDown] = useState(false);
 
   const navigate = useNavigate();
   const handleRoute = () => {
+    setSearch("");
     navigate("/");
   };
   function handleClick(option) {
@@ -53,10 +55,15 @@ const NavBar = ({
             <button>My Account</button>
             {showDropDown && (
               <div className="account-dropdown">
-                <a onClick={() => handleClick("signup")}>SignUp</a>
-
-                <a onClick={() => handleClick("signin")}>SignIn</a>
-                <a onClick={() => handleClick("logout")}>Logout</a>
+                {token ? (
+                  <a onClick={() => handleClick("logout")}>Logout</a>
+                ) : (
+                  <>
+                    {" "}
+                    <a onClick={() => handleClick("signup")}>SignUp</a>
+                    <a onClick={() => handleClick("signin")}>SignIn</a>
+                  </>
+                )}
               </div>
             )}
           </div>

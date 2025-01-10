@@ -27,6 +27,7 @@ const Shipping = ({
   state,
   zipCode,
   country,
+  setSearch,
 }) => {
   const [disableInformation, setdisableInformation] = useState(true);
   const [disableAddress, setdisableAddress] = useState(true);
@@ -219,6 +220,7 @@ const Shipping = ({
         token={token}
         setToken={setToken}
         numItemCart={numItemCart}
+        setSearch={setSearch}
       />
       <div className="shipping-all-container">
         <h3>Your Information</h3>

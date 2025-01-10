@@ -13,14 +13,17 @@ const Product = ({
   setToken,
   numItemCart,
   setNumItemCart,
+  products,
+  setProducts,
+  search,
+  setSearch,
 }) => {
   const navigate = useNavigate();
-  const [products, setProducts] = useState([]);
+  //const [products, setProducts] = useState([]);
   const [filterProduct, setFilterProduct] = useState([]);
+  const [searchWithoutClick, setSearchWithoutClick] = useState("");
 
   console.log("product token: ", token);
-
-  const [search, setSearch] = useState("");
 
   const fetchOrderItem = async () => {
     console.log("token: ", token);
@@ -79,6 +82,7 @@ const Product = ({
 
   const searchItem = (e) => {
     setSearch(e.target.value);
+    setSearchWithoutClick(e.target.value);
     // setFilterProduct(
     //   products.filter((product) =>
     //     product.name.toLowerCase().includes(e.target.value.toLowerCase())
@@ -138,41 +142,56 @@ const Product = ({
         setToken={setToken}
         numItemCart={numItemCart}
       />
-
-      <div className="search-container">
-        <input
-          style={{
-            width: "400px",
-            borderRadius: "10px",
-            padding: "5px",
-            backgroundColor: "#def4fd",
-          }}
-          onChange={searchItem}
-          value={search}
-          placeholder="Search"
-        />
-        <br />
-      </div>
-      <div
-        className="search-filter"
-        style={{ display: search ? "block" : "none" }}
+      <form
+        style={{ background: "none", marginTop: "-30px" }}
+        onSubmit={(e) => {
+          e.preventDefault();
+          if (searchWithoutClick.length > 0) {
+            setSearch(searchWithoutClick);
+            navigate("/searchItem");
+          }
+        }}
       >
-        {products
-          .filter((product) =>
-            product.name.toLowerCase().includes(search.toLowerCase())
-          )
-          .map((product) => {
-            return (
-              <li
-                key={product.id}
-                style={{ listStyleType: "none", cursor: "pointer" }}
-                onClick={() => filterBySearch(product.name)}
-              >
-                {product.name}
-              </li>
-            );
-          })}
-      </div>
+        <div className="search-container">
+          <input
+            style={{
+              width: "400px",
+              borderRadius: "10px",
+              padding: "5px",
+              backgroundColor: "#def4fd",
+            }}
+            onChange={searchItem}
+            value={search}
+            placeholder="Search"
+          />
+
+          <br />
+        </div>
+        <div
+          className="search-filter"
+          style={{ display: search ? "block" : "none" }}
+        >
+          {products
+            .filter((product) =>
+              product.name.toLowerCase().includes(search.toLowerCase())
+            )
+            .map((product) => {
+              return (
+                <li
+                  key={product.id}
+                  style={{ listStyleType: "none", cursor: "pointer" }}
+                  onClick={() => {
+                    setSearch(product.name);
+                    navigate("/searchItem");
+                  }}
+                >
+                  {product.name}
+                </li>
+              );
+            })}
+        </div>
+      </form>
+
       {/* <div className="navbar-3">
         <button>Ads</button>
         <button>Deals</button>

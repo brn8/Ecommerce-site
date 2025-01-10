@@ -127,6 +127,8 @@ form button {
   gap: 20px;
   cursor: pointer;
   width: 100%; /* Ensure this section does not shrink */
+  z-index: 1;
+  margin-top: -30px;
 }
 .itemByCategory img {
   width: 300px;
@@ -220,6 +222,19 @@ td:nth-child(1) {
   padding-right: 10px;
 }
 
+.summaryPageOrder {
+  border: 2px solid black;
+  padding: 10px;
+  height: fit-content;
+  box-sizing: border-box;
+  text-align: center;
+}
+.summaryPageOrder button {
+  width: 200px;
+  background-color: #def4fd;
+  margin-right: 10px;
+}
+
 .cartEmptyFlex {
   display: flex;
   flex-direction: column;
@@ -242,9 +257,8 @@ td:nth-child(1) {
   text-align: center;
 }
 .cartPageOrder button {
-  width: 300px;
+  width: 320px;
   background-color: #def4fd;
-  margin-right: 20px;
 }
 
 textarea {
@@ -341,12 +355,16 @@ textarea {
 .search-filter {
   margin-left: auto;
   margin-right: auto;
-  width: 400px;
-  height: 100px;
+  width: 405px;
+  height: 150px;
   overflow-y: auto;
+  position: absolute;
+  z-index: 10;
+  top: 191px;
 }
 .search-filter li {
-  background-color: white;
+  background-color: #def4fd;
+  padding: 10px;
   height: 30px;
 }
 

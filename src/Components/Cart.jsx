@@ -22,6 +22,7 @@ const Cart = ({
   setProductPrice,
   grandTotal,
   setGrandtotal,
+  setSearch,
 }) => {
   const navigate = useNavigate();
   // let products = [];
@@ -124,6 +125,7 @@ const Cart = ({
         token={token}
         setToken={setToken}
         numItemCart={numItemCart}
+        setSearch={setSearch}
       />
       {token ? (
         <>
@@ -233,7 +235,26 @@ const Cart = ({
           )}
         </>
       ) : (
-        <h1>Your Are not LoggedIn!</h1>
+        <>
+          <h1
+            style={{
+              textAlign: "center",
+              fontFamily:
+                " Lucida Sans, Lucida Sans Regular, Lucida Grande,Lucida Sans Unicode, Geneva, Verdana, sans-serif",
+            }}
+          >
+            You are not LoggedIn!{" "}
+          </h1>
+          <p
+            style={{
+              textAlign: "center",
+              fontFamily:
+                " Lucida Sans, Lucida Sans Regular, Lucida Grande,Lucida Sans Unicode, Geneva, Verdana, sans-serif",
+            }}
+          >
+            Please Login to view your cart
+          </p>
+        </>
       )}
       {/* <div className="cartPageItems">
         <div>
