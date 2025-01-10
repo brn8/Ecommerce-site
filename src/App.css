@@ -127,6 +127,8 @@ form button {
   gap: 20px;
   cursor: pointer;
   width: 100%; /* Ensure this section does not shrink */
+  z-index: 1;
+  margin-top: -30px;
 }
 .itemByCategory img {
   width: 300px;
@@ -144,23 +146,6 @@ form button {
   display: flex;
   flex-direction: row;
   justify-content: space-around;
-}
-
-.cartPageOrder {
-  border: 2px solid black;
-  padding: 10px;
-  height: fit-content;
-  box-sizing: border-box;
-  text-align: center;
-}
-.cartPageOrder button {
-  width: 300px;
-  background-color: #def4fd;
-}
-
-textarea {
-  resize: none;
-  padding: 10px;
 }
 .cartPageFlex th:nth-child(1) {
   width: 600px;
@@ -194,6 +179,93 @@ td:nth-child(1) {
   text-align: left;
   padding-right: 10px;
 }
+
+.summaryPageFlex {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+.summaryPageFlex th:nth-child(1) {
+  width: 600px;
+  text-align: left;
+}
+.summaryPageFlex th:nth-child(2),
+td:nth-child(1) {
+  width: 200px;
+  text-align: center;
+}
+.summaryFlex th {
+  border-bottom: 1px solid black;
+}
+.summaryPageFlex td {
+  border-bottom: 1px solid black;
+}
+.summaryPageFlex td:nth-child(2) {
+  text-align: center;
+}
+.summaryPageItem img {
+  width: 100px;
+  height: 100px;
+}
+
+.summaryPageItem {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  padding: 10px;
+}
+.summaryPageInfomation {
+  display: flex;
+  flex-direction: column;
+  justify-content: left;
+  text-align: left;
+  padding-right: 10px;
+}
+
+.summaryPageOrder {
+  border: 2px solid black;
+  padding: 10px;
+  height: fit-content;
+  box-sizing: border-box;
+  text-align: center;
+}
+.summaryPageOrder button {
+  width: 200px;
+  background-color: #def4fd;
+  margin-right: 10px;
+}
+
+.cartEmptyFlex {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.cartEmptyFlex button {
+  margin-top: 20px;
+}
+.cartEmptyFlex span {
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+}
+
+.cartPageOrder {
+  border: 2px solid black;
+  padding: 10px;
+  height: fit-content;
+  box-sizing: border-box;
+  text-align: center;
+}
+.cartPageOrder button {
+  width: 320px;
+  background-color: #def4fd;
+}
+
+textarea {
+  resize: none;
+  padding: 10px;
+}
+
 .checkout {
   display: flex;
   flex-direction: column;
@@ -283,12 +355,16 @@ td:nth-child(1) {
 .search-filter {
   margin-left: auto;
   margin-right: auto;
-  width: 400px;
-  height: 100px;
+  width: 405px;
+  height: 150px;
   overflow-y: auto;
+  position: absolute;
+  z-index: 10;
+  top: 191px;
 }
 .search-filter li {
-  background-color: white;
+  background-color: #def4fd;
+  padding: 10px;
   height: 30px;
 }
 
