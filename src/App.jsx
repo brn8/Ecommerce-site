@@ -182,7 +182,17 @@ function App() {
         />
         <Route
           path="/account"
-          element={<Account token={token} setToken={setToken} />}
+          element={
+            <div>
+              <Account
+                token={token}
+                setToken={setToken}
+                numItemCart={numItemCart}
+                setActive={setActive}
+                setSearch={setSearch}
+              />
+            </div>
+          }
         />
 
         <Route
