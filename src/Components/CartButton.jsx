@@ -11,7 +11,7 @@ const CartButton = ({ cartItem = [], numItemCart = [] }) => {
   return (
     <>
       <button onClick={addToCartItem}>
-        <i class="bi bi-cart" style={{ fontSize: "30px" }}></i>
+        <i className="bi bi-cart" style={{ fontSize: "30px" }}></i>
         {cartItem.length > 0 ? (
           <span
             style={{

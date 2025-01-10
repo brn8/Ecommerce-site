@@ -13,15 +13,17 @@ const Product = ({
   setToken,
   numItemCart,
   setNumItemCart,
+  products,
+  setProducts,
+  search,
+  setSearch,
 }) => {
   const navigate = useNavigate();
-  const [products, setProducts] = useState([]);
+  //const [products, setProducts] = useState([]);
   const [filterProduct, setFilterProduct] = useState([]);
+  const [searchWithoutClick, setSearchWithoutClick] = useState("");
 
   console.log("product token: ", token);
-
-  const [search, setSearch] = useState("");
-  const [catergory, setCategoty] = useState(true);
 
   const fetchOrderItem = async () => {
     console.log("token: ", token);
@@ -80,13 +82,12 @@ const Product = ({
 
   const searchItem = (e) => {
     setSearch(e.target.value);
-    setFilterProduct(
-      products.filter((product) =>
-        product.name.toLowerCase().includes(e.target.value.toLowerCase())
-      )
-    );
-
-    setCategoty(false);
+    setSearchWithoutClick(e.target.value);
+    // setFilterProduct(
+    //   products.filter((product) =>
+    //     product.name.toLowerCase().includes(e.target.value.toLowerCase())
+    //   )
+    // );
   };
   const addItemToCart = async (product) => {
     console.log("Caret Item: ", cartItem);
@@ -141,61 +142,74 @@ const Product = ({
         setToken={setToken}
         numItemCart={numItemCart}
       />
-
-      <div className="search-container">
-        <input
-          style={{
-            width: "400px",
-            borderRadius: "10px",
-            padding: "5px",
-            backgroundColor: "#def4fd",
-          }}
-          onChange={searchItem}
-          value={search}
-          placeholder="Search"
-        />
-        <br />
-      </div>
-      <div
-        className="search-filter"
-        style={{ display: search ? "block" : "none" }}
+      <form
+        style={{ background: "none", marginTop: "-30px" }}
+        onSubmit={(e) => {
+          e.preventDefault();
+          if (searchWithoutClick.length > 0) {
+            setSearch(searchWithoutClick);
+            navigate("/searchItem");
+          }
+        }}
       >
-        {products
-          .filter((product) =>
-            product.name.toLowerCase().includes(search.toLowerCase())
-          )
-          .map((product) => {
-            return (
-              <li
-                key={product.id}
-                style={{ listStyleType: "none", cursor: "pointer" }}
-                onClick={() => filterBySearch(product.name)}
-              >
-                {product.name}
-              </li>
-            );
-          })}
-      </div>
+        <div className="search-container">
+          <input
+            style={{
+              width: "400px",
+              borderRadius: "10px",
+              padding: "5px",
+              backgroundColor: "#def4fd",
+            }}
+            onChange={searchItem}
+            value={search}
+            placeholder="Search"
+          />
+
+          <br />
+        </div>
+        <div
+          className="search-filter"
+          style={{ display: search ? "block" : "none" }}
+        >
+          {products
+            .filter((product) =>
+              product.name.toLowerCase().includes(search.toLowerCase())
+            )
+            .map((product) => {
+              return (
+                <li
+                  key={product.id}
+                  style={{ listStyleType: "none", cursor: "pointer" }}
+                  onClick={() => {
+                    setSearch(product.name);
+                    navigate("/searchItem");
+                  }}
+                >
+                  {product.name}
+                </li>
+              );
+            })}
+        </div>
+      </form>
+
       {/* <div className="navbar-3">
         <button>Ads</button>
         <button>Deals</button>
         <button>Anything about the website</button>
         <button>Coming up next...</button>
       </div> */}
-      {catergory ? (
-        <div className="itemByCategory">
-          <button onClick={filterElectorics}>
-            <img src="https://pricenmore.com/wp-content/uploads/2019/03/PRICEnMORE-Banner-All-Electronics-Gadgets-price-1170x500.jpg" />
-            <h3>Electronics</h3>
-          </button>
-          <button onClick={filterOfficeSupplies}>
-            <img src="https://media.istockphoto.com/id/136156615/photo/set-of-stationery-items-on-white-background.jpg?s=612x612&w=0&k=20&c=_VUSxD07WzZcj7S39Thvj1SsYBJby2yl6vdCNhkqBck=" />
-            <h3>Office Supply</h3>
-          </button>
-        </div>
-      ) : (
-        ""
-      )}
+
+      <div className="itemByCategory">
+        <button onClick={filterElectorics}>
+          <img src="https://pricenmore.com/wp-content/uploads/2019/03/PRICEnMORE-Banner-All-Electronics-Gadgets-price-1170x500.jpg" />
+          <h3>Electronics</h3>
+        </button>
+        <button onClick={filterOfficeSupplies}>
+          <img src="https://media.istockphoto.com/id/136156615/photo/set-of-stationery-items-on-white-background.jpg?s=612x612&w=0&k=20&c=_VUSxD07WzZcj7S39Thvj1SsYBJby2yl6vdCNhkqBck=" />
+          <h3>Office Supply</h3>
+        </button>
+      </div>
+
       <div className="products">
         {filterProduct.map((product) => {
           return (
