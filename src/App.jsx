@@ -188,6 +188,14 @@ function App() {
                 token={token}
                 setToken={setToken}
                 numItemCart={numItemCart}
+                setFirstName={setFirstName}
+                setLastName={setLastName}
+                setEmail={setEmail}
+                setContact={setContact}
+                firstName={firstName}
+                lastName={lastName}
+                email={email}
+                contact={contact}
                 setActive={setActive}
                 setSearch={setSearch}
               />
