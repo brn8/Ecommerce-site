@@ -189,6 +189,7 @@ function App() {
                 setToken={setToken}
                 numItemCart={numItemCart}
                 setActive={setActive}
+                setSearch={setSearch}
               />
             </div>
           }

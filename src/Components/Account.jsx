@@ -6,7 +6,7 @@ import NavBar from "./NavBar";
 
 const APIURL = "http://localhost:3000/api/";
 
-const Account = ({ token, setToken, numItemCart, setActive }) => {
+const Account = ({ token, setToken, numItemCart, setActive, setSearch }) => {
   //---------placeholders until backend ready
   const filler_orders = [
     {
@@ -135,20 +135,11 @@ const Account = ({ token, setToken, numItemCart, setActive }) => {
         setToken={setToken}
         numItemCart={numItemCart}
         setActive={setActive}
+        setSearch={setSearch}
       />
       <h1 className="account-headers" style={{ paddingLeft: "50px" }}>
         My Account
       </h1>
-      <p
-        onClick={() => {
-          navigate("/");
-          //   log out user (remove token) here
-        }}
-        className="account-links"
-        style={{ paddingLeft: "50px" }}
-      >
-        {`Log Out >`}
-      </p>
       <div className="account">
         <div className="account-orders">
           <h2 className="account-headers">Order History</h2>

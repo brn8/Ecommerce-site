@@ -58,7 +58,10 @@ const NavBar = ({
             {showDropDown && (
               <div className="account-dropdown">
                 {token ? (
-                  <a onClick={() => handleClick("logout")}>Logout</a>
+                  <>
+                    <a onClick={() => handleClick("account")}>Details</a>
+                    <a onClick={() => handleClick("logout")}>Logout</a>
+                  </>
                 ) : (
                   <>
                     {" "}
@@ -66,11 +69,6 @@ const NavBar = ({
                     <a onClick={() => handleClick("signin")}>SignIn</a>
                   </>
                 )}
-              </div>
-            )}
-            {showDropDown && token && (
-              <div className="account-dropdown">
-                <a onClick={() => handleClick("account")}>Details</a>
               </div>
             )}
           </div>
