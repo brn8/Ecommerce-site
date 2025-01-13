@@ -6,21 +6,7 @@ import NavBar from "./NavBar";
 
 const APIURL = "http://localhost:3000/api/";
 
-const Account = ({
-  token,
-  setToken,
-  numItemCart,
-  setFirstName,
-  setLastName,
-  setEmail,
-  setContact,
-  firstName,
-  lastName,
-  email,
-  contact,
-  setActive,
-  setSearch,
-}) => {
+const Account = ({ token, setToken, numItemCart, setActive, setSearch }) => {
   //---------placeholders until backend ready
   const filler_orders = [
     {
@@ -39,13 +25,16 @@ const Account = ({
     },
   ];
 
-  // --------------end of placeholders
-
   // --- states containing user account details
   const [orders, setOrders] = useState(filler_orders);
   const [addresses, setAddresses] = useState([]);
 
   //--- states for info form
+  const [info, setInfo] = useState(null);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [contact, setContact] = useState("");
 
   //--- states for address form
   const [street, setStreet] = useState("");
@@ -125,7 +114,7 @@ const Account = ({
     }
   };
 
-  //-- handleAddressFormSubmit form submission
+  //-- handles for form submission
   function handleAddressFormSubmit(e) {
     e.preventDefault();
     const newAddress = {
@@ -143,6 +132,12 @@ const Account = ({
   function handleInfoFormSubmit(e) {
     e.preventDefault();
     editInfo();
+    setInfo({
+      firstName: firstName,
+      lastName: lastName,
+      contact: contact,
+      email: email,
+    });
     setShowForm(false);
   }
 
@@ -154,6 +149,12 @@ const Account = ({
       setFirstName(userInfo.firstName);
       setLastName(userInfo.lastName);
       setContact(userInfo.contact);
+      setInfo({
+        firstName: userInfo.firstName,
+        lastName: userInfo.lastName,
+        contact: userInfo.contact,
+        email: userInfo.email,
+      });
       const userAddress = {
         street: userInfo.address.streetAddress,
         city: userInfo.address.city,
@@ -217,11 +218,15 @@ const Account = ({
         <div className="account-details">
           <div>
             <h2 className="account-headers">Account Details</h2>
-            {email}
-            <br />
-            {`${firstName} ${lastName}`}
-            <br />
-            {contact}
+            {info && (
+              <>
+                {info.email}
+                <br />
+                {`${info.firstName} ${info.lastName}`}
+                <br />
+                {info.contact}
+              </>
+            )}
             <div
               onClick={() => {
                 if (showForm) {
@@ -234,7 +239,6 @@ const Account = ({
             >
               {`Edit Info`}
             </div>
-
             {addresses.length > 0 ? (
               <address>
                 <br />
@@ -247,7 +251,6 @@ const Account = ({
             ) : (
               <p>No Address Saved</p>
             )}
-
             {addresses.length > 1 && (
               <div
                 className="account-links"
@@ -273,7 +276,6 @@ const Account = ({
                   </>
                 );
               })}
-
             <div
               onClick={() => {
                 if (showAddressForm) {
