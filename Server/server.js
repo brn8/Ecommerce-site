@@ -228,6 +228,66 @@ app.post("/api/login/user", async (req, res, next) => {
 });
 
 /*
+  -For the users logging in with google auth
+*/
+app.post("/api/googleauth/login/user", async (req, res, next) => {
+  try {
+    const user_data = req.body;
+    console.log("user info: ", user_data);
+    const username = user_data.username;
+    const firstName = user_data.firstName;
+    const lastName = user_data.lastName;
+    const email = user_data.email;
+    const email_verified = user_data.emailVerified;
+
+    if (email_verified && username && firstName && lastName && email) {
+      const findUser = await prisma.users.findMany({ where: { username } });
+      console.log("findUser: ", findUser);
+
+      if (!findUser.length) {
+        const createUser = await prisma.users.create({
+          data: {
+            firstName: firstName,
+            lastName: lastName,
+            username: username,
+            email: email,
+            contact: "",
+            password: "",
+          },
+        });
+
+        const findRecentCreateUser = await prisma.users.findMany({
+          where: { username },
+        });
+        console.log("findRecentCreateUser: ", findRecentCreateUser);
+
+        const id = findRecentCreateUser[0].id;
+        const token = await jwt.sign(id, JWT);
+        console.log("token: ", token);
+
+        return res.json({
+          message: `Congratulations!! You are loggedIn successfully!`,
+          data: createUser,
+          token: token,
+        });
+      } else {
+        const id = findUser[0].id;
+        const token = await jwt.sign(id, JWT);
+        console.log("token: ", token);
+        return res.json({
+          message: `Congratulations!! You are loggedIn successfully!`,
+          token: token,
+        });
+      }
+    } else {
+      return res.status(401).json({ message: `The user is not authorized!` });
+    }
+  } catch (ex) {
+    next(ex);
+  }
+});
+
+/*
 -isLoggedIn functioin to check whether a user is authenticated by verifying the provided token
 -jwt.verify(): verify the token using the same key, that is used to sign a token
 -Once the user is verified, retriving the user from db using the id,

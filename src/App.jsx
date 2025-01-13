@@ -178,6 +178,10 @@ function App() {
                 password={password}
                 setUsername={setUsername}
                 setPassword={setPassword}
+                setFirstName={setFirstName}
+                setLastName={setLastName}
+                setEmail={setEmail}
+                setContact={setContact}
               />
             </div>
           }

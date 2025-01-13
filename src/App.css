@@ -16,6 +16,7 @@ body,
   align-items: center;
   background-color: white;
 }
+
 form {
   background-color: #b3e1f4;
   display: flex;
@@ -70,6 +71,9 @@ form button {
   margin-top: 10px;
   margin-bottom: 10px;
 }
+form a {
+  margin-bottom: 10px;
+}
 .nav-bar {
   top: 0%;
 }
@@ -79,7 +83,7 @@ form button {
   margin-bottom: 20px;
 }
 .custom-signin-page .nav-bar-2 {
-  margin-top: -30px;
+  margin-top: 20px;
   margin-bottom: 20px;
 }
 /*CSS for product page*/

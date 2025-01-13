@@ -10,10 +10,43 @@ const LoginPage = ({
   password,
   setUsername,
   setPassword,
+  setFirstName,
+  setLastName,
+  setEmail,
+  setContact,
 }) => {
   const navigate = useNavigate();
 
-  //console.log("jwt_decode: ", jwt_decode); // Check what is being exported
+  async function googleauthhandler(obj) {
+    console.log("first name: ", obj.firstName);
+    try {
+      const response = await fetch(
+        "http://localhost:3000/api/googleauth/login/user",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(obj),
+        }
+      );
+      const data = await response.json();
+      console.log("data after logging in: ", data);
+      if (data) {
+        alert(data.message);
+        if (data.token) {
+          sessionStorage.setItem("authToken", data.token);
+          setFirstName("");
+          setLastName("");
+          setEmail("");
+          setContact("");
+          navigate("/");
+        }
+      } else {
+        alert(data.message);
+      }
+    } catch (error) {
+      console.log("Error while signing in with google auth: ", error);
+    }
+  }
 
   async function submitHandler(e) {
     e.preventDefault();
@@ -93,9 +126,21 @@ const LoginPage = ({
         <a href="">Forgot Password</a>
 
         <GoogleLogin
+          className="google-login"
           onSuccess={(credentialResponse) => {
             console.log("credentialResponse: ", credentialResponse);
-            console.log(jwtDecode(credentialResponse.credential));
+            const userInfo = jwtDecode(credentialResponse.credential);
+            console.log(userInfo);
+            const userName = userInfo.email.split("@");
+            console.log("username: ", userName[0]);
+            const obj = {
+              firstName: userInfo.given_name,
+              lastName: userInfo.family_name,
+              email: userInfo.email,
+              username: userName[0],
+              emailVerified: userInfo.email_verified,
+            };
+            googleauthhandler(obj);
           }}
           onError={() => {
             console.log("Login failed!!");
