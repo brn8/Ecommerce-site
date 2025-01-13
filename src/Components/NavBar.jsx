@@ -23,6 +23,8 @@ const NavBar = ({
       navigate("/signup");
     } else if (option == "signin") {
       navigate("/login");
+    } else if (option == "account") {
+      navigate("/account");
     } else {
       sessionStorage.removeItem("authToken");
       setToken("");
@@ -56,7 +58,10 @@ const NavBar = ({
             {showDropDown && (
               <div className="account-dropdown">
                 {token ? (
-                  <a onClick={() => handleClick("logout")}>Logout</a>
+                  <>
+                    <a onClick={() => handleClick("account")}>Details</a>
+                    <a onClick={() => handleClick("logout")}>Logout</a>
+                  </>
                 ) : (
                   <>
                     {" "}

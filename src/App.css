@@ -397,6 +397,7 @@ textarea {
   background-color: #def4fd;
 }
 
+/*Account Page*/
 .account {
   display: flex;
   justify-content: space-between;
@@ -423,6 +424,7 @@ textarea {
 
 .address-form {
   all: revert;
+  padding-right: 50px;
 }
 
 .orders {
