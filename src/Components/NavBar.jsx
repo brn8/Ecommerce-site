@@ -9,6 +9,7 @@ const NavBar = ({
   token,
   setSearch,
   setToken,
+  isAdmin
 }) => {
   const [showDropDown, setShowDropDown] = useState(false);
 
@@ -46,6 +47,7 @@ const NavBar = ({
           onClick={handleRoute}
         />
         <div className="nav-bar-button">
+         {isAdmin?<button onClick={()=> navigate("/adminPortal")}>Admin Portal</button>:""} 
           <button>About Us</button>
           <button>Contact Us</button>
           <button>Category</button>

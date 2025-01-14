@@ -11,6 +11,7 @@ import NavBar from "./Components/NavBar";
 import Shipping from "./Components/Shipping";
 import OrderSummary from "./Components/OrderSummary";
 import SearchProduct from "./Components/SearchProduct";
+import AdminPortal from "./Components/AdminPortal";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { GoogleLogin } from "@react-oauth/google";
 
@@ -37,6 +38,7 @@ function App() {
   const [grandTotal, setGrandtotal] = useState(null);
   const [products, setProducts] = useState([]);
   const [search, setSearch] = useState("");
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const fetchOrderItem = async () => {
     console.log("token: ", token);
@@ -77,7 +79,25 @@ function App() {
     console.log("Total Cart Item: ", numItemCart);
     // fetchOrderItem();
   }, [cart]);
-
+  
+  useEffect(() => {
+    if (token) {
+      const checkRole = async()=>{
+        const response = await fetch("/api/address", {
+          method: "GET",
+          headers: {
+            authtoken: token,
+          },
+        });
+        const userData = await response.json();
+        setIsAdmin(userData.isAdmin);
+      }
+      checkRole();
+    }
+    else{
+      setIsAdmin(false);
+    }
+  }, [token]);
   return (
     <>
       <Routes>
@@ -100,6 +120,7 @@ function App() {
                 products={products}
                 search={search}
                 setSearch={setSearch}
+                isAdmin={isAdmin}
               />
             </>
           }
@@ -127,6 +148,7 @@ function App() {
               grandTotal={grandTotal}
               setGrandtotal={setGrandtotal}
               setSearch={setSearch}
+              isAdmin={isAdmin}
             />
           }
         />
@@ -140,6 +162,7 @@ function App() {
                 cartItem={cartItem}
                 token={token}
                 setToken={setToken}
+                isAdmin={isAdmin}
               />
               <SignupPage
                 active={active}
@@ -196,6 +219,7 @@ function App() {
                 numItemCart={numItemCart}
                 setActive={setActive}
                 setSearch={setSearch}
+                isAdmin={isAdmin}
               />
             </div>
           }
@@ -212,7 +236,21 @@ function App() {
               setSearch={setSearch}
               products={products}
               setNumItemCart={setNumItemCart}
+              isAdmin={isAdmin}
             />
+          }
+        />
+        <Route
+          path="/adminPortal"
+          element={
+            <AdminPortal   
+            token={token}
+            setToken={setToken}
+            numItemCart={numItemCart}
+            setActive={setActive}
+            setSearch={setSearch}
+            isAdmin={isAdmin}
+          />
           }
         />
         <Route
@@ -234,9 +272,11 @@ function App() {
               country={country}
               setNumItemCart={setNumItemCart}
               setSearch={setSearch}
+              isAdmin={isAdmin}
             />
           }
         />
+        
         <Route
           path="/shipping"
           element={
@@ -265,6 +305,7 @@ function App() {
               zipCode={zipCode}
               country={country}
               setSearch={setSearch}
+              isAdmin={isAdmin}
             />
           }
         />
