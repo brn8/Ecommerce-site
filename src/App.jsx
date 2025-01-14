@@ -12,6 +12,8 @@ import Shipping from "./Components/Shipping";
 import OrderSummary from "./Components/OrderSummary";
 import SearchProduct from "./Components/SearchProduct";
 import AdminPortal from "./Components/AdminPortal";
+import { GoogleOAuthProvider } from "@react-oauth/google";
+import { GoogleLogin } from "@react-oauth/google";
 
 function App() {
   const [firstName, setFirstName] = useState("");
@@ -199,6 +201,10 @@ function App() {
                 password={password}
                 setUsername={setUsername}
                 setPassword={setPassword}
+                setFirstName={setFirstName}
+                setLastName={setLastName}
+                setEmail={setEmail}
+                setContact={setContact}
               />
             </div>
           }
