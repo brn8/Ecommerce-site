@@ -428,6 +428,39 @@ app.patch("/api/payment", isLoggedIn, async (req, res, next) => {
   }
 });
 
+app.patch("/api/products/:id",  async (req, res, next) => {
+  try {
+    const {
+      name,
+      img,
+      description,
+      price,
+      quantity,
+      discountAmount,
+      productCategoryName,
+      modified_at,
+    } = req.body;
+    const id = +req.params.id;
+    const updateProduct = await prisma.product.update({
+      where: { id },
+      data: {
+        name,
+        img,
+        description,
+        price,
+        quantity,
+        discountAmount,
+        productCategoryName,
+        modified_at
+      }
+    });
+    console.log(updateProduct);
+    res.send(updateProduct);
+  } catch (err) {
+    next(err);
+  }
+});
+
 app.patch("/api/user", isLoggedIn, async (req, res, next) => {
   try {
     const userId = req.user.id;
@@ -599,6 +632,17 @@ app.get("/api/user/orders", isLoggedIn, async (req, res, next) => {
     next(error);
   }
 });
+
+app.delete("/api/products/:id", async(req, res, next)=>{
+  const id = +req.params.id;
+  try{
+    const deleteProduct = await prisma.product.delete({where:{id} }) 
+    res.status(204).send( deleteProduct);
+  }
+  catch(err){
+    next(err);
+  }
+})
 
 app.patch("/api/orderItem/:id", isLoggedIn, async (req, res, next) => {
   try {
