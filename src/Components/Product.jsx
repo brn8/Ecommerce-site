@@ -17,6 +17,7 @@ const Product = ({
   setProducts,
   search,
   setSearch,
+  isAdmin
 }) => {
   const navigate = useNavigate();
   //const [products, setProducts] = useState([]);
@@ -141,6 +142,7 @@ const Product = ({
         token={token}
         setToken={setToken}
         numItemCart={numItemCart}
+        isAdmin={isAdmin}
       />
       <form
         style={{ background: "none", marginTop: "-30px" }}

@@ -28,6 +28,7 @@ const Shipping = ({
   zipCode,
   country,
   setSearch,
+  isAdmin
 }) => {
   const [disableInformation, setdisableInformation] = useState(true);
   const [disableAddress, setdisableAddress] = useState(true);
@@ -221,6 +222,7 @@ const Shipping = ({
         setToken={setToken}
         numItemCart={numItemCart}
         setSearch={setSearch}
+        isAdmin={isAdmin}
       />
       <div className="shipping-all-container">
         <h3>Your Information</h3>
