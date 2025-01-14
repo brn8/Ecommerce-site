@@ -1,6 +1,7 @@
 -- CreateTable
 CREATE TABLE "Users" (
     "id" SERIAL NOT NULL,
+    "isAdmin" BOOLEAN NOT NULL DEFAULT false,
     "firstName" TEXT NOT NULL,
     "lastName" TEXT NOT NULL,
     "username" TEXT NOT NULL,

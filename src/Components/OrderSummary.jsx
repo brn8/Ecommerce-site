@@ -17,6 +17,7 @@ const OrderSummary = ({
   zipCode,
   country,
   setSearch,
+  isAdmin
 }) => {
   const [userData, setUserData] = useState([]);
   const navigate = useNavigate();
@@ -32,6 +33,7 @@ const OrderSummary = ({
             setToken={setToken}
             numItemCart={numItemCart}
             setSearch={setSearch}
+            isAdmin={isAdmin}
           />
           <h2 style={{ textAlign: "center" }}>Order Summary</h2>
           <div style={{ marginLeft: "20px" }}>

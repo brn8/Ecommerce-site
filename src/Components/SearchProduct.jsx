@@ -9,6 +9,7 @@ const SearchProduct = ({
   setToken,
   numItemCart,
   setNumItemCart,
+  isAdmin
 }) => {
   const fetchOrderItem = async () => {
     console.log("token: ", token);
@@ -61,7 +62,7 @@ const SearchProduct = ({
   const navigate = useNavigate();
   return (
     <>
-      <NavBar numItemCart={numItemCart} token={token} setToken={setToken} />
+      <NavBar numItemCart={numItemCart} token={token} setToken={setToken} isAdmin={isAdmin} />
       {products.filter((product) =>
         product.name.toLowerCase().includes(search.toLowerCase())
       ).length == 0 ? (
