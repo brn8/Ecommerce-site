@@ -6,7 +6,7 @@ import NavBar from "./NavBar";
 
 const APIURL = "http://localhost:3000/api/";
 
-const Account = ({ token, setToken, numItemCart, setActive, setSearch }) => {
+const Account = ({ token, setToken, numItemCart, setActive, setSearch ,isAdmin}) => {
   //---------placeholders until backend ready
   const filler_orders = [
     {
@@ -136,6 +136,7 @@ const Account = ({ token, setToken, numItemCart, setActive, setSearch }) => {
         numItemCart={numItemCart}
         setActive={setActive}
         setSearch={setSearch}
+        isAdmin={isAdmin}
       />
       <h1 className="account-headers" style={{ paddingLeft: "50px" }}>
         My Account
