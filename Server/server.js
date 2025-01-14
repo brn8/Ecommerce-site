@@ -725,4 +725,78 @@ app.delete("/api/orderItem/:id", isLoggedIn, async (req, res, next) => {
   }
 });
 
+app.post("/api/user/product/review/:id", isLoggedIn, async (req, res, next) => {
+  try {
+    const loggedin_User_Data = req.user;
+    const userId = loggedin_User_Data.id;
+    const data = req.body;
+    const productId = Number(req.params.id);
+    const comment = data.comment;
+    const rating = data.rating;
+
+    console.log("loggedin_User_Data: ", loggedin_User_Data);
+    console.log("data: ", data);
+
+    if (
+      Object.keys(loggedin_User_Data).length >= 0 &&
+      Object.keys(data).length >= 0 &&
+      userId
+    ) {
+      const createReview = await prisma.Review.create({
+        data: {
+          userId: userId,
+          productId: productId,
+          comment: comment,
+          review: rating,
+        },
+      });
+      return res.json({
+        message: `Thank you for your review!!`,
+        data: createReview,
+      });
+    } else {
+      return res.json({ message: `Please, provide necessary information!!` });
+    }
+  } catch (error) {
+    next(error);
+  }
+});
+
+app.get("/api/product/review", async (req, res, next) => {
+  try {
+    const getProductReview = await prisma.Review.findMany();
+    console.log("getProductReview: ", getProductReview);
+
+    const productRatings = getProductReview.reduce((acc, productReview) => {
+      let rating = Number(productReview.review);
+      let productId = productReview.productId;
+
+      if (!acc[productId]) {
+        acc[productId] = { sum: 0, count: 0 };
+      }
+      acc[productId].sum += rating;
+      acc[productId].count += 1;
+      return acc;
+    }, {});
+    console.log("productRatings: ", productRatings);
+
+    const avgProductRating = Object.entries(productRatings).map(
+      ([productId, { sum, count }]) => ({
+        productId: Number(productId),
+        average: sum / count,
+        count,
+      })
+    );
+
+    console.log("avgProductRating: ", avgProductRating);
+
+    return res.json({
+      productReview: getProductReview,
+      productAvgRating: avgProductRating,
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
 app.listen(PORT, () => console.log(`Listening to the port ${PORT}`));
