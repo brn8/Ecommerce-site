@@ -843,36 +843,4 @@ app.get("/api/product/review", async (req, res, next) => {
   }
 });
 
-// purchases
-app.post("/api/purchases", async (req, res, next) => {
-  try {
-    const { orders, address, totalPrice, created_at, userId } = req.body;
-    const response = await prisma.Purchases.create({
-      data: {
-        orders,
-        address,
-        totalPrice,
-        created_at,
-        userId,
-      },
-    });
-    res.status(201).send(response);
-  } catch (err) {
-    next(err);
-  }
-});
-
-app.get("/api/purchases", isLoggedIn, async (req, res, next) => {
-  try {
-    const loggedIn = req.user;
-    const userId = loggedIn.id;
-    const response = await prisma.Purchases.findMany({
-      where: { userId: userId },
-    });
-    res.status(200).send(response);
-  } catch (err) {
-    next(err);
-  }
-});
-
 app.listen(PORT, () => console.log(`Listening to the port ${PORT}`));
