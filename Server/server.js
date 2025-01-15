@@ -428,7 +428,7 @@ app.patch("/api/payment", isLoggedIn, async (req, res, next) => {
   }
 });
 
-app.patch("/api/products/:id",  async (req, res, next) => {
+app.patch("/api/products/:id", async (req, res, next) => {
   try {
     const {
       name,
@@ -451,8 +451,8 @@ app.patch("/api/products/:id",  async (req, res, next) => {
         quantity,
         discountAmount,
         productCategoryName,
-        modified_at
-      }
+        modified_at,
+      },
     });
     console.log(updateProduct);
     res.send(updateProduct);
@@ -493,6 +493,7 @@ app.get("/api/auth/me", isLoggedIn, async (req, res, next) => {
   }
 });
 
+/*Route to post a orderItem into orderItem table and a order into orders table for the currently loggedin user*/
 app.post("/api/user/additem", isLoggedIn, async (req, res, next) => {
   try {
     const loggedinUser = req.user;
@@ -564,6 +565,7 @@ const findProductPrice = async (id) => {
   return findProductId[0].price - findProductId[0].discountAmount;
 };
 
+/*Route to send currently loggedin user's products, quantities, prices and orderItemIds for the currently loggedin user*/
 app.get("/api/user/orders", isLoggedIn, async (req, res, next) => {
   try {
     let orderItemIds = [];
@@ -633,17 +635,17 @@ app.get("/api/user/orders", isLoggedIn, async (req, res, next) => {
   }
 });
 
-app.delete("/api/products/:id", async(req, res, next)=>{
+app.delete("/api/products/:id", async (req, res, next) => {
   const id = +req.params.id;
-  try{
-    const deleteProduct = await prisma.product.delete({where:{id} }) 
-    res.status(204).send( deleteProduct);
-  }
-  catch(err){
+  try {
+    const deleteProduct = await prisma.product.delete({ where: { id } });
+    res.status(204).send(deleteProduct);
+  } catch (err) {
     next(err);
   }
-})
+});
 
+/*Route to modify the quantities in orderItem table and modify the total price in orders table for the loggedin user */
 app.patch("/api/orderItem/:id", isLoggedIn, async (req, res, next) => {
   try {
     const user_data = req.user;
@@ -709,6 +711,7 @@ app.patch("/api/orderItem/:id", isLoggedIn, async (req, res, next) => {
   }
 });
 
+/*Route to delete loggedin user's order from orders table and order item from the orderItem table from the database*/
 app.delete("/api/orderItem/:id", isLoggedIn, async (req, res, next) => {
   try {
     const user_data = req.user;
@@ -769,6 +772,7 @@ app.delete("/api/orderItem/:id", isLoggedIn, async (req, res, next) => {
   }
 });
 
+/*Route to create a loggedin user's review for each product */
 app.post("/api/user/product/review/:id", isLoggedIn, async (req, res, next) => {
   try {
     const loggedin_User_Data = req.user;
@@ -806,6 +810,7 @@ app.post("/api/user/product/review/:id", isLoggedIn, async (req, res, next) => {
   }
 });
 
+/*Route for sending reatings and reviews for each products */
 app.get("/api/product/review", async (req, res, next) => {
   try {
     const getProductReview = await prisma.Review.findMany();
