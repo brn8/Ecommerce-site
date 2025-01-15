@@ -1,29 +1,11 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
 import Footer from "./Footer";
 import NavBar from "./NavBar";
 
 const APIURL = "http://localhost:3000/api/";
 
-const Account = ({ token, setToken, numItemCart, setActive, setSearch ,isAdmin}) => {
-  //---------placeholders until backend ready
-  const filler_orders = [
-    {
-      order: "#0001",
-      date: "Jan 3, 2025",
-      payment: "Paid",
-      status: "Shipped",
-      total: "$100.0",
-    },
-    {
-      order: "#0012",
-      date: "Jan 5, 2025",
-      payment: "Processing",
-      status: "Delivered",
-      total: "$13.25",
-    },
-  ];
+const Account = ({ token, setToken, numItemCart, active, setActive, setSearch ,isAdmin}) => {
 
   // --- states containing user account details
   const [orders, setOrders] = useState(null);
@@ -50,7 +32,7 @@ const Account = ({ token, setToken, numItemCart, setActive, setSearch ,isAdmin})
 
   //-- API Calls
   const fetchUser = async () => {
-    try {
+    if(token){try {
       const response = await fetch("/api/address", {
         method: "GET",
         headers: {
@@ -61,11 +43,11 @@ const Account = ({ token, setToken, numItemCart, setActive, setSearch ,isAdmin})
       return userData;
     } catch (error) {
       console.error(error);
-    }
+    }}
   };
 
   const fetchOrders = async () => {
-    try {
+   if(token){ try {
       const response = await fetch("/api/purchases", {
         method: "GET",
         headers: {
@@ -77,7 +59,7 @@ const Account = ({ token, setToken, numItemCart, setActive, setSearch ,isAdmin})
       return userData;
     } catch (error) {
       console.error(error);
-    }
+    }}
   };
 
   const editAddress = async () => {
@@ -188,8 +170,8 @@ const Account = ({ token, setToken, numItemCart, setActive, setSearch ,isAdmin})
       }
 
       const response = await fetchOrders();
-      setOrders(response);
-      console.log(orders);
+      await setOrders(response);
+
     }
     getUser();
   }, [token]);
@@ -200,6 +182,7 @@ const Account = ({ token, setToken, numItemCart, setActive, setSearch ,isAdmin})
         token={token}
         setToken={setToken}
         numItemCart={numItemCart}
+        active={active}
         setActive={setActive}
         setSearch={setSearch}
         isAdmin={isAdmin}
@@ -227,7 +210,7 @@ const Account = ({ token, setToken, numItemCart, setActive, setSearch ,isAdmin})
                   <tbody>
                     <tr key={key}>
                       {/*make this a link/navigate to specific order page*/}
-                      <td>#{val.id}</td>
+                      <td>#{val.id.toString().padStart(4,"0")}</td>
                       <td>{val.created_at.slice(0, 10)}</td>
                       <td>{val.status}</td>
                       <td>${parseFloat(val.totalPrice).toFixed(2)}</td>
