@@ -19,12 +19,14 @@ const Product = ({
   search,
   setSearch,
   isAdmin,
+  productRating,
+  setProductRating,
 }) => {
   const navigate = useNavigate();
   //const [products, setProducts] = useState([]);
   const [filterProduct, setFilterProduct] = useState([]);
   const [searchWithoutClick, setSearchWithoutClick] = useState("");
-  const [productRating, setProductRating] = useState([]);
+  // const [productRating, setProductRating] = useState([]);
 
   console.log("product token: ", token);
 

@@ -185,6 +185,7 @@ td:nth-child(1) {
   flex-direction: row;
   gap: 10px;
   padding: 10px;
+  /* background-color: #87c5ea; */
 }
 .cartPageInfomation {
   display: flex;
@@ -192,8 +193,18 @@ td:nth-child(1) {
   justify-content: left;
   text-align: left;
   padding-right: 10px;
+  /* background-color: #def4fd; */
 }
-
+.cartPageItem .cartPageInfomation .product-name {
+  margin-bottom: 0;
+}
+.cartPageItem .cartPageInfomation .product-rating {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  text-decoration: underline;
+  margin: 0;
+}
 .summaryPageFlex {
   display: flex;
   flex-direction: row;
