@@ -112,11 +112,21 @@ form a {
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
+  /* background-color: #87c5ea; */
 }
 .individulProduct button {
   background-color: #def4fd;
   color: black;
   margin-bottom: 0px;
+}
+.individulProduct .product-rating {
+  color: blueviolet;
+  display: flex;
+  /* justify-content: center; */
+  align-items: center;
+  gap: 5px;
+  text-decoration: underline;
+  margin: 0;
 }
 .products {
   display: flex;

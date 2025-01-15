@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import NavBar from "./NavBar";
 import Footer from "./Footer";
+import ReactStars from "react-rating-stars-component";
 
 const Product = ({
   active,
@@ -17,12 +18,13 @@ const Product = ({
   setProducts,
   search,
   setSearch,
-  isAdmin
+  isAdmin,
 }) => {
   const navigate = useNavigate();
   //const [products, setProducts] = useState([]);
   const [filterProduct, setFilterProduct] = useState([]);
   const [searchWithoutClick, setSearchWithoutClick] = useState("");
+  const [productRating, setProductRating] = useState([]);
 
   console.log("product token: ", token);
 
@@ -122,15 +124,28 @@ const Product = ({
       alert("Please Login to add item into the cart!!");
     }
   };
+
+  const fetchRatings = async () => {
+    try {
+      const response = await fetch("/api/product/review");
+      const data = await response.json();
+      console.log("data: ", data);
+      setProductRating(data.productAvgRating);
+    } catch (error) {
+      console.log("Error while fetching ratings: ", error);
+    }
+  };
   useEffect(() => {
     const fetchProducts = async () => {
       const response = await fetch("/api/product");
       const fetchProduct = await response.json();
+      console.log("fetchProduct: ", fetchProduct);
       setProducts(fetchProduct);
       setFilterProduct(fetchProduct);
     };
     fetchOrderItem();
     fetchProducts();
+    fetchRatings();
   }, []);
 
   return (
@@ -217,10 +232,12 @@ const Product = ({
           return (
             <div key={product.id} className="individulProduct">
               <h3>{product.name}</h3>
+
               <img
                 src={product.img}
                 style={{ width: "100px", height: "120px" }}
               />
+
               <p>
                 {parseInt(product.discountAmount) == 0 ? (
                   <b>${product.price}</b>
@@ -238,7 +255,33 @@ const Product = ({
                     </s>
                   </>
                 )}
+                {productRating.find(
+                  (rating) => product.id === rating.productId
+                ) ? (
+                  <p className="product-rating">
+                    <ReactStars
+                      count={5}
+                      size={20}
+                      isHalf={true}
+                      value={
+                        productRating.find(
+                          (rating) => rating.productId === product.id
+                        ).average
+                      }
+                      edit={false}
+                      activeColor="#ffd700"
+                    />
+                    {
+                      productRating.find(
+                        (rating) => rating.productId === product.id
+                      ).average
+                    }
+                  </p>
+                ) : (
+                  ""
+                )}
               </p>
+
               <span>{product.description}</span>
               <button onClick={() => addItemToCart(product)}>
                 Add to Cart
