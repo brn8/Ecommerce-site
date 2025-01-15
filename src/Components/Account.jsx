@@ -26,7 +26,7 @@ const Account = ({ token, setToken, numItemCart, setActive, setSearch }) => {
   ];
 
   // --- states containing user account details
-  const [orders, setOrders] = useState(filler_orders);
+  const [orders, setOrders] = useState(null);
   const [addresses, setAddresses] = useState([]);
 
   //--- states for info form
@@ -52,6 +52,21 @@ const Account = ({ token, setToken, numItemCart, setActive, setSearch }) => {
   const fetchUser = async () => {
     try {
       const response = await fetch("/api/address", {
+        method: "GET",
+        headers: {
+          authtoken: token,
+        },
+      });
+      const userData = await response.json();
+      return userData;
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const fetchOrders = async () => {
+    try {
+      const response = await fetch("/api/purchases", {
         method: "GET",
         headers: {
           authtoken: token,
@@ -155,19 +170,26 @@ const Account = ({ token, setToken, numItemCart, setActive, setSearch }) => {
         contact: userInfo.contact,
         email: userInfo.email,
       });
-      const userAddress = {
-        street: userInfo.address.streetAddress,
-        city: userInfo.address.city,
-        state: userInfo.address.state,
-        country: userInfo.address.country,
-        zip: userInfo.address.zipCode,
-      };
-      setStreet(userAddress.street);
-      setCity(userAddress.city);
-      setState(userAddress.state);
-      setCountry(userAddress.country);
-      setZip(userAddress.zip);
-      setAddresses([userAddress]);
+
+      if (userInfo.address) {
+        const userAddress = {
+          street: userInfo.address.streetAddress,
+          city: userInfo.address.city,
+          state: userInfo.address.state,
+          country: userInfo.address.country,
+          zip: userInfo.address.zipCode,
+        };
+        setStreet(userAddress.street);
+        setCity(userAddress.city);
+        setState(userAddress.state);
+        setCountry(userAddress.country);
+        setZip(userAddress.zip);
+        setAddresses([userAddress]);
+      }
+
+      const response = await fetchOrders();
+      setOrders(response);
+      console.log(orders);
     }
     getUser();
   }, [token]);
@@ -193,26 +215,25 @@ const Account = ({ token, setToken, numItemCart, setActive, setSearch }) => {
               <tr className="account-headers">
                 <th style={{ width: "15%" }}>Order</th>
                 <th>Date</th>
-                <th>Payment</th>
                 <th>Status</th>
                 <th>Total</th>
               </tr>
             </thead>
 
-            {orders.map((val, key) => {
-              return (
-                <tbody>
-                  <tr key={key}>
-                    {/*make this a link/navigate to specific order page*/}
-                    <td>{val.order}</td>
-                    <td>{val.date}</td>
-                    <td>{val.payment}</td>
-                    <td>{val.status}</td>
-                    <td>{val.total}</td>
-                  </tr>
-                </tbody>
-              );
-            })}
+            {orders &&
+              orders.map((val, key) => {
+                return (
+                  <tbody>
+                    <tr key={key}>
+                      {/*make this a link/navigate to specific order page*/}
+                      <td>#{val.id}</td>
+                      <td>{val.created_at.slice(0, 10)}</td>
+                      <td>{val.status}</td>
+                      <td>${parseFloat(val.totalPrice).toFixed(2)}</td>
+                    </tr>
+                  </tbody>
+                );
+              })}
           </table>
         </div>
         <div className="account-details">
@@ -298,7 +319,7 @@ const Account = ({ token, setToken, numItemCart, setActive, setSearch }) => {
               <input
                 required
                 value={street}
-                onChandleAddressFormSubmitnge={(e) => setStreet(e.target.value)}
+                onChange={(e) => setStreet(e.target.value)}
               />
             </label>
             <br />
