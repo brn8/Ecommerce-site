@@ -216,6 +216,7 @@ function App() {
               <Account
                 token={token}
                 setToken={setToken}
+                active={active}
                 numItemCart={numItemCart}
                 setActive={setActive}
                 setSearch={setSearch}
