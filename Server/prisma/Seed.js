@@ -61,7 +61,7 @@ const seed = async () => {
         img: "https://i5.walmartimages.com/asr/375d2852-d985-4aa9-b69c-b686da6e513f_1.eef652ba8620bde5c2b792e0ce74f113.jpeg",
         description:
           "High-quality wireless Bluetooth headphones with noise cancellation and a comfortable fit.",
-        price: "99.98999999999999",
+        price: "99.99",
         discountAmount: "10",
         quantity: 50,
         productCategoryName: "Electronics",

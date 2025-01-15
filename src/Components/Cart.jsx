@@ -23,6 +23,7 @@ const Cart = ({
   grandTotal,
   setGrandtotal,
   setSearch,
+  isAdmin
 }) => {
   const navigate = useNavigate();
   // let products = [];
@@ -126,6 +127,7 @@ const Cart = ({
         setToken={setToken}
         numItemCart={numItemCart}
         setSearch={setSearch}
+        isAdmin={isAdmin}
       />
       {token ? (
         <>
