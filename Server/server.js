@@ -848,4 +848,21 @@ app.get("/api/product/review", async (req, res, next) => {
   }
 });
 
+app.get("/api/product/:id", async (req, res, next) => {
+  try {
+    const id = Number(req.params.id);
+    console.log("id: ", typeof id);
+
+    if (id !== null) {
+      const findProduct = await prisma.Product.findMany({ where: { id } });
+      console.log("findProduct: ", findProduct);
+      return res.json({ product: findProduct[0] });
+    } else {
+      return res.json({ message: `Product ID is not provided!!` });
+    }
+  } catch (error) {
+    next(error);
+  }
+});
+
 app.listen(PORT, () => console.log(`Listening to the port ${PORT}`));

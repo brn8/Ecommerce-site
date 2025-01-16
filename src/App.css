@@ -96,6 +96,7 @@ form a {
   justify-content: space-between;
   box-sizing: border-box;
 }
+
 .individulProduct img {
   margin-left: auto;
   margin-right: auto;
@@ -525,4 +526,70 @@ textarea {
 .admin input {
   background-color: #def4fd;
   border-radius: 10px;
+}
+
+/*IndividualProduct Page Style*/
+.product-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  /* background-color: #ae6c1f; */
+}
+.product-info .product-name {
+  /* background-color: #87c5ea; */
+  font-size: xxx-large;
+  margin-bottom: 10px;
+}
+.product-info .product-img {
+  /* background-color: #87c5ea; */
+  display: flex;
+  border: 1px solid black;
+}
+.product-info .product-img img {
+  width: 500px;
+  height: 500px;
+}
+.product-info .product-price {
+  margin-top: 10px;
+  font-size: larger;
+}
+.product-info .product-description {
+  font-size: large;
+}
+.review-section {
+  display: flex;
+  flex-direction: column;
+}
+.review-section .add-review-input-button-container form {
+  display: flex;
+  align-items: flex-start;
+  padding: 15px;
+  background-color: transparent;
+  border: 1px solid black;
+  margin: 20px;
+}
+.review-section .user-reviews {
+  padding: 0 10px;
+  /* background-color: #87c5ea; */
+}
+.review-section .user-reviews h3 {
+  margin: 0;
+  padding: 10px 5px;
+}
+.review-section .user-reviews .reviews .individual-user-review-section {
+  /* background-color: #b3e1f4; */
+  border: solid 1px black;
+  padding: 5px;
+  margin-bottom: 10px;
+}
+.review-section .user-reviews .reviews .individual-user-review-section h4 {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+.review-section .user-reviews .reviews .individual-user-review-section p {
+  margin-top: 0;
+  padding-left: 10px;
+  margin: 0;
 }

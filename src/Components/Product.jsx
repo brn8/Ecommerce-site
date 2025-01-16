@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import NavBar from "./NavBar";
 import Footer from "./Footer";
 import ReactStars from "react-rating-stars-component";
+import IndividualProduct from "./IndividualProduct";
 
 const Product = ({
   active,
@@ -150,6 +151,10 @@ const Product = ({
     fetchRatings();
   }, []);
 
+  function clickHandler(product) {
+    navigate(`/individualProduct/${product.id}`);
+  }
+
   return (
     <>
       <NavBar
@@ -232,7 +237,11 @@ const Product = ({
       <div className="products">
         {filterProduct.map((product) => {
           return (
-            <div key={product.id} className="individulProduct">
+            <div
+              onClick={() => clickHandler(product)}
+              key={product.id}
+              className="individulProduct"
+            >
               <h3>{product.name}</h3>
 
               <img
@@ -285,7 +294,13 @@ const Product = ({
               </p>
 
               <span>{product.description}</span>
-              <button onClick={() => addItemToCart(product)}>
+
+              <button
+                onClick={(event) => {
+                  event.stopPropagation();
+                  addItemToCart(product);
+                }}
+              >
                 Add to Cart
               </button>
             </div>

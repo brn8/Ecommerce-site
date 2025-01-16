@@ -14,6 +14,7 @@ import SearchProduct from "./Components/SearchProduct";
 import AdminPortal from "./Components/AdminPortal";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { GoogleLogin } from "@react-oauth/google";
+import IndividualProduct from "./Components/IndividualProduct";
 
 function App() {
   const [firstName, setFirstName] = useState("");
@@ -310,6 +311,15 @@ function App() {
               country={country}
               setSearch={setSearch}
               isAdmin={isAdmin}
+            />
+          }
+        />
+        <Route
+          path="/individualProduct/:id"
+          element={
+            <IndividualProduct
+              setProductRating={setProductRating}
+              productRating={productRating}
             />
           }
         />
