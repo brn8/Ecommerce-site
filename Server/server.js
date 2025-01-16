@@ -847,23 +847,41 @@ app.get("/api/product/review", async (req, res, next) => {
 app.post("/api/purchases", isLoggedIn, async (req, res, next) => {
   try {
     const loggedinUser = req.user;
-    const userId = loggedinUser.id
-    const { address, totalPrice } = req.body;
+    const userId = loggedinUser.id;
+    // const { address, amountPaid, products } = req.body;
+    const { address, amountPaid} = req.body;
     const currentDate = new Date();
-    const getOrders = await prisma.Orders.findMany({
-      where: { userId }
-    });
-    const orders = getOrders.map((val)=>{return val.id})
-    const response = await prisma.Purchases.create({
+ 
+    const purchase = await prisma.Purchases.create({
       data: {
-        orders:orders,
         address,
-        totalPrice,
+        amountPaid,
         created_at: currentDate,
         userId: loggedinUser.id,
       },
     });
-    res.status(201).send(response);
+
+    const getOrders = await prisma.Orders.findMany({
+    where: { userId }
+    });
+
+    getOrders.forEach(async element => {
+      const orderItem = await prisma.OrderItem.findFirst({
+        where: { id: element.orderItemId }
+      })
+      await prisma.LineItems.create({
+      data: {
+        purchaseId: purchase.id,
+        quantity: orderItem.quantity,
+        productId: orderItem.productId,
+        price: orderItem.price
+      }
+    })
+    });
+    
+
+    
+    res.status(201).send(purchase);
   } catch (err) {
     next(err);
   }

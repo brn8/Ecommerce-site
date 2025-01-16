@@ -213,7 +213,7 @@ const Account = ({ token, setToken, numItemCart, active, setActive, setSearch ,i
                       <td>#{val.id.toString().padStart(4,"0")}</td>
                       <td>{val.created_at.slice(0, 10)}</td>
                       <td>{val.status}</td>
-                      <td>${parseFloat(val.totalPrice).toFixed(2)}</td>
+                      <td>${parseFloat(val.amountPaid).toFixed(2)}</td>
                     </tr>
                   </tbody>
                 );
