@@ -133,15 +133,6 @@ const PurchaseDetails = ({ token, setToken, numItemCart, active, setActive, setS
         </table>
       </div>
       <button onClick={() => navigate("/account")}>Back</button>
-      {/* <div
-        style={{ marginLeft: "20px" }}
-        onClick={() => {
-          navigate("/account")
-        }}
-        className="account-links"
-      >
-        {`< Back`}
-      </div> */}
       <Footer />
     </>
   )
