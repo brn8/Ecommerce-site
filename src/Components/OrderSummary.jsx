@@ -35,7 +35,6 @@ const OrderSummary = ({
       body: JSON.stringify({
         address: fullAddress,
         amountPaid: grandTotal,
-        // products: numItemCart
       }),
     })
     if (response.ok) {
@@ -53,7 +52,7 @@ const OrderSummary = ({
     createPurchase();
     alert("Order has been Placed!");
     setSearch("");
-    // navigate("/")
+    navigate("/")
   }
 
   return (

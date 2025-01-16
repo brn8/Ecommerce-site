@@ -5,8 +5,8 @@ import NavBar from "./NavBar";
 
 const APIURL = "http://localhost:3000/api/";
 
-const Account = ({ token, setToken, numItemCart, active, setActive, setSearch ,isAdmin}) => {
-
+const Account = ({ token, setToken, numItemCart, active, setActive, setSearch, isAdmin }) => {
+  const navigate = useNavigate();
   // --- states containing user account details
   const [orders, setOrders] = useState(null);
   const [addresses, setAddresses] = useState([]);
@@ -32,34 +32,38 @@ const Account = ({ token, setToken, numItemCart, active, setActive, setSearch ,i
 
   //-- API Calls
   const fetchUser = async () => {
-    if(token){try {
-      const response = await fetch("/api/address", {
-        method: "GET",
-        headers: {
-          authtoken: token,
-        },
-      });
-      const userData = await response.json();
-      return userData;
-    } catch (error) {
-      console.error(error);
-    }}
+    if (token) {
+      try {
+        const response = await fetch("/api/address", {
+          method: "GET",
+          headers: {
+            authtoken: token,
+          },
+        });
+        const userData = await response.json();
+        return userData;
+      } catch (error) {
+        console.error(error);
+      }
+    }
   };
 
   const fetchOrders = async () => {
-   if(token){ try {
-      const response = await fetch("/api/purchases", {
-        method: "GET",
-        headers: {
-          authtoken: token,
-        },
-      });
-      const userData = await response.json();
-      console.log(userData);
-      return userData;
-    } catch (error) {
-      console.error(error);
-    }}
+    if (token) {
+      try {
+        const response = await fetch("/api/purchases", {
+          method: "GET",
+          headers: {
+            authtoken: token,
+          },
+        });
+        const userData = await response.json();
+
+        return userData;
+      } catch (error) {
+        console.error(error);
+      }
+    }
   };
 
   const editAddress = async () => {
@@ -170,6 +174,8 @@ const Account = ({ token, setToken, numItemCart, active, setActive, setSearch ,i
       }
 
       const response = await fetchOrders();
+
+
       await setOrders(response);
 
     }
@@ -207,10 +213,15 @@ const Account = ({ token, setToken, numItemCart, active, setActive, setSearch ,i
             {orders &&
               orders.map((val, key) => {
                 return (
-                  <tbody>
+                  <tbody key={key}>
                     <tr key={key}>
                       {/*make this a link/navigate to specific order page*/}
-                      <td>#{val.id.toString().padStart(4,"0")}</td>
+                      <td onClick={(e) => {
+                        e.preventDefault();
+                        navigate(`/order-details/${val.id}`)
+                      }}
+                        className="account-links"
+                      >#{val.id.toString().padStart(4, "0")}</td>
                       <td>{val.created_at.slice(0, 10)}</td>
                       <td>{val.status}</td>
                       <td>${parseFloat(val.amountPaid).toFixed(2)}</td>
