@@ -34,7 +34,7 @@ const OrderSummary = ({
         },
       body: JSON.stringify({
         address: fullAddress,
-        totalPrice: grandTotal,
+        amountPaid: grandTotal,
       }),
     })
     if (response.ok) {
@@ -57,6 +57,7 @@ const OrderSummary = ({
 
   return (
     <>
+      {console.log(numItemCart)}
       {numItemCart.length == 0 ? (
         navigate("/cart")
       ) : (

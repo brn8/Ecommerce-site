@@ -852,23 +852,44 @@ app.get("/api/product/review", async (req, res, next) => {
 app.post("/api/purchases", isLoggedIn, async (req, res, next) => {
   try {
     const loggedinUser = req.user;
-    const userId = loggedinUser.id
-    const { address, totalPrice } = req.body;
+    const userId = loggedinUser.id;
+    // const { address, amountPaid, products } = req.body;
+    const { address, amountPaid} = req.body;
     const currentDate = new Date();
-    const getOrders = await prisma.Orders.findMany({
-      where: { userId }
-    });
-    const orders = getOrders.map((val)=>{return val.id})
-    const response = await prisma.Purchases.create({
+ 
+    const purchase = await prisma.Purchases.create({
       data: {
-        orders:orders,
         address,
-        totalPrice,
+        amountPaid,
         created_at: currentDate,
         userId: loggedinUser.id,
       },
     });
-    res.status(201).send(response);
+
+    const getOrders = await prisma.Orders.findMany({
+    where: { userId }
+    });
+
+    getOrders.forEach(async element => {
+      const orderItem = await prisma.OrderItem.findFirst({
+        where: { id: element.orderItemId }
+      })
+      const product = await prisma.product.findFirst({
+        where: {id: orderItem.productId}
+      })
+      await prisma.LineItems.create({
+      data: {
+        purchaseId: purchase.id,
+        quantity: orderItem.quantity,
+        productId: orderItem.productId,
+        productName: product.name,
+        productDesc: product.description,
+        productImg: product.img,
+        price: orderItem.price
+      }
+    })
+    });
+    res.status(201).send(purchase);
   } catch (err) {
     next(err);
   }
@@ -904,6 +925,32 @@ app.get("/api/purchases", isLoggedIn, async (req, res, next) => {
     next(err);
   }
 });
+
+app.get("/api/purchases/:id", async (req, res, next) => {
+  try {
+    const purchaseId = Number(req.params.id);
+    const response = await prisma.Purchases.findFirst({
+      where: { id: purchaseId},
+    });
+    res.status(200).send(response);
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.get("/api/lineItems/:id", async (req, res, next) => {
+  try {
+    const purchaseId = Number(req.params.id);
+    const response = await prisma.LineItems.findMany({
+      where: { purchaseId: purchaseId},
+    });
+    res.status(200).send(response);
+  } catch (err) {
+    next(err);
+  }
+});
+
+
 
 
 
