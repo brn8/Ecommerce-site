@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import NavBar from "./NavBar";
+import ReactStars from "react-rating-stars-component";
 // import { orderItem } from "../../Server/prisma";
 
 const Cart = ({
@@ -23,7 +24,9 @@ const Cart = ({
   grandTotal,
   setGrandtotal,
   setSearch,
-  isAdmin
+  isAdmin,
+  productRating,
+  setProductRating,
 }) => {
   const navigate = useNavigate();
   // let products = [];
@@ -70,8 +73,20 @@ const Cart = ({
     }
   };
 
+  const fetchRatings = async () => {
+    try {
+      const response = await fetch("/api/product/review");
+      const data = await response.json();
+      console.log("data: ", data);
+      setProductRating(data.productAvgRating);
+    } catch (error) {
+      console.log("Error while fetching ratings: ", error);
+    }
+  };
+
   useEffect(() => {
     fetchOrderItem();
+    fetchRatings();
     // setCart(!cart);
   }, [token]);
 
@@ -162,9 +177,40 @@ const Cart = ({
                             <div className="cartPageItem">
                               <img src={addedItem.img} />
                               <div className="cartPageInfomation">
-                                <p>
+                                <p className="product-name">
                                   <b>{addedItem.name}</b>
                                 </p>
+                                <p>
+                                  {productRating.find(
+                                    (rating) =>
+                                      addedItem.id === rating.productId
+                                  ) ? (
+                                    <p className="product-rating">
+                                      <ReactStars
+                                        count={5}
+                                        size={20}
+                                        isHalf={true}
+                                        value={
+                                          productRating.find(
+                                            (rating) =>
+                                              rating.productId === addedItem.id
+                                          ).average
+                                        }
+                                        edit={false}
+                                        activeColor="#ffd700"
+                                      />
+                                      {
+                                        productRating.find(
+                                          (rating) =>
+                                            rating.productId === addedItem.id
+                                        ).average
+                                      }
+                                    </p>
+                                  ) : (
+                                    ""
+                                  )}
+                                </p>
+
                                 <span>{addedItem.description}</span>
                               </div>
                             </div>

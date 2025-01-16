@@ -40,6 +40,7 @@ function App() {
   const [products, setProducts] = useState([]);
   const [search, setSearch] = useState("");
   const [isAdmin, setIsAdmin] = useState(false);
+  const [productRating, setProductRating] = useState([]);
 
   const fetchOrderItem = async () => {
     console.log("token: ", token);
@@ -80,10 +81,10 @@ function App() {
     console.log("Total Cart Item: ", numItemCart);
     // fetchOrderItem();
   }, [cart]);
-  
+
   useEffect(() => {
     if (token) {
-      const checkRole = async()=>{
+      const checkRole = async () => {
         const response = await fetch("/api/address", {
           method: "GET",
           headers: {
@@ -92,10 +93,9 @@ function App() {
         });
         const userData = await response.json();
         setIsAdmin(userData.isAdmin);
-      }
+      };
       checkRole();
-    }
-    else{
+    } else {
       setIsAdmin(false);
     }
   }, [token]);
@@ -122,6 +122,8 @@ function App() {
                 search={search}
                 setSearch={setSearch}
                 isAdmin={isAdmin}
+                productRating={productRating}
+                setProductRating={setProductRating}
               />
             </>
           }
@@ -150,6 +152,8 @@ function App() {
               setGrandtotal={setGrandtotal}
               setSearch={setSearch}
               isAdmin={isAdmin}
+              productRating={productRating}
+              setProductRating={setProductRating}
             />
           }
         />
@@ -262,14 +266,14 @@ function App() {
         <Route
           path="/adminPortal"
           element={
-            <AdminPortal   
-            token={token}
-            setToken={setToken}
-            numItemCart={numItemCart}
-            setActive={setActive}
-            setSearch={setSearch}
-            isAdmin={isAdmin}
-          />
+            <AdminPortal
+              token={token}
+              setToken={setToken}
+              numItemCart={numItemCart}
+              setActive={setActive}
+              setSearch={setSearch}
+              isAdmin={isAdmin}
+            />
           }
         />
         <Route
@@ -295,7 +299,7 @@ function App() {
             />
           }
         />
-        
+
         <Route
           path="/shipping"
           element={
