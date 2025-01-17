@@ -22,8 +22,51 @@ const OrderSummary = ({
   const [userData, setUserData] = useState([]);
   const navigate = useNavigate();
 
+  //--API Calls
+  const createPurchase = async () => {
+    try {
+      const fullAddress = `${address}, ${city}, ${state} ${zipCode}`
+      const response = await fetch("/api/purchases", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          authtoken: token,
+        },
+        body: JSON.stringify({
+          address: fullAddress,
+          amountPaid: grandTotal,
+        }),
+      })
+      if (response.ok) {
+        const data = await response.json();
+        console.log("Posted new purchase");
+      }
+    } catch (error) {
+      console.error(error);
+
+    }
+  }
+
+  const deleteOrders = async () => {
+    const response = await fetch(`/api/orderItem/`, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json", authtoken: token },
+    });
+    setCart(!cart);
+  };
+
+  function onClickHandler(e) {
+    e.preventDefault();
+    createPurchase();
+    alert("Order has been Placed!");
+    deleteOrders();
+    setSearch("");
+    navigate("/")
+  }
+
   return (
     <>
+      {console.log(numItemCart)}
       {numItemCart.length == 0 ? (
         navigate("/cart")
       ) : (
@@ -98,11 +141,7 @@ const OrderSummary = ({
           <div className="summaryPageOrder" style={{ border: "none" }}>
             <button onClick={() => navigate("/shipping")}>Previous</button>
             <button
-              onClick={() => {
-                alert("Order has been Placed!");
-                setSearch("");
-                navigate("/");
-              }}
+              onClick={onClickHandler}
             >
               Place order
             </button>

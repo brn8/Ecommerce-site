@@ -772,6 +772,33 @@ app.delete("/api/orderItem/:id", isLoggedIn, async (req, res, next) => {
   }
 });
 
+/*Route to delete all orders from loggedin user from orders table and all order items from the orderItem table from the database*/
+app.delete("/api/orderItem/", isLoggedIn, async (req, res, next) => {
+  try {
+    const user_data = req.user;
+    const userId = user_data.id;
+
+    async function deleteOrders() {
+      const orders = await prisma.Orders.findMany({
+        where: { userId },
+      });
+      for (const order of orders) {
+        await prisma.orderItem.delete({
+          where: { id: order.orderItemId}
+        })
+      }
+    }
+    
+    deleteOrders();
+    await prisma.Orders.deleteMany({
+      where: { userId },
+    });
+    res.status(204);
+  } catch (err) {
+    next(err);
+  }
+});
+
 /*Route to create a loggedin user's review for each product */
 app.post("/api/user/product/review/:id", isLoggedIn, async (req, res, next) => {
   try {
@@ -862,6 +889,7 @@ app.get("/api/product/review", async (req, res, next) => {
   }
 });
 
+
 app.get("/api/product/:id", async (req, res, next) => {
   try {
     const id = Number(req.params.id);
@@ -878,5 +906,115 @@ app.get("/api/product/:id", async (req, res, next) => {
     next(error);
   }
 });
+
+
+// purchases
+app.post("/api/purchases", isLoggedIn, async (req, res, next) => {
+  try {
+    const loggedinUser = req.user;
+    const userId = loggedinUser.id;
+    // const { address, amountPaid, products } = req.body;
+    const { address, amountPaid} = req.body;
+    const currentDate = new Date();
+ 
+    const purchase = await prisma.Purchases.create({
+      data: {
+        address,
+        amountPaid,
+        created_at: currentDate,
+        userId: loggedinUser.id,
+      },
+    });
+
+    const getOrders = await prisma.Orders.findMany({
+    where: { userId }
+    });
+
+    getOrders.forEach(async element => {
+      const orderItem = await prisma.OrderItem.findFirst({
+        where: { id: element.orderItemId }
+      })
+      const product = await prisma.product.findFirst({
+        where: {id: orderItem.productId}
+      })
+      await prisma.LineItems.create({
+      data: {
+        purchaseId: purchase.id,
+        quantity: orderItem.quantity,
+        productId: orderItem.productId,
+        productName: product.name,
+        productDesc: product.description,
+        productImg: product.img,
+        price: orderItem.price
+      }
+    })
+    });
+    res.status(201).send(purchase);
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.patch("/api/purchases", async (req, res, next) => {
+  try {
+    const { id, status } = req.body;
+    const updateStatus = await prisma.Purchases.update({
+      where: {
+        id: id
+      },
+      data: {
+        status: status
+      }
+    })
+    res.send(updateStatus);
+  } catch (error) {
+    next(error);
+    
+  }
+})
+
+app.get("/api/purchases", isLoggedIn, async (req, res, next) => {
+  try {
+    const loggedIn = req.user;
+    const userId = loggedIn.id;
+    const response = await prisma.Purchases.findMany({
+      where: { userId: userId },
+    });
+    res.status(200).send(response);
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.get("/api/purchases/:id", async (req, res, next) => {
+  try {
+    const purchaseId = Number(req.params.id);
+    const response = await prisma.Purchases.findFirst({
+      where: { id: purchaseId},
+    });
+    res.status(200).send(response);
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.get("/api/lineItems/:id", async (req, res, next) => {
+  try {
+    const purchaseId = Number(req.params.id);
+    const response = await prisma.LineItems.findMany({
+      where: { purchaseId: purchaseId},
+    });
+    res.status(200).send(response);
+  } catch (err) {
+    next(err);
+  }
+});
+
+
+
+
+
+
+
 
 app.listen(PORT, () => console.log(`Listening to the port ${PORT}`));

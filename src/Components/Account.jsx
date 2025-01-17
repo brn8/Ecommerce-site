@@ -1,37 +1,22 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
 import Footer from "./Footer";
 import NavBar from "./NavBar";
 
 const APIURL = "http://localhost:3000/api/";
 
-const Account = ({ token, setToken, numItemCart, setActive, setSearch ,isAdmin}) => {
-  //---------placeholders until backend ready
-  const filler_orders = [
-    {
-      order: "#0001",
-      date: "Jan 3, 2025",
-      payment: "Paid",
-      status: "Shipped",
-      total: "$100.0",
-    },
-    {
-      order: "#0012",
-      date: "Jan 5, 2025",
-      payment: "Processing",
-      status: "Delivered",
-      total: "$13.25",
-    },
-  ];
-
-  // --------------end of placeholders
-
+const Account = ({ token, setToken, numItemCart, active, setActive, setSearch, isAdmin }) => {
   const navigate = useNavigate();
   // --- states containing user account details
-  const [info, setInfo] = useState({});
-  const [orders, setOrders] = useState(filler_orders);
+  const [orders, setOrders] = useState(null);
   const [addresses, setAddresses] = useState([]);
+
+  //--- states for info form
+  const [info, setInfo] = useState(null);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [contact, setContact] = useState("");
 
   //--- states for address form
   const [street, setStreet] = useState("");
@@ -41,13 +26,47 @@ const Account = ({ token, setToken, numItemCart, setActive, setSearch ,isAdmin})
   const [country, setCountry] = useState("");
 
   //-- bools to show certain elements
+  const [showAddressForm, setshowAddressForm] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [showAddresses, setShowAddresses] = useState(false);
 
   //-- API Calls
-  const addAddress = async () => {
-    console.log("innit");
+  const fetchUser = async () => {
+    if (token) {
+      try {
+        const response = await fetch("/api/address", {
+          method: "GET",
+          headers: {
+            authtoken: token,
+          },
+        });
+        const userData = await response.json();
+        return userData;
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  };
 
+  const fetchOrders = async () => {
+    if (token) {
+      try {
+        const response = await fetch("/api/purchases", {
+          method: "GET",
+          headers: {
+            authtoken: token,
+          },
+        });
+        const userData = await response.json();
+
+        return userData;
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  };
+
+  const editAddress = async () => {
     try {
       const response = await fetch("/api/address", {
         method: "PATCH",
@@ -72,24 +91,32 @@ const Account = ({ token, setToken, numItemCart, setActive, setSearch ,isAdmin})
     }
   };
 
-  const fetchUser = async () => {
+  const editInfo = async () => {
     try {
-      const response = await fetch("/api/address", {
-        method: "GET",
+      const response = await fetch("/api/user", {
+        method: "PATCH",
         headers: {
+          "Content-Type": "application/json",
           authtoken: token,
         },
+        body: JSON.stringify({
+          firstName: firstName,
+          lastName: lastName,
+          email: email,
+          contact: contact,
+        }),
       });
-      const userData = await response.json();
-      console.log(userData);
-      return userData;
+      if (response.ok) {
+        const data = await response.json();
+        console.log("User info updated successfully!");
+      }
     } catch (error) {
       console.error(error);
     }
   };
 
-  //-- Handle form submission
-  function handleSubmit(e) {
+  //-- handles for form submission
+  function handleAddressFormSubmit(e) {
     e.preventDefault();
     const newAddress = {
       street: street,
@@ -98,32 +125,59 @@ const Account = ({ token, setToken, numItemCart, setActive, setSearch ,isAdmin})
       country: country,
       zip: zip,
     };
-    addAddress();
+    editAddress();
     setAddresses([newAddress]);
-    setStreet("");
-    setCity("");
-    setState("");
-    setCountry("");
-    setZip("");
+    setshowAddressForm(false);
+  }
+
+  function handleInfoFormSubmit(e) {
+    e.preventDefault();
+    editInfo();
+    setInfo({
+      firstName: firstName,
+      lastName: lastName,
+      contact: contact,
+      email: email,
+    });
     setShowForm(false);
   }
 
+  //-- on load
   useEffect(() => {
     async function getUser() {
       const userInfo = await fetchUser();
+      setEmail(userInfo.email);
+      setFirstName(userInfo.firstName);
+      setLastName(userInfo.lastName);
+      setContact(userInfo.contact);
       setInfo({
+        firstName: userInfo.firstName,
+        lastName: userInfo.lastName,
+        contact: userInfo.contact,
         email: userInfo.email,
-        name: `${userInfo.firstName} ${userInfo.lastName}`,
-        phone_number: userInfo.contact,
       });
-      const userAddress = {
-        street: userInfo.address.streetAddress,
-        city: userInfo.address.city,
-        state: userInfo.address.state,
-        country: userInfo.address.country,
-        zip: userInfo.address.zipCode,
-      };
-      setAddresses([userAddress]);
+
+      if (userInfo.address) {
+        const userAddress = {
+          street: userInfo.address.streetAddress,
+          city: userInfo.address.city,
+          state: userInfo.address.state,
+          country: userInfo.address.country,
+          zip: userInfo.address.zipCode,
+        };
+        setStreet(userAddress.street);
+        setCity(userAddress.city);
+        setState(userAddress.state);
+        setCountry(userAddress.country);
+        setZip(userAddress.zip);
+        setAddresses([userAddress]);
+      }
+
+      const response = await fetchOrders();
+
+
+      await setOrders(response);
+
     }
     getUser();
   }, [token]);
@@ -134,6 +188,7 @@ const Account = ({ token, setToken, numItemCart, setActive, setSearch ,isAdmin})
         token={token}
         setToken={setToken}
         numItemCart={numItemCart}
+        active={active}
         setActive={setActive}
         setSearch={setSearch}
         isAdmin={isAdmin}
@@ -150,59 +205,70 @@ const Account = ({ token, setToken, numItemCart, setActive, setSearch ,isAdmin})
               <tr className="account-headers">
                 <th style={{ width: "15%" }}>Order</th>
                 <th>Date</th>
-                <th>Payment</th>
                 <th>Status</th>
                 <th>Total</th>
               </tr>
             </thead>
 
-            {orders.map((val, key) => {
-              return (
-                <tbody>
-                  <tr key={key}>
-                    {/*make this a link/navigate to specific order page*/}
-                    <td>{val.order}</td>
-                    <td>{val.date}</td>
-                    <td>{val.payment}</td>
-                    <td>{val.status}</td>
-                    <td>{val.total}</td>
-                  </tr>
-                </tbody>
-              );
-            })}
+            {orders &&
+              orders.map((val, key) => {
+                return (
+                  <tbody key={key}>
+                    <tr key={key}>
+                      {/*make this a link/navigate to specific order page*/}
+                      <td onClick={(e) => {
+                        e.preventDefault();
+                        navigate(`/order-details/${val.id}`)
+                      }}
+                        className="account-links"
+                      >#{val.id.toString().padStart(4, "0")}</td>
+                      <td>{val.created_at.slice(0, 10)}</td>
+                      <td>{val.status}</td>
+                      <td>${parseFloat(val.amountPaid).toFixed(2)}</td>
+                    </tr>
+                  </tbody>
+                );
+              })}
           </table>
         </div>
         <div className="account-details">
           <div>
             <h2 className="account-headers">Account Details</h2>
+            {info && (
+              <>
+                {info.email}
+                <br />
+                {`${info.firstName} ${info.lastName}`}
+                <br />
+                {info.contact}
+              </>
+            )}
+            <div
+              onClick={() => {
+                if (showForm) {
+                  setShowForm(false);
+                } else {
+                  setShowForm(true);
+                }
+              }}
+              className="account-links"
+            >
+              {`Edit Info`}
+            </div>
             {addresses.length > 0 ? (
               <address>
-                {`${info.email}`}
-                <br />
-                {`${info.name}`}
                 <br />
                 {`${addresses[0].country}`}
                 <br />
                 {`${addresses[0].street}`}
                 <br />
                 {`${addresses[0].city}, ${addresses[0].state} ${addresses[0].zip}`}
-                <br />
-                {info.phone_number}
               </address>
             ) : (
-              <p>
-                No Addresses Saved
-                <br />
-                {`${info.email}`}
-                <br />
-                {`${info.name}`}
-                <br />
-                {info.phone_number}
-              </p>
+              <p>No Address Saved</p>
             )}
-
             {addresses.length > 1 && (
-              <p
+              <div
                 className="account-links"
                 onClick={() => {
                   if (showAddresses) {
@@ -211,7 +277,7 @@ const Account = ({ token, setToken, numItemCart, setActive, setSearch ,isAdmin})
                     setShowAddresses(true);
                   }
                 }}
-              >{`View Addresses (${addresses.length - 1}) >`}</p>
+              >{`View Addresses (${addresses.length - 1}) >`}</div>
             )}
             {showAddresses &&
               addresses.slice(1).map((val, key) => {
@@ -226,25 +292,24 @@ const Account = ({ token, setToken, numItemCart, setActive, setSearch ,isAdmin})
                   </>
                 );
               })}
-
-            <p
+            <div
               onClick={() => {
-                if (showForm) {
-                  setShowForm(false);
+                if (showAddressForm) {
+                  setshowAddressForm(false);
                 } else {
-                  setShowForm(true);
+                  setshowAddressForm(true);
                 }
               }}
               className="account-links"
             >
               {`Edit Address`}
-            </p>
+            </div>
           </div>
         </div>
-        {showForm && (
-          <form className="address-form" onSubmit={handleSubmit}>
+        {showAddressForm && (
+          <form className="address-form" onSubmit={handleAddressFormSubmit}>
             <label>
-              *Street Address:
+              Street Address:
               <br />
               <input
                 required
@@ -266,7 +331,7 @@ const Account = ({ token, setToken, numItemCart, setActive, setSearch ,isAdmin})
             <br />
 
             <label>
-              *City:
+              City:
               <br />
               <input
                 required
@@ -277,7 +342,7 @@ const Account = ({ token, setToken, numItemCart, setActive, setSearch ,isAdmin})
             <br />
 
             <label>
-              *State:
+              State:
               <br />
               <input
                 required
@@ -288,7 +353,7 @@ const Account = ({ token, setToken, numItemCart, setActive, setSearch ,isAdmin})
             <br />
 
             <label>
-              *Country:
+              Country:
               <br />
               <input
                 required
@@ -297,10 +362,58 @@ const Account = ({ token, setToken, numItemCart, setActive, setSearch ,isAdmin})
               />
             </label>
             <br />
+            <button>Change</button>
+          </form>
+        )}
+
+        {showForm && (
+          <form className="address-form" onSubmit={handleInfoFormSubmit}>
+            <label>
+              Email:
+              <br />
+              <input
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </label>
             <br />
-            <em>* Required fields</em>
+
+            <label>
+              First Name:
+              <br />
+              <input
+                required
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+              />
+            </label>
             <br />
-            <button>Submit</button>
+
+            <label>
+              Last Name:
+              <br />
+              <input
+                required
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+              />
+            </label>
+            <br />
+
+            <label>
+              Contact:
+              <br />
+              <input
+                required
+                value={contact}
+                onChange={(e) => setContact(e.target.value)}
+              />
+            </label>
+            <br />
+
+            <br />
+            <button>Change</button>
           </form>
         )}
       </div>
