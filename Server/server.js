@@ -772,6 +772,33 @@ app.delete("/api/orderItem/:id", isLoggedIn, async (req, res, next) => {
   }
 });
 
+/*Route to delete all orders from loggedin user from orders table and all order items from the orderItem table from the database*/
+app.delete("/api/orderItem/", isLoggedIn, async (req, res, next) => {
+  try {
+    const user_data = req.user;
+    const userId = user_data.id;
+
+    async function deleteOrders() {
+      const orders = await prisma.Orders.findMany({
+        where: { userId },
+      });
+      for (const order of orders) {
+        await prisma.orderItem.delete({
+          where: { id: order.orderItemId}
+        })
+      }
+    }
+    
+    deleteOrders();
+    await prisma.Orders.deleteMany({
+      where: { userId },
+    });
+    res.status(204);
+  } catch (err) {
+    next(err);
+  }
+});
+
 /*Route to create a loggedin user's review for each product */
 app.post("/api/user/product/review/:id", isLoggedIn, async (req, res, next) => {
   try {

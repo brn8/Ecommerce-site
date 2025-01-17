@@ -26,31 +26,40 @@ const OrderSummary = ({
   const createPurchase = async () => {
     try {
       const fullAddress = `${address}, ${city}, ${state} ${zipCode}`
-    const response = await fetch("/api/purchases", {
-      method: "POST",
-      headers: {
+      const response = await fetch("/api/purchases", {
+        method: "POST",
+        headers: {
           "Content-Type": "application/json",
           authtoken: token,
         },
-      body: JSON.stringify({
-        address: fullAddress,
-        amountPaid: grandTotal,
-      }),
-    })
-    if (response.ok) {
+        body: JSON.stringify({
+          address: fullAddress,
+          amountPaid: grandTotal,
+        }),
+      })
+      if (response.ok) {
         const data = await response.json();
         console.log("Posted new purchase");
       }
-  } catch (error) {
-    console.error(error);
-    
+    } catch (error) {
+      console.error(error);
+
+    }
   }
-  }
-  
+
+  const deleteOrders = async () => {
+    const response = await fetch(`/api/orderItem/`, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json", authtoken: token },
+    });
+    setCart(!cart);
+  };
+
   function onClickHandler(e) {
     e.preventDefault();
     createPurchase();
     alert("Order has been Placed!");
+    deleteOrders();
     setSearch("");
     navigate("/")
   }
