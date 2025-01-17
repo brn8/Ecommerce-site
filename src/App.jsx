@@ -15,6 +15,7 @@ import AdminPortal from "./Components/AdminPortal";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { GoogleLogin } from "@react-oauth/google";
 import PurchaseDetails from "./Components/PurchaseDetails";
+import Category from "./Components/Category";
 
 function App() {
   const [firstName, setFirstName] = useState("");
@@ -232,9 +233,10 @@ function App() {
         />
 
         <Route
-          path="/order-details/:purchaseId"
+          path="/category"
           element={
-            <PurchaseDetails
+            <div>
+              <Category
                 token={token}
                 setToken={setToken}
                 active={active}
@@ -242,7 +244,23 @@ function App() {
                 setActive={setActive}
                 setSearch={setSearch}
                 isAdmin={isAdmin}
-                firstName={firstName}
+              />
+            </div>
+          }
+        />
+
+        <Route
+          path="/order-details/:purchaseId"
+          element={
+            <PurchaseDetails
+              token={token}
+              setToken={setToken}
+              active={active}
+              numItemCart={numItemCart}
+              setActive={setActive}
+              setSearch={setSearch}
+              isAdmin={isAdmin}
+              firstName={firstName}
               lastName={lastName}
             />
           }
