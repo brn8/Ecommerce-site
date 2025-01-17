@@ -5,6 +5,7 @@ import ReactStars from "react-rating-stars-component";
 const IndividualProduct = ({ setProductRating, productRating }) => {
   const [individualProduct, setIndividualProduct] = useState([]);
   const [productReview, setProductReview] = useState([]);
+  const [users, setUsers] = useState([]);
   const { id } = useParams();
 
   const fetchProduct = async (id) => {
@@ -25,6 +26,7 @@ const IndividualProduct = ({ setProductRating, productRating }) => {
       console.log("data: ", data);
       setProductRating(data.productAvgRating);
       setProductReview(data.productReview);
+      setUsers(data.users);
     } catch (error) {
       console.log("Error while fetching ratings: ", error);
     }
@@ -70,9 +72,9 @@ const IndividualProduct = ({ setProductRating, productRating }) => {
               count={5}
               size={24}
               isHalf={true}
-              value={
+              value={Number(
                 productRating.find((rating) => rating.productId == id).average
-              }
+              )}
               edit={false}
               activeColor="#ffd700"
             />
@@ -106,7 +108,17 @@ const IndividualProduct = ({ setProductRating, productRating }) => {
                   .filter((review) => review.productId == id)
                   .map((review, index) => (
                     <div className="individual-user-review-section" key={index}>
-                      <h4>User Name:</h4>
+                      <h4>
+                        {users[index].firstName} {users[index].lastName}:
+                      </h4>
+                      <ReactStars
+                        count={5}
+                        size={20}
+                        isHalf={true}
+                        value={Number(review.review || null)}
+                        edit={false}
+                        activeColor="#ffd700"
+                      />
                       <p>{review.comment}</p>
                     </div>
                   ))

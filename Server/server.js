@@ -816,6 +816,19 @@ app.get("/api/product/review", async (req, res, next) => {
     const getProductReview = await prisma.Review.findMany();
     console.log("getProductReview: ", getProductReview);
 
+    const userIds = getProductReview.map((review) => review.userId);
+    console.log("userIds", userIds);
+
+    const users = (
+      await Promise.all(
+        userIds.map(
+          async (id) => await prisma.users.findMany({ where: { id } })
+        )
+      )
+    ).flat();
+
+    console.log("users: ", users);
+
     const productRatings = getProductReview.reduce((acc, productReview) => {
       let rating = Number(productReview.review);
       let productId = productReview.productId;
@@ -832,7 +845,7 @@ app.get("/api/product/review", async (req, res, next) => {
     const avgProductRating = Object.entries(productRatings).map(
       ([productId, { sum, count }]) => ({
         productId: Number(productId),
-        average: sum / count,
+        average: (sum / count).toFixed(1),
         count,
       })
     );
@@ -842,6 +855,7 @@ app.get("/api/product/review", async (req, res, next) => {
     return res.json({
       productReview: getProductReview,
       productAvgRating: avgProductRating,
+      users: users,
     });
   } catch (error) {
     next(error);
