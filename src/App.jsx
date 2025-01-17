@@ -320,6 +320,13 @@ function App() {
             <IndividualProduct
               setProductRating={setProductRating}
               productRating={productRating}
+              setActive={setActive}
+              token={token}
+              setToken={setToken}
+              numItemCart={numItemCart}
+              setSearch={setSearch}
+              isAdmin={isAdmin}
+              setNumItemCart={setNumItemCart}
             />
           }
         />

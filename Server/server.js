@@ -798,7 +798,7 @@ app.post("/api/user/product/review/:id", isLoggedIn, async (req, res, next) => {
           review: rating,
         },
       });
-      return res.json({
+      return res.status(200).json({
         message: `Thank you for your review!!`,
         data: createReview,
       });

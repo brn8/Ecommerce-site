@@ -250,7 +250,7 @@ const Product = ({
               />
 
               <p>
-                {parseInt(product.discountAmount) == 0 ? (
+                {parseInt(product.discountAmount) < 0 ? (
                   <b>${product.price}</b>
                 ) : (
                   <>
