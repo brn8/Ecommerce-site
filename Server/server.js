@@ -772,6 +772,33 @@ app.delete("/api/orderItem/:id", isLoggedIn, async (req, res, next) => {
   }
 });
 
+/*Route to delete all orders from loggedin user from orders table and all order items from the orderItem table from the database*/
+app.delete("/api/orderItem/", isLoggedIn, async (req, res, next) => {
+  try {
+    const user_data = req.user;
+    const userId = user_data.id;
+
+    async function deleteOrders() {
+      const orders = await prisma.Orders.findMany({
+        where: { userId },
+      });
+      for (const order of orders) {
+        await prisma.orderItem.delete({
+          where: { id: order.orderItemId}
+        })
+      }
+    }
+    
+    deleteOrders();
+    await prisma.Orders.deleteMany({
+      where: { userId },
+    });
+    res.status(204);
+  } catch (err) {
+    next(err);
+  }
+});
+
 /*Route to create a loggedin user's review for each product */
 app.post("/api/user/product/review/:id", isLoggedIn, async (req, res, next) => {
   try {
@@ -798,7 +825,7 @@ app.post("/api/user/product/review/:id", isLoggedIn, async (req, res, next) => {
           review: rating,
         },
       });
-      return res.json({
+      return res.status(200).json({
         message: `Thank you for your review!!`,
         data: createReview,
       });
@@ -816,6 +843,19 @@ app.get("/api/product/review", async (req, res, next) => {
     const getProductReview = await prisma.Review.findMany();
     console.log("getProductReview: ", getProductReview);
 
+    const userIds = getProductReview.map((review) => review.userId);
+    console.log("userIds", userIds);
+
+    const users = (
+      await Promise.all(
+        userIds.map(
+          async (id) => await prisma.users.findMany({ where: { id } })
+        )
+      )
+    ).flat();
+
+    console.log("users: ", users);
+
     const productRatings = getProductReview.reduce((acc, productReview) => {
       let rating = Number(productReview.review);
       let productId = productReview.productId;
@@ -832,7 +872,7 @@ app.get("/api/product/review", async (req, res, next) => {
     const avgProductRating = Object.entries(productRatings).map(
       ([productId, { sum, count }]) => ({
         productId: Number(productId),
-        average: sum / count,
+        average: (sum / count).toFixed(1),
         count,
       })
     );
@@ -842,13 +882,33 @@ app.get("/api/product/review", async (req, res, next) => {
     return res.json({
       productReview: getProductReview,
       productAvgRating: avgProductRating,
+      users: users,
     });
   } catch (error) {
     next(error);
   }
 });
 
-// post a new completed order (a purchase)
+
+app.get("/api/product/:id", async (req, res, next) => {
+  try {
+    const id = Number(req.params.id);
+    console.log("id: ", typeof id);
+
+    if (id !== null) {
+      const findProduct = await prisma.Product.findMany({ where: { id } });
+      console.log("findProduct: ", findProduct);
+      return res.json({ product: findProduct[0] });
+    } else {
+      return res.json({ message: `Product ID is not provided!!` });
+    }
+  } catch (error) {
+    next(error);
+  }
+});
+
+
+// purchases
 app.post("/api/purchases", isLoggedIn, async (req, res, next) => {
   try {
     const loggedinUser = req.user;
@@ -953,6 +1013,7 @@ app.get("/api/lineItems/:id", async (req, res, next) => {
     next(err);
   }
 });
+
 
 //get categories
 app.get("/api/categories", async (req, res, next) => {
