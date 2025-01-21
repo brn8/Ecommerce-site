@@ -26,7 +26,7 @@ const NavBar = ({
         navigate("/signup");
         break;
       case "signin":
-        navigate("/signup");
+        navigate("/login");
         break;
       case "account":
         navigate("/account");
