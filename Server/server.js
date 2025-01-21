@@ -2,6 +2,7 @@ const express = require("express");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const morgan = require("morgan");
+const nodemailer = require("nodemailer");
 
 const cors = require("cors");
 
@@ -20,6 +21,22 @@ app.use(cors());
 app.use(require("morgan")("dev"));
 
 const JWT = process.env.JWT;
+
+const transporter = nodemailer.createTransport({
+  service: "Gmail",
+  auth: {
+    user: "pritpatel7311@gmail.com",
+    pass: "kjrw wpwn zrru idfu",
+  },
+});
+
+transporter.verify((error, success) => {
+  if (error) {
+    console.log("Error with email configuration: ", error);
+  } else {
+    console.log("Emaiil configuration successfull: ", success);
+  }
+});
 
 app.post("/api/product", async (req, res, next) => {
   try {
@@ -784,11 +801,11 @@ app.delete("/api/orderItem/", isLoggedIn, async (req, res, next) => {
       });
       for (const order of orders) {
         await prisma.orderItem.delete({
-          where: { id: order.orderItemId}
-        })
+          where: { id: order.orderItemId },
+        });
       }
     }
-    
+
     deleteOrders();
     await prisma.Orders.deleteMany({
       where: { userId },
@@ -889,7 +906,6 @@ app.get("/api/product/review", async (req, res, next) => {
   }
 });
 
-
 app.get("/api/product/:id", async (req, res, next) => {
   try {
     const id = Number(req.params.id);
@@ -907,16 +923,15 @@ app.get("/api/product/:id", async (req, res, next) => {
   }
 });
 
-
 // purchases
 app.post("/api/purchases", isLoggedIn, async (req, res, next) => {
   try {
     const loggedinUser = req.user;
     const userId = loggedinUser.id;
     // const { address, amountPaid, products } = req.body;
-    const { address, amountPaid} = req.body;
+    const { address, amountPaid } = req.body;
     const currentDate = new Date();
- 
+
     const purchase = await prisma.Purchases.create({
       data: {
         address,
@@ -927,27 +942,27 @@ app.post("/api/purchases", isLoggedIn, async (req, res, next) => {
     });
 
     const getOrders = await prisma.Orders.findMany({
-    where: { userId }
+      where: { userId },
     });
 
-    getOrders.forEach(async element => {
+    getOrders.forEach(async (element) => {
       const orderItem = await prisma.OrderItem.findFirst({
-        where: { id: element.orderItemId }
-      })
+        where: { id: element.orderItemId },
+      });
       const product = await prisma.product.findFirst({
-        where: {id: orderItem.productId}
-      })
+        where: { id: orderItem.productId },
+      });
       await prisma.LineItems.create({
-      data: {
-        purchaseId: purchase.id,
-        quantity: orderItem.quantity,
-        productId: orderItem.productId,
-        productName: product.name,
-        productDesc: product.description,
-        productImg: product.img,
-        price: orderItem.price
-      }
-    })
+        data: {
+          purchaseId: purchase.id,
+          quantity: orderItem.quantity,
+          productId: orderItem.productId,
+          productName: product.name,
+          productDesc: product.description,
+          productImg: product.img,
+          price: orderItem.price,
+        },
+      });
     });
     res.status(201).send(purchase);
   } catch (err) {
@@ -960,18 +975,17 @@ app.patch("/api/purchases", async (req, res, next) => {
     const { id, status } = req.body;
     const updateStatus = await prisma.Purchases.update({
       where: {
-        id: id
+        id: id,
       },
       data: {
-        status: status
-      }
-    })
+        status: status,
+      },
+    });
     res.send(updateStatus);
   } catch (error) {
     next(error);
-    
   }
-})
+});
 
 app.get("/api/purchases", isLoggedIn, async (req, res, next) => {
   try {
@@ -990,7 +1004,7 @@ app.get("/api/purchases/:id", async (req, res, next) => {
   try {
     const purchaseId = Number(req.params.id);
     const response = await prisma.Purchases.findFirst({
-      where: { id: purchaseId},
+      where: { id: purchaseId },
     });
     res.status(200).send(response);
   } catch (err) {
@@ -1002,7 +1016,7 @@ app.get("/api/lineItems/:id", async (req, res, next) => {
   try {
     const purchaseId = Number(req.params.id);
     const response = await prisma.LineItems.findMany({
-      where: { purchaseId: purchaseId},
+      where: { purchaseId: purchaseId },
     });
     res.status(200).send(response);
   } catch (err) {
@@ -1010,11 +1024,40 @@ app.get("/api/lineItems/:id", async (req, res, next) => {
   }
 });
 
+app.post("/api/user/forgotpassword", async (req, res, next) => {
+  try {
+    const email = req.body.email;
+    const frontend_url = `http://localhost:5173/reset-password`;
 
+    const findUser = await prisma.users.findMany({ where: { email } });
+    // console.log("findUser: ", findUser);
 
+    if (findUser.length != 0) {
+      const id = findUser[0].id;
+      // console.log("id: ", id);
 
+      const token = await jwt.sign({ id }, JWT, { expiresIn: "5m" });
+      // console.log("token: ", token);
 
+      let url = `${frontend_url}?token=${token}`;
 
+      const mailinfo = {
+        from: "pritpatel7311@gmail.com",
+        to: email,
+        subject: "Password Recovery Link",
+        text: `Click the following link to reset the password: \n\n${url}`,
+      };
 
+      const info = await transporter.sendMail(mailinfo);
+      // console.log("Email sent: ", info.response);
+
+      return res.json({ url: url, message: `Email sent: ${info.response}` });
+    } else {
+      res.json({ message: `User not found with the provided email!` });
+    }
+  } catch (error) {
+    next(error);
+  }
+});
 
 app.listen(PORT, () => console.log(`Listening to the port ${PORT}`));
