@@ -20,6 +20,8 @@ import { loadStripe } from "@stripe/stripe-js";
 import IndividualProduct from "./Components/IndividualProduct";
 
 import PurchaseDetails from "./Components/PurchaseDetails";
+import Category from "./Components/Category";
+import ContactUs from "./Components/ContactUs";
 
 function App() {
   const [firstName, setFirstName] = useState("");
@@ -228,6 +230,41 @@ function App() {
           element={
             <div>
               <Account
+                token={token}
+                setToken={setToken}
+                active={active}
+                numItemCart={numItemCart}
+                setActive={setActive}
+                setSearch={setSearch}
+                isAdmin={isAdmin}
+              />
+            </div>
+          }
+        />
+
+        <Route
+          path="/category"
+          element={
+
+            <div>
+              <Category
+                token={token}
+                setToken={setToken}
+                active={active}
+                numItemCart={numItemCart}
+                setActive={setActive}
+                setSearch={setSearch}
+                isAdmin={isAdmin}
+              />
+            </div>
+          }
+        />
+
+        <Route
+          path="/contactus"
+          element={
+            <div>
+              <ContactUs
                 token={token}
                 setToken={setToken}
                 active={active}

@@ -18,19 +18,41 @@ const NavBar = ({
     setSearch("");
     navigate("/");
   };
+
   function handleClick(option) {
     setActive(option);
-    if (option == "signup") {
-      navigate("/signup");
-    } else if (option == "signin") {
-      navigate("/login");
-    } else if (option == "account") {
-      navigate("/account");
-    } else {
-      sessionStorage.removeItem("authToken");
-      setToken("");
-      navigate("/");
+    switch (option) {
+      case "signup":
+        navigate("/signup");
+        break;
+      case "signin":
+        navigate("/login");
+        break;
+      case "account":
+        navigate("/account");
+        break;
+      case "category":
+        navigate("/category");
+        break;
+      case "contactus":
+        navigate("/contactus");
+        break;
+      default:
+        sessionStorage.removeItem("authToken");
+        setToken("");
+        navigate("/");
     }
+    // if (option == "signup") {
+    //   navigate("/signup");
+    // } else if (option == "signin") {
+    //   navigate("/login");
+    // } else if (option == "account") {
+    //   navigate("/account");
+    // } else {
+    //   sessionStorage.removeItem("authToken");
+    //   setToken("");
+    //   navigate("/");
+    // }
   }
 
   useEffect(() => {
@@ -47,10 +69,10 @@ const NavBar = ({
           onClick={handleRoute}
         />
         <div className="nav-bar-button">
-         {isAdmin?<button onClick={()=> navigate("/adminPortal")}>Admin Portal</button>:""} 
+          {isAdmin ? <button onClick={() => navigate("/adminPortal")}>Admin Portal</button> : ""}
           <button>About Us</button>
-          <button>Contact Us</button>
-          <button>Category</button>
+          <button onClick={() => handleClick("contactus")}>Contact Us</button>
+          {/* <button onClick={() => handleClick("category")}>Category</button> */}
           <div
             className="account-button-wrapper"
             onMouseEnter={() => setShowDropDown(true)}

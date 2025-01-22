@@ -955,6 +955,7 @@ app.post("/api/purchases", isLoggedIn, async (req, res, next) => {
   }
 });
 
+// change a purchase's order status
 app.patch("/api/purchases", async (req, res, next) => {
   try {
     const { id, status } = req.body;
@@ -972,6 +973,7 @@ app.patch("/api/purchases", async (req, res, next) => {
   }
 });
 
+//get all purchases tied to a user ID
 app.get("/api/purchases", isLoggedIn, async (req, res, next) => {
   try {
     const loggedIn = req.user;
@@ -985,6 +987,7 @@ app.get("/api/purchases", isLoggedIn, async (req, res, next) => {
   }
 });
 
+//get a specific purchase
 app.get("/api/purchases/:id", async (req, res, next) => {
   try {
     const purchaseId = Number(req.params.id);
@@ -997,6 +1000,7 @@ app.get("/api/purchases/:id", async (req, res, next) => {
   }
 });
 
+//get a specific item in a purchase
 app.get("/api/lineItems/:id", async (req, res, next) => {
   try {
     const purchaseId = Number(req.params.id);
@@ -1024,5 +1028,16 @@ app.post("/api/payment-intent", async (req, res) => {
     res.status(500).send({ error: error.message });
   }
 });
+//get categories
+app.get("/api/categories", async (req, res, next) => {
+  try {
+    const response = await prisma.ProductCategory.findMany();
+    res.status(200).send(response);
+  } catch (err) {
+    next(err);
+  }
+});
+
+
 
 app.listen(PORT, () => console.log(`Listening to the port ${PORT}`));
