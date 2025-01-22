@@ -18,6 +18,8 @@ import { GoogleLogin } from "@react-oauth/google";
 import IndividualProduct from "./Components/IndividualProduct";
 
 import PurchaseDetails from "./Components/PurchaseDetails";
+import Category from "./Components/Category";
+import ContactUs from "./Components/ContactUs";
 
 
 function App() {
@@ -236,9 +238,10 @@ function App() {
         />
 
         <Route
-          path="/order-details/:purchaseId"
+          path="/category"
           element={
-            <PurchaseDetails
+            <div>
+              <Category
                 token={token}
                 setToken={setToken}
                 active={active}
@@ -246,7 +249,40 @@ function App() {
                 setActive={setActive}
                 setSearch={setSearch}
                 isAdmin={isAdmin}
-                firstName={firstName}
+              />
+            </div>
+          }
+        />
+
+        <Route
+          path="/contactus"
+          element={
+            <div>
+              <ContactUs
+                token={token}
+                setToken={setToken}
+                active={active}
+                numItemCart={numItemCart}
+                setActive={setActive}
+                setSearch={setSearch}
+                isAdmin={isAdmin}
+              />
+            </div>
+          }
+        />
+
+        <Route
+          path="/order-details/:purchaseId"
+          element={
+            <PurchaseDetails
+              token={token}
+              setToken={setToken}
+              active={active}
+              numItemCart={numItemCart}
+              setActive={setActive}
+              setSearch={setSearch}
+              isAdmin={isAdmin}
+              firstName={firstName}
               lastName={lastName}
             />
           }
