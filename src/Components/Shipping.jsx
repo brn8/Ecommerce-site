@@ -162,8 +162,7 @@ const Shipping = ({
     }
     setdisableAddress(true);
   };
-  const donepaymentEditingHandler = async () => {
-    console.log({ expiration: expiration1 + "/" + expiration2 });
+  const donepaymentEditingHandler = async (cardDetails) => {
     const response = await fetch("/api/payment", {
       method: "PATCH",
       headers: {
@@ -171,9 +170,9 @@ const Shipping = ({
         authtoken: token,
       },
       body: JSON.stringify({
-        cardNumber,
+        cardNumber: cardDetails.cardNumber,
         nameOnCard: nameOncard,
-        expiration: expiration1 + "/" + expiration2,
+        expiration: cardDetails.expiration,
         // securityCode,
       }),
     });
@@ -184,39 +183,6 @@ const Shipping = ({
     setdisablePayment(true);
   };
   const handleShipping = async () => {
-    const cardElement = elements.getElement(CardElement);
-    const { error, paymentMethod } = await stripe.createPaymentMethod({
-      type: "card",
-      card: cardElement,
-    });
-
-    if (error) {
-      console.error("Error creating payment method:", error);
-      setCardNumber("");
-      setExpiration1("");
-      setExpiration2("");
-    } else {
-      console.log("Payment method created successfully:", paymentMethod.card);
-      setCardNumber(paymentMethod.card.last4);
-      setExpiration1(paymentMethod.card.exp_month);
-      setExpiration2(paymentMethod.card.exp_year);
-      if (
-        firstName !== "" &&
-        lastName !== "" &&
-        email !== "" &&
-        contact !== "" &&
-        address !== "" &&
-        city !== "" &&
-        state !== "" &&
-        zipCode !== "" &&
-        country !== ""
-      ) {
-        doneEditingHandler();
-        doneAddressEditingHandler();
-        donepaymentEditingHandler();
-        navigate("/orderSummary");
-      }
-    }
     if (
       firstName === "" ||
       lastName === "" ||
@@ -227,10 +193,7 @@ const Shipping = ({
       state === "" ||
       zipCode === "" ||
       country === "" ||
-      cardNumber === "" ||
-      nameOncard === "" ||
-      expiration1 === "" ||
-      expiration2 === ""
+      nameOncard === ""
     ) {
       alert("Please fill in the required fields (*)");
     } else {
@@ -238,10 +201,30 @@ const Shipping = ({
         return;
       }
 
-      doneEditingHandler();
-      doneAddressEditingHandler();
-      donepaymentEditingHandler();
-      navigate("/orderSummary");
+      const cardElement = elements.getElement(CardElement);
+      const { error, paymentMethod } = await stripe.createPaymentMethod({
+        type: "card",
+        card: cardElement,
+      });
+
+      if (error) {
+        alert(
+          "Please fill in the card detail along with any other missing required fields (*)"
+        );
+      } else {
+        const cardDetails = {
+          cardNumber: paymentMethod.card.last4,
+          nameOnCard: nameOncard,
+          expiration:
+            paymentMethod.card.exp_month + "/" + paymentMethod.card.exp_year,
+        };
+
+        donepaymentEditingHandler(cardDetails);
+        doneEditingHandler();
+        doneAddressEditingHandler();
+        donepaymentEditingHandler();
+        navigate("/orderSummary");
+      }
     }
   };
   useEffect(() => {
@@ -452,14 +435,7 @@ const Shipping = ({
         <div className="shipping-flex-2-container">
           <br />
           <div>
-            <label>
-              Card Details{" "}
-              {cardNumber === "" && expiration1 === "" && expiration2 === "" ? (
-                <span style={{ color: "red" }}>*</span>
-              ) : (
-                ""
-              )}
-            </label>
+            <label>Card Details</label>
             <br />
             <CardElement></CardElement>
             {/* <input
