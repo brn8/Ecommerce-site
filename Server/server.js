@@ -1060,4 +1060,38 @@ app.post("/api/user/forgotpassword", async (req, res, next) => {
   }
 });
 
+app.patch("/api/user/resetPassword", async (req, res, next) => {
+  try {
+    const user_data = req.body;
+    const salt = await bcrypt.genSalt();
+    const hashedPassword = await bcrypt.hash(user_data.password, salt);
+
+    const token = req.headers.authtoken;
+    // console.log("user_data: ", user_data);
+
+    if (token) {
+      const tokenVerification = jwt.verify(token, JWT);
+      // console.log("tokenVerification: ", tokenVerification);
+      const id = tokenVerification.id;
+
+      const findUser = await prisma.users.update({
+        where: {
+          id,
+        },
+        data: {
+          password: hashedPassword,
+        },
+      });
+      return res.json({
+        message: "Your password has been reset successfully!!",
+        user: findUser,
+      });
+    } else {
+      return res.status(401).json({ message: "You are not authorized!!" });
+    }
+  } catch (error) {
+    next(error);
+  }
+});
+
 app.listen(PORT, () => console.log(`Listening to the port ${PORT}`));
