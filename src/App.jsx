@@ -171,14 +171,7 @@ function App() {
           path="/signup"
           element={
             <div className="signup-page custom-signup-page">
-              <NavBar
-                active={active}
-                setActive={setActive}
-                cartItem={cartItem}
-                token={token}
-                setToken={setToken}
-                isAdmin={isAdmin}
-              />
+
               <SignupPage
                 active={active}
                 setActive={setActive}
@@ -194,6 +187,10 @@ function App() {
                 setEmail={setEmail}
                 contact={contact}
                 setContact={setContact}
+                token={token}
+                setToken={setToken}
+                isAdmin={isAdmin}
+                setSearch={setSearch}
               />
             </div>
           }
@@ -202,13 +199,6 @@ function App() {
           path="/login"
           element={
             <div className="signin-page custom-signin-page">
-              <NavBar
-                active={active}
-                setActive={setActive}
-                cartItem={cartItem}
-                token={token}
-                setToken={setToken}
-              />
               <LoginPage
                 active={active}
                 setActive={setActive}
@@ -220,6 +210,11 @@ function App() {
                 setLastName={setLastName}
                 setEmail={setEmail}
                 setContact={setContact}
+                token={token}
+                setToken={setToken}
+                isAdmin={isAdmin}
+                setSearch={setSearch}
+                cartItem={cartItem}
               />
             </div>
           }
