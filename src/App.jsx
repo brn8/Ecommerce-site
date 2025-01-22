@@ -14,11 +14,11 @@ import SearchProduct from "./Components/SearchProduct";
 import AdminPortal from "./Components/AdminPortal";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { GoogleLogin } from "@react-oauth/google";
+import ForgotPassword from "./Components/ForgotPassword";
 
 import IndividualProduct from "./Components/IndividualProduct";
 
 import PurchaseDetails from "./Components/PurchaseDetails";
-
 
 function App() {
   const [firstName, setFirstName] = useState("");
@@ -239,14 +239,14 @@ function App() {
           path="/order-details/:purchaseId"
           element={
             <PurchaseDetails
-                token={token}
-                setToken={setToken}
-                active={active}
-                numItemCart={numItemCart}
-                setActive={setActive}
-                setSearch={setSearch}
-                isAdmin={isAdmin}
-                firstName={firstName}
+              token={token}
+              setToken={setToken}
+              active={active}
+              numItemCart={numItemCart}
+              setActive={setActive}
+              setSearch={setSearch}
+              isAdmin={isAdmin}
+              firstName={firstName}
               lastName={lastName}
             />
           }
@@ -351,6 +351,10 @@ function App() {
               setNumItemCart={setNumItemCart}
             />
           }
+        />
+        <Route
+          path="/forgotPassword"
+          element={<ForgotPassword setEmail={setEmail} email={email} />}
         />
       </Routes>
     </>

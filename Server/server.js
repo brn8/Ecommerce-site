@@ -1027,6 +1027,7 @@ app.get("/api/lineItems/:id", async (req, res, next) => {
 app.post("/api/user/forgotpassword", async (req, res, next) => {
   try {
     const email = req.body.email;
+    console.log("email is: ", email);
     const frontend_url = `http://localhost:5173/reset-password`;
 
     const findUser = await prisma.users.findMany({ where: { email } });
@@ -1051,7 +1052,7 @@ app.post("/api/user/forgotpassword", async (req, res, next) => {
       const info = await transporter.sendMail(mailinfo);
       // console.log("Email sent: ", info.response);
 
-      return res.json({ url: url, message: `Email sent: ${info.response}` });
+      return res.json({ url: url, message: `Please check your email!!` });
     } else {
       res.json({ message: `User not found with the provided email!` });
     }
