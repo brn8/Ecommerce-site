@@ -49,9 +49,8 @@ function App() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [productRating, setProductRating] = useState([]);
 
-  const stripePromise = loadStripe(
-    "pk_test_51Qjj61BSi0aluqNqxbPk8fQicsyAXYSMoCmJSKDFcyV5xcgiV8wrRGOgCV4wpRTJjWwX9eyuc83zruvsjcRM34w100K3Yvt9qo"
-  );
+  const stripeApiKey = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
+  const stripePromise = loadStripe(stripeApiKey);
 
   const fetchOrderItem = async () => {
     console.log("token: ", token);
@@ -245,7 +244,6 @@ function App() {
         <Route
           path="/category"
           element={
-
             <div>
               <Category
                 token={token}
