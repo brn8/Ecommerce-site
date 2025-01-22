@@ -1,4 +1,16 @@
-const ForgotPassword = ({ setEmail, email }) => {
+import NavBar from "./NavBar";
+import "../App.css";
+const ForgotPassword = ({
+  setEmail,
+  email,
+  active,
+  setActive,
+  token,
+  setToken,
+  numItemCart,
+  setSearch,
+  isAdmin,
+}) => {
   const submitHandler = async (e) => {
     e.preventDefault();
     if (email) {
@@ -30,6 +42,15 @@ const ForgotPassword = ({ setEmail, email }) => {
   };
   return (
     <>
+      <NavBar
+        active={active}
+        setActive={setActive}
+        token={token}
+        setToken={setToken}
+        numItemCart={numItemCart}
+        setSearch={setSearch}
+        isAdmin={isAdmin}
+      />
       <form onSubmit={submitHandler}>
         <h1>Forgot Passowrd</h1>
         <input

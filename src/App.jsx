@@ -15,6 +15,7 @@ import AdminPortal from "./Components/AdminPortal";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { GoogleLogin } from "@react-oauth/google";
 import ForgotPassword from "./Components/ForgotPassword";
+import ResetPassword from "./Components/ResetPassword";
 
 import IndividualProduct from "./Components/IndividualProduct";
 
@@ -45,6 +46,7 @@ function App() {
   const [search, setSearch] = useState("");
   const [isAdmin, setIsAdmin] = useState(false);
   const [productRating, setProductRating] = useState([]);
+  const [reEnterPassword, setReEnterPassword] = useState("");
 
   const fetchOrderItem = async () => {
     console.log("token: ", token);
@@ -354,7 +356,34 @@ function App() {
         />
         <Route
           path="/forgotPassword"
-          element={<ForgotPassword setEmail={setEmail} email={email} />}
+          element={
+            <div className="forgot-password-page .custom-forgot-password-page">
+              <ForgotPassword
+                setEmail={setEmail}
+                email={email}
+                active={active}
+                setActive={setActive}
+                token={token}
+                setToken={setToken}
+                numItemCart={numItemCart}
+                setSearch={setSearch}
+                isAdmin={isAdmin}
+              />
+            </div>
+          }
+        />
+        <Route
+          path="/reset-password"
+          element={
+            <ResetPassword
+              setPassword={setPassword}
+              password={password}
+              reEnterPassword={reEnterPassword}
+              setReEnterPassword={setReEnterPassword}
+              token={token}
+              setToken={setToken}
+            />
+          }
         />
       </Routes>
     </>

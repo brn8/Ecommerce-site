@@ -123,7 +123,7 @@ const LoginPage = ({
         />
 
         <button onClick={submitHandler}>Sign In</button>
-        <a href="/forgotPassword">Forgot Password</a>
+        <a onClick={() => navigate("/forgotPassword")}>Forgot Password</a>
 
         <GoogleLogin
           className="google-login"

@@ -1064,29 +1064,44 @@ app.post("/api/user/forgotpassword", async (req, res, next) => {
 app.patch("/api/user/resetPassword", async (req, res, next) => {
   try {
     const user_data = req.body;
+    console.log("user_data", user_data);
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(user_data.password, salt);
 
     const token = req.headers.authtoken;
     // console.log("user_data: ", user_data);
+    // console.log("token: ", token);
+    // console.log(req.headers);
 
     if (token) {
-      const tokenVerification = jwt.verify(token, JWT);
-      // console.log("tokenVerification: ", tokenVerification);
-      const id = tokenVerification.id;
+      try {
+        const tokenVerification = jwt.verify(token, JWT);
+        // console.log("tokenVerification: ", tokenVerification);
+        const id = tokenVerification.id;
 
-      const findUser = await prisma.users.update({
-        where: {
-          id,
-        },
-        data: {
-          password: hashedPassword,
-        },
-      });
-      return res.json({
-        message: "Your password has been reset successfully!!",
-        user: findUser,
-      });
+        const findUser = await prisma.users.update({
+          where: {
+            id,
+          },
+          data: {
+            password: hashedPassword,
+          },
+        });
+        return res.json({
+          message: "Your password has been reset successfully!!",
+          user: findUser,
+        });
+      } catch (error) {
+        if (error.name === "TokenExpiredError") {
+          return res.status(401).json({
+            message:
+              "The token has expired. Please request a new password reset link!",
+          });
+        }
+        return res
+          .status(401)
+          .json({ message: "Invalid token. Authorization failed!" });
+      }
     } else {
       return res.status(401).json({ message: "You are not authorized!!" });
     }
