@@ -18,6 +18,10 @@ const SignupPage = ({
   setEmail,
   contact,
   setContact,
+  token,
+  setToken,
+  isAdmin,
+  setSearch
 }) => {
   const navigate = useNavigate();
 
@@ -75,6 +79,15 @@ const SignupPage = ({
   }
   return (
     <>
+      <NavBar
+        active={active}
+        setActive={setActive}
+        cartItem={cartItem}
+        token={token}
+        setToken={setToken}
+        isAdmin={isAdmin}
+        setSearch={setSearch}
+      />
       <form>
         <div className="option-container">
           <h3
