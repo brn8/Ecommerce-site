@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import NavBar from "./NavBar";
 import Footer from "./Footer";
 import { useNavigate } from "react-router-dom";
+import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 
 const Shipping = ({
   setActive,
@@ -28,7 +29,7 @@ const Shipping = ({
   zipCode,
   country,
   setSearch,
-  isAdmin
+  isAdmin,
 }) => {
   const [disableInformation, setdisableInformation] = useState(true);
   const [disableAddress, setdisableAddress] = useState(true);
@@ -48,6 +49,8 @@ const Shipping = ({
   const [expiration2, setExpiration2] = useState("");
   const [securityCode, setSecurityCode] = useState("");
   const navigate = useNavigate();
+  const stripe = useStripe();
+  const elements = useElements();
 
   // setToken(sessionStorage.setItem("authtoken", token));
 
@@ -82,6 +85,29 @@ const Shipping = ({
   useEffect(() => {
     fetchOrderItem();
   }, [token]);
+
+  // useEffect(() => {
+  //   const fetchClientSecret = async () => {
+  //     try {
+  //       const response = await fetch("/api/payment-intent", {
+  //         method: "POST",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //           authtoken: token,
+  //         },
+  //         body: JSON.stringify({
+  //           amount: 200,
+  //         }),
+  //       });
+  //       const data = await response.json();
+  //       setClientSecret(data.clientSecret);
+  //     } catch (error) {
+  //       console.error("Error fetching payment intent:", error);
+  //     }
+  //   };
+
+  //   fetchClientSecret();
+  // }, []);
 
   const editInformationHandler = () => {
     setdisableInformation(false);
@@ -136,7 +162,7 @@ const Shipping = ({
     }
     setdisableAddress(true);
   };
-  const donepaymentEditingHandler = async () => {
+  const donepaymentEditingHandler = async (cardDetails) => {
     const response = await fetch("/api/payment", {
       method: "PATCH",
       headers: {
@@ -144,10 +170,10 @@ const Shipping = ({
         authtoken: token,
       },
       body: JSON.stringify({
-        cardNumber,
+        cardNumber: cardDetails.cardNumber,
         nameOnCard: nameOncard,
-        expiration: expiration1 + "/" + expiration2,
-        securityCode,
+        expiration: cardDetails.expiration,
+        // securityCode,
       }),
     });
     if (response.ok) {
@@ -156,7 +182,7 @@ const Shipping = ({
     }
     setdisablePayment(true);
   };
-  const handleShipping = () => {
+  const handleShipping = async () => {
     if (
       firstName === "" ||
       lastName === "" ||
@@ -167,18 +193,38 @@ const Shipping = ({
       state === "" ||
       zipCode === "" ||
       country === "" ||
-      cardNumber === "" ||
-      nameOncard === "" ||
-      expiration1 === "" ||
-      expiration2 === "" ||
-      securityCode === ""
+      nameOncard === ""
     ) {
       alert("Please fill in the required fields (*)");
     } else {
-      doneEditingHandler();
-      doneAddressEditingHandler();
-      donepaymentEditingHandler();
-      navigate("/orderSummary");
+      if (!stripe || !elements) {
+        return;
+      }
+
+      const cardElement = elements.getElement(CardElement);
+      const { error, paymentMethod } = await stripe.createPaymentMethod({
+        type: "card",
+        card: cardElement,
+      });
+
+      if (error) {
+        alert(
+          "Please fill in the card detail along with any other missing required fields (*)"
+        );
+      } else {
+        const cardDetails = {
+          cardNumber: paymentMethod.card.last4,
+          nameOnCard: nameOncard,
+          expiration:
+            paymentMethod.card.exp_month + "/" + paymentMethod.card.exp_year,
+        };
+
+        donepaymentEditingHandler(cardDetails);
+        doneEditingHandler();
+        doneAddressEditingHandler();
+        donepaymentEditingHandler();
+        navigate("/orderSummary");
+      }
     }
   };
   useEffect(() => {
@@ -202,13 +248,13 @@ const Shipping = ({
           setZipcode(userData.address.zipCode);
           setCountry(userData.address.country);
         }
-        if (userData.payment != null) {
-          setCardNumber(userData.payment.cardNumber);
-          setNameOnCard(userData.payment.nameOnCard);
-          setExpiration1(userData.payment.expiration?.split("/")[0]);
-          setExpiration2(userData.payment.expiration?.split("/")[1]);
-          setSecurityCode(userData.payment.securityCode);
-        }
+        // if (userData.payment != null) {
+        //   setCardNumber(userData.payment.cardNumber);
+        //   setNameOnCard(userData.payment.nameOnCard);
+        //   setExpiration1(userData.payment.expiration?.split("/")[0]);
+        //   setExpiration2(userData.payment.expiration?.split("/")[1]);
+        //   // setSecurityCode(userData.payment.securityCode);
+        // }
       }
     };
     userInfo();
@@ -389,17 +435,15 @@ const Shipping = ({
         <div className="shipping-flex-2-container">
           <br />
           <div>
-            <label>
-              Card Number{" "}
-              {cardNumber == "" ? <span style={{ color: "red" }}>*</span> : ""}
-            </label>
+            <label>Card Details</label>
             <br />
-            <input
+            <CardElement></CardElement>
+            {/* <input
               type="text"
               // disabled={disablePayment}
               value={cardNumber || ""}
               onChange={(e) => setCardNumber(e.target.value)}
-            />
+            /> */}
             <br />
             <label>
               Name on Card{" "}
@@ -413,6 +457,7 @@ const Shipping = ({
               value={nameOncard || ""}
             />{" "}
             <br />
+            {/*
             <label>
               Expiration Date{" "}
               {expiration1 == "" || expiration2 == "" ? (
@@ -436,8 +481,8 @@ const Shipping = ({
               // disabled={disablePayment}
               style={{ width: "140px" }}
             />
-            <br />
-            <label>
+            <br /> */}
+            {/* <label>
               Security Code{" "}
               {securityCode == "" ? (
                 <span style={{ color: "red" }}>*</span>
@@ -451,7 +496,7 @@ const Shipping = ({
               // disabled={disablePayment}
               value={securityCode || ""}
               onChange={(e) => setSecurityCode(e.target.value)}
-            />
+            /> */}
           </div>
           {/* <div className="shipping-editUseButton">
             {disablePayment ? (
