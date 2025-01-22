@@ -1,16 +1,18 @@
+require("dotenv").config();
 const express = require("express");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const morgan = require("morgan");
-
+const Stripe = require("stripe");
 const cors = require("cors");
 
 const app = express();
+
+const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 const PORT = 3000;
 const prisma = require("../Server/prisma");
 const { data } = require("react-router-dom");
 
-require("dotenv").config();
 app.use(express.json());
 
 app.use(morgan("dev"));
@@ -406,7 +408,7 @@ app.patch("/api/payment", isLoggedIn, async (req, res, next) => {
           cardNumber,
           nameOnCard,
           expiration,
-          securityCode,
+          // securityCode,
           users: { connect: { id: userId } },
         },
       });
@@ -784,11 +786,11 @@ app.delete("/api/orderItem/", isLoggedIn, async (req, res, next) => {
       });
       for (const order of orders) {
         await prisma.orderItem.delete({
-          where: { id: order.orderItemId}
-        })
+          where: { id: order.orderItemId },
+        });
       }
     }
-    
+
     deleteOrders();
     await prisma.Orders.deleteMany({
       where: { userId },
@@ -889,7 +891,6 @@ app.get("/api/product/review", async (req, res, next) => {
   }
 });
 
-
 app.get("/api/product/:id", async (req, res, next) => {
   try {
     const id = Number(req.params.id);
@@ -907,16 +908,15 @@ app.get("/api/product/:id", async (req, res, next) => {
   }
 });
 
-
 // purchases
 app.post("/api/purchases", isLoggedIn, async (req, res, next) => {
   try {
     const loggedinUser = req.user;
     const userId = loggedinUser.id;
     // const { address, amountPaid, products } = req.body;
-    const { address, amountPaid} = req.body;
+    const { address, amountPaid } = req.body;
     const currentDate = new Date();
- 
+
     const purchase = await prisma.Purchases.create({
       data: {
         address,
@@ -927,27 +927,27 @@ app.post("/api/purchases", isLoggedIn, async (req, res, next) => {
     });
 
     const getOrders = await prisma.Orders.findMany({
-    where: { userId }
+      where: { userId },
     });
 
-    getOrders.forEach(async element => {
+    getOrders.forEach(async (element) => {
       const orderItem = await prisma.OrderItem.findFirst({
-        where: { id: element.orderItemId }
-      })
+        where: { id: element.orderItemId },
+      });
       const product = await prisma.product.findFirst({
-        where: {id: orderItem.productId}
-      })
+        where: { id: orderItem.productId },
+      });
       await prisma.LineItems.create({
-      data: {
-        purchaseId: purchase.id,
-        quantity: orderItem.quantity,
-        productId: orderItem.productId,
-        productName: product.name,
-        productDesc: product.description,
-        productImg: product.img,
-        price: orderItem.price
-      }
-    })
+        data: {
+          purchaseId: purchase.id,
+          quantity: orderItem.quantity,
+          productId: orderItem.productId,
+          productName: product.name,
+          productDesc: product.description,
+          productImg: product.img,
+          price: orderItem.price,
+        },
+      });
     });
     res.status(201).send(purchase);
   } catch (err) {
@@ -961,18 +961,17 @@ app.patch("/api/purchases", async (req, res, next) => {
     const { id, status } = req.body;
     const updateStatus = await prisma.Purchases.update({
       where: {
-        id: id
+        id: id,
       },
       data: {
-        status: status
-      }
-    })
+        status: status,
+      },
+    });
     res.send(updateStatus);
   } catch (error) {
     next(error);
-    
   }
-})
+});
 
 //get all purchases tied to a user ID
 app.get("/api/purchases", isLoggedIn, async (req, res, next) => {
@@ -993,7 +992,7 @@ app.get("/api/purchases/:id", async (req, res, next) => {
   try {
     const purchaseId = Number(req.params.id);
     const response = await prisma.Purchases.findFirst({
-      where: { id: purchaseId},
+      where: { id: purchaseId },
     });
     res.status(200).send(response);
   } catch (err) {
@@ -1006,7 +1005,7 @@ app.get("/api/lineItems/:id", async (req, res, next) => {
   try {
     const purchaseId = Number(req.params.id);
     const response = await prisma.LineItems.findMany({
-      where: { purchaseId: purchaseId},
+      where: { purchaseId: purchaseId },
     });
     res.status(200).send(response);
   } catch (err) {
@@ -1014,7 +1013,21 @@ app.get("/api/lineItems/:id", async (req, res, next) => {
   }
 });
 
+app.post("/api/payment-intent", async (req, res) => {
+  try {
+    const { amount } = req.body;
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount,
+      currency: "usd",
+    });
 
+    res.send({
+      clientSecret: paymentIntent.client_secret,
+    });
+  } catch (error) {
+    res.status(500).send({ error: error.message });
+  }
+});
 //get categories
 app.get("/api/categories", async (req, res, next) => {
   try {
@@ -1024,9 +1037,6 @@ app.get("/api/categories", async (req, res, next) => {
     next(err);
   }
 });
-
-
-
 
 
 

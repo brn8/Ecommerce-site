@@ -14,13 +14,14 @@ import SearchProduct from "./Components/SearchProduct";
 import AdminPortal from "./Components/AdminPortal";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { GoogleLogin } from "@react-oauth/google";
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
 
 import IndividualProduct from "./Components/IndividualProduct";
 
 import PurchaseDetails from "./Components/PurchaseDetails";
 import Category from "./Components/Category";
 import ContactUs from "./Components/ContactUs";
-
 
 function App() {
   const [firstName, setFirstName] = useState("");
@@ -47,6 +48,9 @@ function App() {
   const [search, setSearch] = useState("");
   const [isAdmin, setIsAdmin] = useState(false);
   const [productRating, setProductRating] = useState([]);
+
+  const stripeApiKey = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
+  const stripePromise = loadStripe(stripeApiKey);
 
   const fetchOrderItem = async () => {
     console.log("token: ", token);
@@ -343,33 +347,35 @@ function App() {
         <Route
           path="/shipping"
           element={
-            <Shipping
-              setActive={setActive}
-              token={token}
-              setToken={setToken}
-              numItemCart={numItemCart}
-              setNumItemCart={setNumItemCart}
-              setFirstName={setFirstName}
-              setLastName={setLastName}
-              setEmail={setEmail}
-              setContact={setContact}
-              firstName={firstName}
-              lastName={lastName}
-              email={email}
-              contact={contact}
-              setAddress={setAddress}
-              setCity={setCity}
-              setState={setState}
-              setZipcode={setZipcode}
-              setCountry={setCountry}
-              address={address}
-              city={city}
-              state={state}
-              zipCode={zipCode}
-              country={country}
-              setSearch={setSearch}
-              isAdmin={isAdmin}
-            />
+            <Elements stripe={stripePromise}>
+              <Shipping
+                setActive={setActive}
+                token={token}
+                setToken={setToken}
+                numItemCart={numItemCart}
+                setNumItemCart={setNumItemCart}
+                setFirstName={setFirstName}
+                setLastName={setLastName}
+                setEmail={setEmail}
+                setContact={setContact}
+                firstName={firstName}
+                lastName={lastName}
+                email={email}
+                contact={contact}
+                setAddress={setAddress}
+                setCity={setCity}
+                setState={setState}
+                setZipcode={setZipcode}
+                setCountry={setCountry}
+                address={address}
+                city={city}
+                state={state}
+                zipCode={zipCode}
+                country={country}
+                setSearch={setSearch}
+                isAdmin={isAdmin}
+              />
+            </Elements>
           }
         />
         <Route
