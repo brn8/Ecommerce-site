@@ -7,7 +7,9 @@ body,
   padding: 0;
 }
 .signup-page,
-.signin-page {
+.signin-page,
+.forgot-password-page,
+.reset-password-page {
   height: 100%;
   width: 100%;
   display: flex;
@@ -73,19 +75,34 @@ form button {
 }
 form a {
   margin-bottom: 10px;
+  font-size: large;
+}
+form a:hover {
+  cursor: pointer;
+  text-decoration: underline;
+  font-weight: bold;
 }
 .nav-bar {
   top: 0%;
 }
 
-.custom-signup-page .nav-bar-2 {
-  margin-top: 5px;
-  margin-bottom: 20px;
+.signup-page form {
+  margin-top: auto;
+  margin-bottom: auto;
 }
-.custom-signin-page .nav-bar-2 {
-  margin-top: 20px;
-  margin-bottom: 20px;
+.signin-page form {
+  margin-top: auto;
+  margin-bottom: auto;
 }
+.forgot-password-page form {
+  margin-top: auto;
+  margin-bottom: auto;
+}
+.reset-password-page form {
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
 /*CSS for product page*/
 .individulProduct {
   width: 200px;
@@ -345,6 +362,7 @@ textarea {
   padding: 10px 20px;
   border-radius: 10px;
 }
+
 .nav-bar .nav-bar-button .account-button-wrapper .account-dropdown a {
   text-align: center;
   font-size: large;

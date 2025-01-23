@@ -3,7 +3,12 @@ const express = require("express");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const morgan = require("morgan");
+
+const nodemailer = require("nodemailer");
+
+
 const Stripe = require("stripe");
+
 const cors = require("cors");
 
 const app = express();
@@ -22,6 +27,22 @@ app.use(cors());
 app.use(require("morgan")("dev"));
 
 const JWT = process.env.JWT;
+
+const transporter = nodemailer.createTransport({
+  service: "Gmail",
+  auth: {
+    user: "pritpatel7311@gmail.com",
+    pass: "kjrw wpwn zrru idfu",
+  },
+});
+
+transporter.verify((error, success) => {
+  if (error) {
+    console.log("Error with email configuration: ", error);
+  } else {
+    console.log("Emaiil configuration successfull: ", success);
+  }
+});
 
 app.post("/api/product", async (req, res, next) => {
   try {
@@ -1013,6 +1034,51 @@ app.get("/api/lineItems/:id", async (req, res, next) => {
   }
 });
 
+
+app.post("/api/user/forgotpassword", async (req, res, next) => {
+  try {
+    const email = req.body.email;
+    console.log("email is: ", email);
+    const frontend_url = `http://localhost:5173/reset-password`;
+
+    const findUser = await prisma.users.findMany({ where: { email } });
+    // console.log("findUser: ", findUser);
+
+    if (findUser.length != 0) {
+      const id = findUser[0].id;
+      // console.log("id: ", id);
+
+      const token = await jwt.sign({ id }, JWT, { expiresIn: "5m" });
+      // console.log("token: ", token);
+
+      let url = `${frontend_url}?token=${token}`;
+
+      const mailinfo = {
+        from: "pritpatel7311@gmail.com",
+        to: email,
+        subject: "Password Recovery Link",
+        text: `Click the following link to reset the password: \n\n${url}`,
+      };
+
+      const info = await transporter.sendMail(mailinfo);
+      // console.log("Email sent: ", info.response);
+
+      return res.json({ url: url, message: `Please check your email!!` });
+    } else {
+      res.json({ message: `User not found with the provided email!` });
+    }
+  } catch (error) {
+    next(error);
+  }
+});
+
+app.patch("/api/user/resetPassword", async (req, res, next) => {
+  try {
+    const user_data = req.body;
+    console.log("user_data", user_data);
+    const salt = await bcrypt.genSalt();
+    const hashedPassword = await bcrypt.hash(user_data.password, salt);
+
 app.post("/api/payment-intent", async (req, res) => {
   try {
     const { amount } = req.body;
@@ -1039,5 +1105,46 @@ app.get("/api/categories", async (req, res, next) => {
 });
 
 
+    const token = req.headers.authtoken;
+    // console.log("user_data: ", user_data);
+    // console.log("token: ", token);
+    // console.log(req.headers);
+
+    if (token) {
+      try {
+        const tokenVerification = jwt.verify(token, JWT);
+        // console.log("tokenVerification: ", tokenVerification);
+        const id = tokenVerification.id;
+
+        const findUser = await prisma.users.update({
+          where: {
+            id,
+          },
+          data: {
+            password: hashedPassword,
+          },
+        });
+        return res.json({
+          message: "Your password has been reset successfully!!",
+          user: findUser,
+        });
+      } catch (error) {
+        if (error.name === "TokenExpiredError") {
+          return res.status(401).json({
+            message:
+              "The token has expired. Please request a new password reset link!",
+          });
+        }
+        return res
+          .status(401)
+          .json({ message: "Invalid token. Authorization failed!" });
+      }
+    } else {
+      return res.status(401).json({ message: "You are not authorized!!" });
+    }
+  } catch (error) {
+    next(error);
+  }
+});
 
 app.listen(PORT, () => console.log(`Listening to the port ${PORT}`));
