@@ -10,7 +10,10 @@ const SearchProduct = ({
   numItemCart,
   setNumItemCart,
   isAdmin,
-
+  filterElectorics,
+  filterOfficeSupplies,
+  filterAllProduct,
+  setActive,
   active,
   setActive,
   cartItem,
@@ -72,6 +75,13 @@ const SearchProduct = ({
     <>
       <NavBar
         numItemCart={numItemCart}
+        setActive={setActive}
+        token={token}
+        setToken={setToken}
+        isAdmin={isAdmin}
+        filterElectorics={filterElectorics}
+        filterOfficeSupplies={filterOfficeSupplies}
+        filterAllProduct={filterAllProduct}
         token={token}
         setToken={setToken}
         isAdmin={isAdmin}

@@ -27,6 +27,9 @@ const Cart = ({
   isAdmin,
   productRating,
   setProductRating,
+  filterElectorics,
+  filterOfficeSupplies,
+  filterAllProduct,
 }) => {
   const navigate = useNavigate();
   // let products = [];
@@ -147,6 +150,9 @@ const Cart = ({
         numItemCart={numItemCart}
         setSearch={setSearch}
         isAdmin={isAdmin}
+        filterElectorics={filterElectorics}
+        filterOfficeSupplies={filterOfficeSupplies}
+        filterAllProduct={filterAllProduct}
       />
       {token ? (
         <>

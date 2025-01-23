@@ -9,7 +9,10 @@ const NavBar = ({
   token,
   setSearch,
   setToken,
-  isAdmin
+  isAdmin,
+  filterElectorics,
+  filterOfficeSupplies,
+  filterAllProduct,
 }) => {
   const [showDropDown, setShowDropDown] = useState(false);
 
@@ -69,7 +72,13 @@ const NavBar = ({
           onClick={handleRoute}
         />
         <div className="nav-bar-button">
-          {isAdmin ? <button onClick={() => navigate("/adminPortal")}>Admin Portal</button> : ""}
+          {isAdmin ? (
+            <button onClick={() => navigate("/adminPortal")}>
+              Admin Portal
+            </button>
+          ) : (
+            ""
+          )}
           <button>About Us</button>
           <button onClick={() => handleClick("contactus")}>Contact Us</button>
           {/* <button onClick={() => handleClick("category")}>Category</button> */}
@@ -104,22 +113,25 @@ const NavBar = ({
       </div>
 
       <div className="nav-bar-2">
-        <button>
+        <button onClick={() => filterAllProduct()}>
+          <i className="bi bi-star-fill"></i>All Products
+        </button>
+        <button onClick={() => filterElectorics()}>
           <i className="bi bi-star-fill"></i>Electronics
         </button>
-        <button>
+        <button onClick={() => filterOfficeSupplies()}>
           <i className="bi bi-star-fill"></i>Office Supplies
         </button>
-        <button>
+        <button onClick={() => filterElectorics()}>
           <i className="bi bi-star-fill"></i>Electronics
         </button>
-        <button>
+        <button onClick={() => filterOfficeSupplies()}>
           <i className="bi bi-star-fill"></i>Office Supplies
         </button>
-        <button>
+        <button onClick={() => filterElectorics()}>
           <i className="bi bi-star-fill"></i>Electronics
         </button>
-        <button>
+        <button onClick={() => filterOfficeSupplies()}>
           <i className="bi bi-star-fill"></i>Office Supplies
         </button>
       </div>

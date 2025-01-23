@@ -5,7 +5,18 @@ import NavBar from "./NavBar";
 
 const APIURL = "http://localhost:3000/api/";
 
-const Account = ({ token, setToken, numItemCart, active, setActive, setSearch, isAdmin }) => {
+const Account = ({
+  token,
+  setToken,
+  numItemCart,
+  active,
+  setActive,
+  setSearch,
+  isAdmin,
+  filterElectorics,
+  filterOfficeSupplies,
+  filterAllProduct,
+}) => {
   const navigate = useNavigate();
   // --- states containing user account details
   const [orders, setOrders] = useState(null);
@@ -175,9 +186,7 @@ const Account = ({ token, setToken, numItemCart, active, setActive, setSearch, i
 
       const response = await fetchOrders();
 
-
       await setOrders(response);
-
     }
     getUser();
   }, [token]);
@@ -192,6 +201,9 @@ const Account = ({ token, setToken, numItemCart, active, setActive, setSearch, i
         setActive={setActive}
         setSearch={setSearch}
         isAdmin={isAdmin}
+        filterElectorics={filterElectorics}
+        filterOfficeSupplies={filterOfficeSupplies}
+        filterAllProduct={filterAllProduct}
       />
       <h1 className="account-headers" style={{ paddingLeft: "50px" }}>
         My Account
@@ -216,12 +228,15 @@ const Account = ({ token, setToken, numItemCart, active, setActive, setSearch, i
                   <tbody key={key}>
                     <tr key={key}>
                       {/*make this a link/navigate to specific order page*/}
-                      <td onClick={(e) => {
-                        e.preventDefault();
-                        navigate(`/order-details/${val.id}`)
-                      }}
+                      <td
+                        onClick={(e) => {
+                          e.preventDefault();
+                          navigate(`/order-details/${val.id}`);
+                        }}
                         className="account-links"
-                      >#{val.id.toString().padStart(4, "0")}</td>
+                      >
+                        #{val.id.toString().padStart(4, "0")}
+                      </td>
                       <td>{val.created_at.slice(0, 10)}</td>
                       <td>{val.status}</td>
                       <td>${parseFloat(val.amountPaid).toFixed(2)}</td>

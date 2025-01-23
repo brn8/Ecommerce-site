@@ -30,6 +30,9 @@ const Shipping = ({
   country,
   setSearch,
   isAdmin,
+  filterElectorics,
+  filterOfficeSupplies,
+  filterAllProduct,
 }) => {
   const [disableInformation, setdisableInformation] = useState(true);
   const [disableAddress, setdisableAddress] = useState(true);
@@ -269,6 +272,9 @@ const Shipping = ({
         numItemCart={numItemCart}
         setSearch={setSearch}
         isAdmin={isAdmin}
+        filterElectorics={filterElectorics}
+        filterOfficeSupplies={filterOfficeSupplies}
+        filterAllProduct={filterAllProduct}
       />
       <div className="shipping-all-container">
         <h3>Your Information</h3>
