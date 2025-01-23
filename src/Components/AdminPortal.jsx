@@ -9,6 +9,9 @@ const AdminPortal = ({
   setActive,
   isAdmin,
   setSearch,
+  filterElectorics,
+  filterOfficeSupplies,
+  filterAllProduct,
 }) => {
   const [newProduct, setNewProduct] = useState(false);
   const [refetchData, setRefetchData] = useState(0);
@@ -179,6 +182,9 @@ const AdminPortal = ({
         setActive={setActive}
         isAdmin={isAdmin}
         setSearch={setSearch}
+        filterElectorics={filterElectorics}
+        filterOfficeSupplies={filterOfficeSupplies}
+        filterAllProduct={filterAllProduct}
       />
       <h2 style={{ textAlign: "center" }}>Products</h2>
 

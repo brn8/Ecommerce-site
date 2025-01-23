@@ -9,7 +9,12 @@ const SearchProduct = ({
   setToken,
   numItemCart,
   setNumItemCart,
-  isAdmin
+  isAdmin,
+  filterElectorics,
+  filterOfficeSupplies,
+  filterAllProduct,
+
+  setActive,
 }) => {
   const fetchOrderItem = async () => {
     console.log("token: ", token);
@@ -62,7 +67,16 @@ const SearchProduct = ({
   const navigate = useNavigate();
   return (
     <>
-      <NavBar numItemCart={numItemCart} token={token} setToken={setToken} isAdmin={isAdmin} />
+      <NavBar
+        numItemCart={numItemCart}
+        setActive={setActive}
+        token={token}
+        setToken={setToken}
+        isAdmin={isAdmin}
+        filterElectorics={filterElectorics}
+        filterOfficeSupplies={filterOfficeSupplies}
+        filterAllProduct={filterAllProduct}
+      />
       {products.filter((product) =>
         product.name.toLowerCase().includes(search.toLowerCase())
       ).length == 0 ? (

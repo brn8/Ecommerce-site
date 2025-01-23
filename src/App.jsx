@@ -3,7 +3,7 @@ import SignupPage from "./Components/SignupPage";
 import "./App.css";
 import Product from "./Components/Product";
 import CartButton from "./Components/CartButton";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import Cart from "./Components/Cart";
 import Account from "./Components/Account";
 import LoginPage from "./Components/LoginPage";
@@ -48,6 +48,8 @@ function App() {
   const [search, setSearch] = useState("");
   const [isAdmin, setIsAdmin] = useState(false);
   const [productRating, setProductRating] = useState([]);
+  const [filterProduct, setFilterProduct] = useState([]);
+  const navigate = useNavigate();
 
   const stripeApiKey = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
   const stripePromise = loadStripe(stripeApiKey);
@@ -79,6 +81,17 @@ function App() {
         console.log("Error while getting your order items is ", error);
       }
     }
+  };
+
+  const filterElectorics = () => {
+    navigate("/", { state: { message: "Electronics" } });
+  };
+  const filterOfficeSupplies = () => {
+    navigate("/", { state: { message: "Office Supplies" } });
+  };
+  const filterAllProduct = () => {
+    navigate("/");
+    setFilterProduct(products.filter((product) => product.productCategoryName));
   };
 
   useEffect(() => {
@@ -134,6 +147,11 @@ function App() {
                 isAdmin={isAdmin}
                 productRating={productRating}
                 setProductRating={setProductRating}
+                filterProduct={filterProduct}
+                setFilterProduct={setFilterProduct}
+                filterElectorics={() => filterElectorics()}
+                filterOfficeSupplies={() => filterOfficeSupplies()}
+                filterAllProduct={() => filterAllProduct()}
               />
             </>
           }
@@ -164,6 +182,9 @@ function App() {
               isAdmin={isAdmin}
               productRating={productRating}
               setProductRating={setProductRating}
+              filterElectorics={() => filterElectorics()}
+              filterOfficeSupplies={() => filterOfficeSupplies()}
+              filterAllProduct={() => filterAllProduct()}
             />
           }
         />
@@ -236,6 +257,9 @@ function App() {
                 setActive={setActive}
                 setSearch={setSearch}
                 isAdmin={isAdmin}
+                filterElectorics={() => filterElectorics()}
+                filterOfficeSupplies={() => filterOfficeSupplies()}
+                filterAllProduct={() => filterAllProduct()}
               />
             </div>
           }
@@ -270,6 +294,9 @@ function App() {
                 setActive={setActive}
                 setSearch={setSearch}
                 isAdmin={isAdmin}
+                filterElectorics={() => filterElectorics()}
+                filterOfficeSupplies={() => filterOfficeSupplies()}
+                filterAllProduct={() => filterAllProduct()}
               />
             </div>
           }
@@ -304,6 +331,10 @@ function App() {
               products={products}
               setNumItemCart={setNumItemCart}
               isAdmin={isAdmin}
+              filterElectorics={() => filterElectorics()}
+              filterOfficeSupplies={() => filterOfficeSupplies()}
+              filterAllProduct={() => filterAllProduct()}
+              setActive={setActive}
             />
           }
         />
@@ -317,6 +348,9 @@ function App() {
               setActive={setActive}
               setSearch={setSearch}
               isAdmin={isAdmin}
+              filterElectorics={() => filterElectorics()}
+              filterOfficeSupplies={() => filterOfficeSupplies()}
+              filterAllProduct={() => filterAllProduct()}
             />
           }
         />
@@ -340,6 +374,10 @@ function App() {
               setNumItemCart={setNumItemCart}
               setSearch={setSearch}
               isAdmin={isAdmin}
+              filterElectorics={() => filterElectorics()}
+              filterOfficeSupplies={() => filterOfficeSupplies()}
+              filterAllProduct={() => filterAllProduct()}
+              setActive={setActive}
             />
           }
         />
@@ -374,6 +412,9 @@ function App() {
                 country={country}
                 setSearch={setSearch}
                 isAdmin={isAdmin}
+                filterElectorics={() => filterElectorics()}
+                filterOfficeSupplies={() => filterOfficeSupplies()}
+                filterAllProduct={() => filterAllProduct()}
               />
             </Elements>
           }
@@ -391,6 +432,9 @@ function App() {
               setSearch={setSearch}
               isAdmin={isAdmin}
               setNumItemCart={setNumItemCart}
+              filterElectorics={() => filterElectorics()}
+              filterOfficeSupplies={() => filterOfficeSupplies()}
+              filterAllProduct={() => filterAllProduct()}
             />
           }
         />
