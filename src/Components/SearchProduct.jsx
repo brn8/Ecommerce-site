@@ -15,7 +15,6 @@ const SearchProduct = ({
   filterAllProduct,
   setActive,
   active,
-  setActive,
   cartItem,
 }) => {
   const fetchOrderItem = async () => {
@@ -82,11 +81,7 @@ const SearchProduct = ({
         filterElectorics={filterElectorics}
         filterOfficeSupplies={filterOfficeSupplies}
         filterAllProduct={filterAllProduct}
-        token={token}
-        setToken={setToken}
-        isAdmin={isAdmin}
         active={active}
-        setActive={setActive}
         cartItem={cartItem}
         setSearch={setSearch}
       />

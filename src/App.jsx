@@ -358,7 +358,6 @@ function App() {
               filterAllProduct={() => filterAllProduct()}
               setActive={setActive}
               active={active}
-              setActive={setActive}
               cartItem={cartItem}
             />
           }
