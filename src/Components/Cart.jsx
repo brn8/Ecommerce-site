@@ -132,6 +132,10 @@ const Cart = ({
   };
   console.log("token: ", token);
 
+  function clickHandler(product) {
+    navigate(`/individualProduct/${product.id}`);
+  }
+
   return (
     <>
       <NavBar
@@ -174,7 +178,10 @@ const Cart = ({
                       return (
                         <tr key={index}>
                           <td>
-                            <div className="cartPageItem">
+                            <div
+                              onClick={() => clickHandler(addedItem)}
+                              className="cartPageItem"
+                            >
                               <img src={addedItem.img} />
                               <div className="cartPageInfomation">
                                 <p className="product-name">

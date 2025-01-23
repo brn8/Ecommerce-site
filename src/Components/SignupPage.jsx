@@ -21,7 +21,7 @@ const SignupPage = ({
   token,
   setToken,
   isAdmin,
-  setSearch
+  setSearch,
 }) => {
   const navigate = useNavigate();
 
@@ -79,7 +79,7 @@ const SignupPage = ({
   }
   return (
     <>
-      <NavBar
+      {/* <NavBar
         active={active}
         setActive={setActive}
         cartItem={cartItem}
@@ -87,7 +87,7 @@ const SignupPage = ({
         setToken={setToken}
         isAdmin={isAdmin}
         setSearch={setSearch}
-      />
+      /> */}
       <form>
         <div className="option-container">
           <h3
