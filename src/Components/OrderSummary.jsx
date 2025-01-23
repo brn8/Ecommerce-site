@@ -17,7 +17,11 @@ const OrderSummary = ({
   zipCode,
   country,
   setSearch,
-  isAdmin
+  isAdmin,
+  filterElectorics,
+  filterOfficeSupplies,
+  filterAllProduct,
+  setActive,
 }) => {
   const [userData, setUserData] = useState([]);
   const navigate = useNavigate();
@@ -25,7 +29,7 @@ const OrderSummary = ({
   //--API Calls
   const createPurchase = async () => {
     try {
-      const fullAddress = `${address}, ${city}, ${state} ${zipCode}`
+      const fullAddress = `${address}, ${city}, ${state} ${zipCode}`;
       const response = await fetch("/api/purchases", {
         method: "POST",
         headers: {
@@ -36,16 +40,15 @@ const OrderSummary = ({
           address: fullAddress,
           amountPaid: grandTotal,
         }),
-      })
+      });
       if (response.ok) {
         const data = await response.json();
         console.log("Posted new purchase");
       }
     } catch (error) {
       console.error(error);
-
     }
-  }
+  };
 
   const deleteOrders = async () => {
     const response = await fetch(`/api/orderItem/`, {
@@ -61,7 +64,7 @@ const OrderSummary = ({
     alert("Order has been Placed!");
     deleteOrders();
     setSearch("");
-    navigate("/")
+    navigate("/");
   }
 
   return (
@@ -77,6 +80,10 @@ const OrderSummary = ({
             numItemCart={numItemCart}
             setSearch={setSearch}
             isAdmin={isAdmin}
+            filterElectorics={filterElectorics}
+            filterOfficeSupplies={filterOfficeSupplies}
+            filterAllProduct={filterAllProduct}
+            setActive={setActive}
           />
           <h2 style={{ textAlign: "center" }}>Order Summary</h2>
           <div style={{ marginLeft: "20px" }}>
@@ -140,11 +147,7 @@ const OrderSummary = ({
           </div>
           <div className="summaryPageOrder" style={{ border: "none" }}>
             <button onClick={() => navigate("/shipping")}>Previous</button>
-            <button
-              onClick={onClickHandler}
-            >
-              Place order
-            </button>
+            <button onClick={onClickHandler}>Place order</button>
           </div>
         </>
       )}

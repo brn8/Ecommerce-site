@@ -9,7 +9,13 @@ const SearchProduct = ({
   setToken,
   numItemCart,
   setNumItemCart,
-  isAdmin
+  isAdmin,
+  filterElectorics,
+  filterOfficeSupplies,
+  filterAllProduct,
+  setActive,
+  active,
+  cartItem,
 }) => {
   const fetchOrderItem = async () => {
     console.log("token: ", token);
@@ -60,9 +66,25 @@ const SearchProduct = ({
     }
   };
   const navigate = useNavigate();
+
+  function clickHandler(product) {
+    navigate(`/individualProduct/${product.id}`);
+  }
   return (
     <>
-      <NavBar numItemCart={numItemCart} token={token} setToken={setToken} isAdmin={isAdmin} />
+      <NavBar
+        numItemCart={numItemCart}
+        setActive={setActive}
+        token={token}
+        setToken={setToken}
+        isAdmin={isAdmin}
+        filterElectorics={filterElectorics}
+        filterOfficeSupplies={filterOfficeSupplies}
+        filterAllProduct={filterAllProduct}
+        active={active}
+        cartItem={cartItem}
+        setSearch={setSearch}
+      />
       {products.filter((product) =>
         product.name.toLowerCase().includes(search.toLowerCase())
       ).length == 0 ? (
@@ -100,7 +122,11 @@ const SearchProduct = ({
               )
               .map((product) => {
                 return (
-                  <div key={product.id} className="individulProduct">
+                  <div
+                    onClick={() => clickHandler(product)}
+                    key={product.id}
+                    className="individulProduct"
+                  >
                     <h3>{product.name}</h3>
                     <img
                       src={product.img}

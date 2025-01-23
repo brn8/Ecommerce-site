@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { GoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
+import NavBar from "./NavBar";
 // import * as jwt_decode from "jwt-decode";
 
 const LoginPage = ({
@@ -14,6 +15,11 @@ const LoginPage = ({
   setLastName,
   setEmail,
   setContact,
+  token,
+  setToken,
+  isAdmin,
+  setSearch,
+  cartItem,
 }) => {
   const navigate = useNavigate();
 
@@ -89,6 +95,15 @@ const LoginPage = ({
 
   return (
     <>
+      {/* <NavBar
+        active={active}
+        setActive={setActive}
+        cartItem={cartItem}
+        token={token}
+        setToken={setToken}
+        isAdmin={isAdmin}
+        setSearch={setSearch}
+      /> */}
       <form>
         <div className="option-container">
           <h3
@@ -123,7 +138,7 @@ const LoginPage = ({
         />
 
         <button onClick={submitHandler}>Sign In</button>
-        <a href="">Forgot Password</a>
+        <a onClick={() => navigate("/forgotPassword")}>Forgot Password?</a>
 
         <GoogleLogin
           className="google-login"

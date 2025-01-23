@@ -3,7 +3,7 @@ import SignupPage from "./Components/SignupPage";
 import "./App.css";
 import Product from "./Components/Product";
 import CartButton from "./Components/CartButton";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import Cart from "./Components/Cart";
 import Account from "./Components/Account";
 import LoginPage from "./Components/LoginPage";
@@ -14,12 +14,17 @@ import SearchProduct from "./Components/SearchProduct";
 import AdminPortal from "./Components/AdminPortal";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { GoogleLogin } from "@react-oauth/google";
+
+import ForgotPassword from "./Components/ForgotPassword";
+import ResetPassword from "./Components/ResetPassword";
+
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 
 import IndividualProduct from "./Components/IndividualProduct";
 
 import PurchaseDetails from "./Components/PurchaseDetails";
+
 import Category from "./Components/Category";
 import ContactUs from "./Components/ContactUs";
 
@@ -48,6 +53,9 @@ function App() {
   const [search, setSearch] = useState("");
   const [isAdmin, setIsAdmin] = useState(false);
   const [productRating, setProductRating] = useState([]);
+  const [filterProduct, setFilterProduct] = useState([]);
+  const navigate = useNavigate();
+  const [reEnterPassword, setReEnterPassword] = useState("");
 
   const stripeApiKey = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
   const stripePromise = loadStripe(stripeApiKey);
@@ -79,6 +87,17 @@ function App() {
         console.log("Error while getting your order items is ", error);
       }
     }
+  };
+
+  const filterElectorics = () => {
+    navigate("/", { state: { message: "Electronics" } });
+  };
+  const filterOfficeSupplies = () => {
+    navigate("/", { state: { message: "Office Supplies" } });
+  };
+  const filterAllProduct = () => {
+    navigate("/");
+    setFilterProduct(products.filter((product) => product.productCategoryName));
   };
 
   useEffect(() => {
@@ -134,6 +153,11 @@ function App() {
                 isAdmin={isAdmin}
                 productRating={productRating}
                 setProductRating={setProductRating}
+                filterProduct={filterProduct}
+                setFilterProduct={setFilterProduct}
+                filterElectorics={() => filterElectorics()}
+                filterOfficeSupplies={() => filterOfficeSupplies()}
+                filterAllProduct={() => filterAllProduct()}
               />
             </>
           }
@@ -164,6 +188,9 @@ function App() {
               isAdmin={isAdmin}
               productRating={productRating}
               setProductRating={setProductRating}
+              filterElectorics={() => filterElectorics()}
+              filterOfficeSupplies={() => filterOfficeSupplies()}
+              filterAllProduct={() => filterAllProduct()}
             />
           }
         />
@@ -177,8 +204,11 @@ function App() {
                 cartItem={cartItem}
                 token={token}
                 setToken={setToken}
+                numItemCart={numItemCart}
+                setSearch={setSearch}
                 isAdmin={isAdmin}
               />
+
               <SignupPage
                 active={active}
                 setActive={setActive}
@@ -194,6 +224,10 @@ function App() {
                 setEmail={setEmail}
                 contact={contact}
                 setContact={setContact}
+                token={token}
+                setToken={setToken}
+                isAdmin={isAdmin}
+                setSearch={setSearch}
               />
             </div>
           }
@@ -208,7 +242,11 @@ function App() {
                 cartItem={cartItem}
                 token={token}
                 setToken={setToken}
+                numItemCart={numItemCart}
+                setSearch={setSearch}
+                isAdmin={isAdmin}
               />
+
               <LoginPage
                 active={active}
                 setActive={setActive}
@@ -220,6 +258,11 @@ function App() {
                 setLastName={setLastName}
                 setEmail={setEmail}
                 setContact={setContact}
+                token={token}
+                setToken={setToken}
+                isAdmin={isAdmin}
+                setSearch={setSearch}
+                cartItem={cartItem}
               />
             </div>
           }
@@ -236,6 +279,9 @@ function App() {
                 setActive={setActive}
                 setSearch={setSearch}
                 isAdmin={isAdmin}
+                filterElectorics={() => filterElectorics()}
+                filterOfficeSupplies={() => filterOfficeSupplies()}
+                filterAllProduct={() => filterAllProduct()}
               />
             </div>
           }
@@ -270,6 +316,9 @@ function App() {
                 setActive={setActive}
                 setSearch={setSearch}
                 isAdmin={isAdmin}
+                filterElectorics={() => filterElectorics()}
+                filterOfficeSupplies={() => filterOfficeSupplies()}
+                filterAllProduct={() => filterAllProduct()}
               />
             </div>
           }
@@ -304,6 +353,12 @@ function App() {
               products={products}
               setNumItemCart={setNumItemCart}
               isAdmin={isAdmin}
+              filterElectorics={() => filterElectorics()}
+              filterOfficeSupplies={() => filterOfficeSupplies()}
+              filterAllProduct={() => filterAllProduct()}
+              setActive={setActive}
+              active={active}
+              cartItem={cartItem}
             />
           }
         />
@@ -317,6 +372,9 @@ function App() {
               setActive={setActive}
               setSearch={setSearch}
               isAdmin={isAdmin}
+              filterElectorics={() => filterElectorics()}
+              filterOfficeSupplies={() => filterOfficeSupplies()}
+              filterAllProduct={() => filterAllProduct()}
             />
           }
         />
@@ -340,6 +398,10 @@ function App() {
               setNumItemCart={setNumItemCart}
               setSearch={setSearch}
               isAdmin={isAdmin}
+              filterElectorics={() => filterElectorics()}
+              filterOfficeSupplies={() => filterOfficeSupplies()}
+              filterAllProduct={() => filterAllProduct()}
+              setActive={setActive}
             />
           }
         />
@@ -374,6 +436,9 @@ function App() {
                 country={country}
                 setSearch={setSearch}
                 isAdmin={isAdmin}
+                filterElectorics={() => filterElectorics()}
+                filterOfficeSupplies={() => filterOfficeSupplies()}
+                filterAllProduct={() => filterAllProduct()}
               />
             </Elements>
           }
@@ -391,7 +456,48 @@ function App() {
               setSearch={setSearch}
               isAdmin={isAdmin}
               setNumItemCart={setNumItemCart}
+              filterElectorics={() => filterElectorics()}
+              filterOfficeSupplies={() => filterOfficeSupplies()}
+              filterAllProduct={() => filterAllProduct()}
             />
+          }
+        />
+        <Route
+          path="/forgotPassword"
+          element={
+            <div className="forgot-password-page .custom-forgot-password-page">
+              <ForgotPassword
+                setEmail={setEmail}
+                email={email}
+                active={active}
+                setActive={setActive}
+                token={token}
+                setToken={setToken}
+                numItemCart={numItemCart}
+                setSearch={setSearch}
+                isAdmin={isAdmin}
+              />
+            </div>
+          }
+        />
+        <Route
+          path="/reset-password"
+          element={
+            <div className="reset-password-page">
+              <ResetPassword
+                setPassword={setPassword}
+                password={password}
+                reEnterPassword={reEnterPassword}
+                setReEnterPassword={setReEnterPassword}
+                token={token}
+                setToken={setToken}
+                active={active}
+                setActive={setActive}
+                numItemCart={numItemCart}
+                setSearch={setSearch}
+                isAdmin={isAdmin}
+              />
+            </div>
           }
         />
       </Routes>

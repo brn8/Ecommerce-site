@@ -27,6 +27,9 @@ const Cart = ({
   isAdmin,
   productRating,
   setProductRating,
+  filterElectorics,
+  filterOfficeSupplies,
+  filterAllProduct,
 }) => {
   const navigate = useNavigate();
   // let products = [];
@@ -132,6 +135,10 @@ const Cart = ({
   };
   console.log("token: ", token);
 
+  function clickHandler(product) {
+    navigate(`/individualProduct/${product.id}`);
+  }
+
   return (
     <>
       <NavBar
@@ -143,6 +150,9 @@ const Cart = ({
         numItemCart={numItemCart}
         setSearch={setSearch}
         isAdmin={isAdmin}
+        filterElectorics={filterElectorics}
+        filterOfficeSupplies={filterOfficeSupplies}
+        filterAllProduct={filterAllProduct}
       />
       {token ? (
         <>
@@ -174,7 +184,10 @@ const Cart = ({
                       return (
                         <tr key={index}>
                           <td>
-                            <div className="cartPageItem">
+                            <div
+                              onClick={() => clickHandler(addedItem)}
+                              className="cartPageItem"
+                            >
                               <img src={addedItem.img} />
                               <div className="cartPageInfomation">
                                 <p className="product-name">

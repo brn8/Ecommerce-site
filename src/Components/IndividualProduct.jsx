@@ -14,6 +14,9 @@ const IndividualProduct = ({
   setSearch,
   isAdmin,
   setNumItemCart,
+  filterElectorics,
+  filterOfficeSupplies,
+  filterAllProduct,
 }) => {
   const navigate = useNavigate();
   const [individualProduct, setIndividualProduct] = useState([]);
@@ -146,6 +149,9 @@ const IndividualProduct = ({
         numItemCart={numItemCart}
         setSearch={setSearch}
         isAdmin={isAdmin}
+        filterElectorics={filterElectorics}
+        filterOfficeSupplies={filterOfficeSupplies}
+        filterAllProduct={filterAllProduct}
       />
       <div className="product-info">
         <div className="product-img">

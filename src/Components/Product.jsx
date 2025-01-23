@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import NavBar from "./NavBar";
 import Footer from "./Footer";
 import ReactStars from "react-rating-stars-component";
@@ -22,13 +22,18 @@ const Product = ({
   isAdmin,
   productRating,
   setProductRating,
+  filterProduct,
+  setFilterProduct,
+  filterElectorics,
+  filterOfficeSupplies,
+  filterAllProduct,
 }) => {
   const navigate = useNavigate();
   //const [products, setProducts] = useState([]);
-  const [filterProduct, setFilterProduct] = useState([]);
   const [searchWithoutClick, setSearchWithoutClick] = useState("");
   // const [productRating, setProductRating] = useState([]);
-
+  const location = useLocation();
+  const { message } = location.state || {};
   console.log("product token: ", token);
 
   const fetchOrderItem = async () => {
@@ -64,20 +69,6 @@ const Product = ({
     fetchOrderItem();
   }, [token]);
 
-  const filterElectorics = () => {
-    setFilterProduct(
-      products.filter(
-        (product) => product.productCategoryName === "Electronics"
-      )
-    );
-  };
-  const filterOfficeSupplies = () => {
-    setFilterProduct(
-      products.filter(
-        (product) => product.productCategoryName === "Office Supplies"
-      )
-    );
-  };
   const filterBySearch = (productName) => {
     setFilterProduct(
       products.filter((product) => product.name === productName)
@@ -165,6 +156,9 @@ const Product = ({
         setToken={setToken}
         numItemCart={numItemCart}
         isAdmin={isAdmin}
+        filterElectorics={filterElectorics}
+        filterOfficeSupplies={filterOfficeSupplies}
+        filterAllProduct={filterAllProduct}
       />
       <form
         style={{ background: "none", marginTop: "-30px" }}
@@ -235,77 +229,83 @@ const Product = ({
       </div>
 
       <div className="products">
-        {filterProduct.map((product) => {
-          return (
-            <div
-              onClick={() => clickHandler(product)}
-              key={product.id}
-              className="individulProduct"
-            >
-              <h3>{product.name}</h3>
+        {filterProduct
+          .filter((product) =>
+            message !== undefined
+              ? product.productCategoryName === message
+              : product.productCategoryName
+          )
+          .map((product) => {
+            return (
+              <div
+                onClick={() => clickHandler(product)}
+                key={product.id}
+                className="individulProduct"
+              >
+                <h3>{product.name}</h3>
 
-              <img
-                src={product.img}
-                style={{ width: "100px", height: "120px" }}
-              />
+                <img
+                  src={product.img}
+                  style={{ width: "100px", height: "120px" }}
+                />
 
-              <p>
-                {parseInt(product.discountAmount) < 0 ? (
-                  <b>${product.price}</b>
-                ) : (
-                  <>
-                    <b style={{ color: "green" }}>
-                      NOW $
-                      {Math.round(
-                        (product.price - product.discountAmount) * 100
-                      ) / 100}{" "}
-                    </b>
-                    <s style={{ color: "red" }}>
-                      {" "}
-                      ${Math.round(product.price * 100) / 100}
-                    </s>
-                  </>
-                )}
-                {productRating.find(
-                  (rating) => product.id === rating.productId
-                ) ? (
-                  <p className="product-rating">
-                    <ReactStars
-                      count={5}
-                      size={20}
-                      isHalf={true}
-                      value={
+                <p>
+                  {parseInt(product.discountAmount) < 0 ? (
+                    <b>${product.price}</b>
+                  ) : (
+                    <>
+                      <b style={{ color: "green" }}>
+                        NOW $
+                        {Math.round(
+                          (product.price - product.discountAmount) * 100
+                        ) / 100}{" "}
+                      </b>
+                      <s style={{ color: "red" }}>
+                        {" "}
+                        ${Math.round(product.price * 100) / 100}
+                      </s>
+                    </>
+                  )}
+                  {productRating.find(
+                    (rating) => product.id === rating.productId
+                  ) ? (
+                    <p className="product-rating">
+                      <ReactStars
+                        count={5}
+                        size={20}
+                        isHalf={true}
+                        value={
+                          productRating.find(
+                            (rating) => rating.productId === product.id
+                          ).average
+                        }
+                        edit={false}
+                        activeColor="#ffd700"
+                      />
+                      {
                         productRating.find(
                           (rating) => rating.productId === product.id
                         ).average
                       }
-                      edit={false}
-                      activeColor="#ffd700"
-                    />
-                    {
-                      productRating.find(
-                        (rating) => rating.productId === product.id
-                      ).average
-                    }
-                  </p>
-                ) : (
-                  ""
-                )}
-              </p>
+                    </p>
+                  ) : (
+                    ""
+                  )}
+                </p>
 
-              <span>{product.description}</span>
+                <span>{product.description}</span>
 
-              <button
-                onClick={(event) => {
-                  event.stopPropagation();
-                  addItemToCart(product);
-                }}
-              >
-                Add to Cart
-              </button>
-            </div>
-          );
-        })}
+                <button
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    addItemToCart(product);
+                  }}
+                >
+                  Add to Cart
+                </button>
+              </div>
+            );
+          })}
       </div>
 
       <Footer />
