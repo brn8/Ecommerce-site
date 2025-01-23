@@ -173,8 +173,11 @@ function App() {
                 cartItem={cartItem}
                 token={token}
                 setToken={setToken}
+                numItemCart={numItemCart}
+                setSearch={setSearch}
                 isAdmin={isAdmin}
               />
+
               <SignupPage
                 active={active}
                 setActive={setActive}
@@ -204,7 +207,11 @@ function App() {
                 cartItem={cartItem}
                 token={token}
                 setToken={setToken}
+                numItemCart={numItemCart}
+                setSearch={setSearch}
+                isAdmin={isAdmin}
               />
+
               <LoginPage
                 active={active}
                 setActive={setActive}
@@ -375,14 +382,21 @@ function App() {
         <Route
           path="/reset-password"
           element={
-            <ResetPassword
-              setPassword={setPassword}
-              password={password}
-              reEnterPassword={reEnterPassword}
-              setReEnterPassword={setReEnterPassword}
-              token={token}
-              setToken={setToken}
-            />
+            <div className="reset-password-page">
+              <ResetPassword
+                setPassword={setPassword}
+                password={password}
+                reEnterPassword={reEnterPassword}
+                setReEnterPassword={setReEnterPassword}
+                token={token}
+                setToken={setToken}
+                active={active}
+                setActive={setActive}
+                numItemCart={numItemCart}
+                setSearch={setSearch}
+                isAdmin={isAdmin}
+              />
+            </div>
           }
         />
       </Routes>

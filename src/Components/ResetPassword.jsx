@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import NavBar from "./NavBar";
 const ResetPassword = ({
   setPassword,
   password,
@@ -7,6 +8,11 @@ const ResetPassword = ({
   setReEnterPassword,
   setToken,
   token,
+  active,
+  setActive,
+  numItemCart,
+  setSearch,
+  isAdmin,
 }) => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -59,6 +65,15 @@ const ResetPassword = ({
   };
   return (
     <>
+      <NavBar
+        active={active}
+        setActive={setActive}
+        token={token}
+        setToken={setToken}
+        numItemCart={numItemCart}
+        setSearch={setSearch}
+        isAdmin={isAdmin}
+      />
       <form onSubmit={handleSubmit}>
         <h1>Reset Password</h1>
         <input
