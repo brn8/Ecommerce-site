@@ -14,14 +14,21 @@ import SearchProduct from "./Components/SearchProduct";
 import AdminPortal from "./Components/AdminPortal";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { GoogleLogin } from "@react-oauth/google";
+
+import ForgotPassword from "./Components/ForgotPassword";
+import ResetPassword from "./Components/ResetPassword";
+
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
+
 
 import IndividualProduct from "./Components/IndividualProduct";
 
 import PurchaseDetails from "./Components/PurchaseDetails";
+
 import Category from "./Components/Category";
 import ContactUs from "./Components/ContactUs";
+
 
 function App() {
   const [firstName, setFirstName] = useState("");
@@ -50,6 +57,7 @@ function App() {
   const [productRating, setProductRating] = useState([]);
   const [filterProduct, setFilterProduct] = useState([]);
   const navigate = useNavigate();
+  const [reEnterPassword, setReEnterPassword] = useState("");
 
   const stripeApiKey = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
   const stripePromise = loadStripe(stripeApiKey);
@@ -192,14 +200,19 @@ function App() {
           path="/signup"
           element={
             <div className="signup-page custom-signup-page">
+
               <NavBar
                 active={active}
                 setActive={setActive}
                 cartItem={cartItem}
                 token={token}
                 setToken={setToken}
+                numItemCart={numItemCart}
+                setSearch={setSearch}
                 isAdmin={isAdmin}
               />
+
+
               <SignupPage
                 active={active}
                 setActive={setActive}
@@ -215,6 +228,10 @@ function App() {
                 setEmail={setEmail}
                 contact={contact}
                 setContact={setContact}
+                token={token}
+                setToken={setToken}
+                isAdmin={isAdmin}
+                setSearch={setSearch}
               />
             </div>
           }
@@ -223,13 +240,19 @@ function App() {
           path="/login"
           element={
             <div className="signin-page custom-signin-page">
+
               <NavBar
                 active={active}
                 setActive={setActive}
                 cartItem={cartItem}
                 token={token}
                 setToken={setToken}
+                numItemCart={numItemCart}
+                setSearch={setSearch}
+                isAdmin={isAdmin}
               />
+
+
               <LoginPage
                 active={active}
                 setActive={setActive}
@@ -241,6 +264,11 @@ function App() {
                 setLastName={setLastName}
                 setEmail={setEmail}
                 setContact={setContact}
+                token={token}
+                setToken={setToken}
+                isAdmin={isAdmin}
+                setSearch={setSearch}
+                cartItem={cartItem}
               />
             </div>
           }
@@ -268,6 +296,7 @@ function App() {
         <Route
           path="/category"
           element={
+
             <div>
               <Category
                 token={token}
@@ -305,6 +334,7 @@ function App() {
         <Route
           path="/order-details/:purchaseId"
           element={
+
             <PurchaseDetails
               token={token}
               setToken={setToken}
@@ -436,6 +466,44 @@ function App() {
               filterOfficeSupplies={() => filterOfficeSupplies()}
               filterAllProduct={() => filterAllProduct()}
             />
+          }
+        />
+        <Route
+          path="/forgotPassword"
+          element={
+            <div className="forgot-password-page .custom-forgot-password-page">
+              <ForgotPassword
+                setEmail={setEmail}
+                email={email}
+                active={active}
+                setActive={setActive}
+                token={token}
+                setToken={setToken}
+                numItemCart={numItemCart}
+                setSearch={setSearch}
+                isAdmin={isAdmin}
+              />
+            </div>
+          }
+        />
+        <Route
+          path="/reset-password"
+          element={
+            <div className="reset-password-page">
+              <ResetPassword
+                setPassword={setPassword}
+                password={password}
+                reEnterPassword={reEnterPassword}
+                setReEnterPassword={setReEnterPassword}
+                token={token}
+                setToken={setToken}
+                active={active}
+                setActive={setActive}
+                numItemCart={numItemCart}
+                setSearch={setSearch}
+                isAdmin={isAdmin}
+              />
+            </div>
           }
         />
       </Routes>
