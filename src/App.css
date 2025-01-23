@@ -422,6 +422,10 @@ textarea {
   display: flex;
   flex-direction: row;
   justify-content: center;
+  position:absolute;
+  left:0;
+  bottom:0;
+  right:0;
 }
 .footer-button button {
   background-color: #def4fd;
@@ -482,6 +486,10 @@ textarea {
   border-bottom: 1px solid #000000;
 }
 
+.simple-page{
+  display: flex;
+  justify-content: center;
+}
 /*For Shipping page*/
 .shipping-all-container {
   display: flex;

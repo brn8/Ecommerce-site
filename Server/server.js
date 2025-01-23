@@ -1,17 +1,23 @@
+require("dotenv").config();
 const express = require("express");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const morgan = require("morgan");
+
 const nodemailer = require("nodemailer");
+
+
+const Stripe = require("stripe");
 
 const cors = require("cors");
 
 const app = express();
+
+const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 const PORT = 3000;
 const prisma = require("../Server/prisma");
 const { data } = require("react-router-dom");
 
-require("dotenv").config();
 app.use(express.json());
 
 app.use(morgan("dev"));
@@ -423,7 +429,7 @@ app.patch("/api/payment", isLoggedIn, async (req, res, next) => {
           cardNumber,
           nameOnCard,
           expiration,
-          securityCode,
+          // securityCode,
           users: { connect: { id: userId } },
         },
       });
@@ -970,6 +976,7 @@ app.post("/api/purchases", isLoggedIn, async (req, res, next) => {
   }
 });
 
+// change a purchase's order status
 app.patch("/api/purchases", async (req, res, next) => {
   try {
     const { id, status } = req.body;
@@ -987,6 +994,7 @@ app.patch("/api/purchases", async (req, res, next) => {
   }
 });
 
+//get all purchases tied to a user ID
 app.get("/api/purchases", isLoggedIn, async (req, res, next) => {
   try {
     const loggedIn = req.user;
@@ -1000,6 +1008,7 @@ app.get("/api/purchases", isLoggedIn, async (req, res, next) => {
   }
 });
 
+//get a specific purchase
 app.get("/api/purchases/:id", async (req, res, next) => {
   try {
     const purchaseId = Number(req.params.id);
@@ -1012,6 +1021,7 @@ app.get("/api/purchases/:id", async (req, res, next) => {
   }
 });
 
+//get a specific item in a purchase
 app.get("/api/lineItems/:id", async (req, res, next) => {
   try {
     const purchaseId = Number(req.params.id);
@@ -1023,6 +1033,7 @@ app.get("/api/lineItems/:id", async (req, res, next) => {
     next(err);
   }
 });
+
 
 app.post("/api/user/forgotpassword", async (req, res, next) => {
   try {
@@ -1067,6 +1078,32 @@ app.patch("/api/user/resetPassword", async (req, res, next) => {
     console.log("user_data", user_data);
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(user_data.password, salt);
+
+app.post("/api/payment-intent", async (req, res) => {
+  try {
+    const { amount } = req.body;
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount,
+      currency: "usd",
+    });
+
+    res.send({
+      clientSecret: paymentIntent.client_secret,
+    });
+  } catch (error) {
+    res.status(500).send({ error: error.message });
+  }
+});
+//get categories
+app.get("/api/categories", async (req, res, next) => {
+  try {
+    const response = await prisma.ProductCategory.findMany();
+    res.status(200).send(response);
+  } catch (err) {
+    next(err);
+  }
+});
+
 
     const token = req.headers.authtoken;
     // console.log("user_data: ", user_data);
