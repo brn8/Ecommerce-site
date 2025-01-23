@@ -21,14 +21,12 @@ import ResetPassword from "./Components/ResetPassword";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 
-
 import IndividualProduct from "./Components/IndividualProduct";
 
 import PurchaseDetails from "./Components/PurchaseDetails";
 
 import Category from "./Components/Category";
 import ContactUs from "./Components/ContactUs";
-
 
 function App() {
   const [firstName, setFirstName] = useState("");
@@ -200,7 +198,6 @@ function App() {
           path="/signup"
           element={
             <div className="signup-page custom-signup-page">
-
               <NavBar
                 active={active}
                 setActive={setActive}
@@ -211,7 +208,6 @@ function App() {
                 setSearch={setSearch}
                 isAdmin={isAdmin}
               />
-
 
               <SignupPage
                 active={active}
@@ -240,7 +236,6 @@ function App() {
           path="/login"
           element={
             <div className="signin-page custom-signin-page">
-
               <NavBar
                 active={active}
                 setActive={setActive}
@@ -251,7 +246,6 @@ function App() {
                 setSearch={setSearch}
                 isAdmin={isAdmin}
               />
-
 
               <LoginPage
                 active={active}
@@ -296,7 +290,6 @@ function App() {
         <Route
           path="/category"
           element={
-
             <div>
               <Category
                 token={token}
@@ -334,7 +327,6 @@ function App() {
         <Route
           path="/order-details/:purchaseId"
           element={
-
             <PurchaseDetails
               token={token}
               setToken={setToken}
@@ -365,6 +357,9 @@ function App() {
               filterOfficeSupplies={() => filterOfficeSupplies()}
               filterAllProduct={() => filterAllProduct()}
               setActive={setActive}
+              active={active}
+              setActive={setActive}
+              cartItem={cartItem}
             />
           }
         />

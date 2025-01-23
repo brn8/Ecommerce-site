@@ -19,7 +19,7 @@ const LoginPage = ({
   setToken,
   isAdmin,
   setSearch,
-  cartItem
+  cartItem,
 }) => {
   const navigate = useNavigate();
 
@@ -95,7 +95,7 @@ const LoginPage = ({
 
   return (
     <>
-      <NavBar
+      {/* <NavBar
         active={active}
         setActive={setActive}
         cartItem={cartItem}
@@ -103,7 +103,7 @@ const LoginPage = ({
         setToken={setToken}
         isAdmin={isAdmin}
         setSearch={setSearch}
-      />
+      /> */}
       <form>
         <div className="option-container">
           <h3

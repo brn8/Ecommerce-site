@@ -208,6 +208,9 @@ td:nth-child(1) {
   padding: 10px;
   /* background-color: #87c5ea; */
 }
+.cartPageItem:hover {
+  cursor: pointer;
+}
 .cartPageInfomation {
   display: flex;
   flex-direction: column;
@@ -422,10 +425,10 @@ textarea {
   display: flex;
   flex-direction: row;
   justify-content: center;
-  position:absolute;
-  left:0;
-  bottom:0;
-  right:0;
+  position: relative;
+  left: 0;
+  bottom: 0;
+  right: 0;
 }
 .footer-button button {
   background-color: #def4fd;
@@ -486,7 +489,7 @@ textarea {
   border-bottom: 1px solid #000000;
 }
 
-.simple-page{
+.simple-page {
   display: flex;
   justify-content: center;
 }
