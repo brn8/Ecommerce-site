@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import NavBar from "./NavBar";
 import ReactStars from "react-rating-stars-component";
+import Footer from "./Footer";
 // import { orderItem } from "../../Server/prisma";
 
 const Cart = ({
@@ -141,183 +142,190 @@ const Cart = ({
 
   return (
     <>
-      <NavBar
-        active={active}
-        setActive={setActive}
-        cartItem={cartItem}
-        token={token}
-        setToken={setToken}
-        numItemCart={numItemCart}
-        setSearch={setSearch}
-        isAdmin={isAdmin}
-        filterElectorics={filterElectorics}
-        filterOfficeSupplies={filterOfficeSupplies}
-        filterAllProduct={filterAllProduct}
-      />
-      {token ? (
-        <>
-          {numItemCart.length == 0 ? (
-            <div className="cartEmptyFlex">
-              <img
-                src="https://cdni.iconscout.com/illustration/premium/thumb/empty-cart-illustration-download-in-svg-png-gif-file-formats--shopping-ecommerce-simple-error-state-pack-user-interface-illustrations-6024626.png"
-                style={{ width: "300px", height: "300px" }}
-              />
-              <h2>
-                Your Cart is <span style={{ color: "red" }}>Empty!</span>
-              </h2>
-              <span>Must add items on cart before you proceed to checkout</span>
-              <button onClick={() => navigate("/")}>Return Home</button>
-            </div>
-          ) : (
-            <>
-              <h2>Cart</h2>
+      <div className="cart">
+        <NavBar
+          active={active}
+          setActive={setActive}
+          cartItem={cartItem}
+          token={token}
+          setToken={setToken}
+          numItemCart={numItemCart}
+          setSearch={setSearch}
+          isAdmin={isAdmin}
+          filterElectorics={filterElectorics}
+          filterOfficeSupplies={filterOfficeSupplies}
+          filterAllProduct={filterAllProduct}
+        />
 
-              <div className="cartPageFlex">
-                <table style={{ borderCollapse: "collapse" }}>
-                  <tbody>
-                    <tr>
-                      <th>Product</th>
-                      <th>Quantity</th>
-                      <th>Price</th>
-                    </tr>
-                    {numItemCart.map((addedItem, index) => {
-                      return (
-                        <tr key={index}>
-                          <td>
-                            <div
-                              onClick={() => clickHandler(addedItem)}
-                              className="cartPageItem"
-                            >
-                              <img src={addedItem.img} />
-                              <div className="cartPageInfomation">
-                                <p className="product-name">
-                                  <b>{addedItem.name}</b>
-                                </p>
-                                <p>
-                                  {productRating.find(
-                                    (rating) =>
-                                      addedItem.id === rating.productId
-                                  ) ? (
-                                    <p className="product-rating">
-                                      <ReactStars
-                                        count={5}
-                                        size={20}
-                                        isHalf={true}
-                                        value={
+        {token ? (
+          <>
+            {numItemCart.length == 0 ? (
+              <div className="cartEmptyFlex">
+                <img
+                  src="https://cdni.iconscout.com/illustration/premium/thumb/empty-cart-illustration-download-in-svg-png-gif-file-formats--shopping-ecommerce-simple-error-state-pack-user-interface-illustrations-6024626.png"
+                  style={{ width: "300px", height: "300px" }}
+                />
+                <h2>
+                  Your Cart is <span style={{ color: "red" }}>Empty!</span>
+                </h2>
+                <span>
+                  Must add items on cart before you proceed to checkout
+                </span>
+                <button onClick={() => navigate("/")}>Return Home</button>
+              </div>
+            ) : (
+              <>
+                <h2>Cart</h2>
+
+                <div className="cartPageFlex">
+                  <table style={{ borderCollapse: "collapse" }}>
+                    <tbody>
+                      <tr>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                      </tr>
+                      {numItemCart.map((addedItem, index) => {
+                        return (
+                          <tr key={index}>
+                            <td>
+                              <div
+                                onClick={() => clickHandler(addedItem)}
+                                className="cartPageItem"
+                              >
+                                <img src={addedItem.img} />
+                                <div className="cartPageInfomation">
+                                  <p className="product-name">
+                                    <b>{addedItem.name}</b>
+                                  </p>
+                                  <p>
+                                    {productRating.find(
+                                      (rating) =>
+                                        addedItem.id === rating.productId
+                                    ) ? (
+                                      <p className="product-rating">
+                                        <ReactStars
+                                          count={5}
+                                          size={20}
+                                          isHalf={true}
+                                          value={
+                                            productRating.find(
+                                              (rating) =>
+                                                rating.productId ===
+                                                addedItem.id
+                                            ).average
+                                          }
+                                          edit={false}
+                                          activeColor="#ffd700"
+                                        />
+                                        {
                                           productRating.find(
                                             (rating) =>
                                               rating.productId === addedItem.id
                                           ).average
                                         }
-                                        edit={false}
-                                        activeColor="#ffd700"
-                                      />
-                                      {
-                                        productRating.find(
-                                          (rating) =>
-                                            rating.productId === addedItem.id
-                                        ).average
-                                      }
-                                    </p>
-                                  ) : (
-                                    ""
-                                  )}
-                                </p>
+                                      </p>
+                                    ) : (
+                                      ""
+                                    )}
+                                  </p>
 
-                                <span>{addedItem.description}</span>
+                                  <span>{addedItem.description}</span>
+                                </div>
                               </div>
-                            </div>
-                          </td>
-                          <td>
-                            {" "}
-                            {quantity[index] < 2 ? (
-                              <button disabled={true}>-</button>
-                            ) : (
+                            </td>
+                            <td>
+                              {" "}
+                              {quantity[index] < 2 ? (
+                                <button disabled={true}>-</button>
+                              ) : (
+                                <button
+                                  onClick={() =>
+                                    subtractItem(orderItemId[index], index)
+                                  }
+                                >
+                                  -
+                                </button>
+                              )}
+                              <span>{quantity[index]} </span>
                               <button
                                 onClick={() =>
-                                  subtractItem(orderItemId[index], index)
+                                  addItem(orderItemId[index], index)
                                 }
                               >
-                                -
+                                {console.log(
+                                  "order item id index: ",
+                                  orderItemId[index]
+                                )}
+                                +
+                              </button>{" "}
+                              <button
+                                onClick={() =>
+                                  deleteOrderItem(orderItemId[index])
+                                }
+                              >
+                                <i className="bi bi-trash"></i>
                               </button>
-                            )}
-                            <span>{quantity[index]} </span>
-                            <button
-                              onClick={() => addItem(orderItemId[index], index)}
-                            >
-                              {console.log(
-                                "order item id index: ",
-                                orderItemId[index]
-                              )}
-                              +
-                            </button>{" "}
-                            <button
-                              onClick={() =>
-                                deleteOrderItem(orderItemId[index])
-                              }
-                            >
-                              <i className="bi bi-trash"></i>
-                            </button>
-                          </td>
-                          <td>
-                            {" "}
-                            <b>
-                              ${productPrice[index]}
-                              {/* {Math.round(
+                            </td>
+                            <td>
+                              {" "}
+                              <b>
+                                ${productPrice[index]}
+                                {/* {Math.round(
                           (addedItem.price - addedItem.discountAmount) *
                             quantity[index] *
                             100
                         ) / 100} */}
-                            </b>
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-                <div className="cartPageOrder">
-                  <textarea
-                    placeholder="Order Instruction"
-                    cols="35"
-                    rows="12"
-                  ></textarea>
-                  <p>Total: ${grandTotal}</p>
+                              </b>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                  <div className="cartPageOrder">
+                    <textarea
+                      placeholder="Order Instruction"
+                      cols="35"
+                      rows="12"
+                    ></textarea>
+                    <p>Total: ${grandTotal}</p>
 
-                  <button
-                    onClick={() =>
-                      cartItem.length != 0 ? navigate("/shipping") : ""
-                    }
-                  >
-                    Check Out
-                  </button>
+                    <button
+                      onClick={() =>
+                        cartItem.length != 0 ? navigate("/shipping") : ""
+                      }
+                    >
+                      Check Out
+                    </button>
+                  </div>
                 </div>
-              </div>
-            </>
-          )}
-        </>
-      ) : (
-        <>
-          <h1
-            style={{
-              textAlign: "center",
-              fontFamily:
-                " Lucida Sans, Lucida Sans Regular, Lucida Grande,Lucida Sans Unicode, Geneva, Verdana, sans-serif",
-            }}
-          >
-            You are not LoggedIn!{" "}
-          </h1>
-          <p
-            style={{
-              textAlign: "center",
-              fontFamily:
-                " Lucida Sans, Lucida Sans Regular, Lucida Grande,Lucida Sans Unicode, Geneva, Verdana, sans-serif",
-            }}
-          >
-            Please Login to view your cart
-          </p>
-        </>
-      )}
-      {/* <div className="cartPageItems">
+              </>
+            )}
+          </>
+        ) : (
+          <>
+            <h1
+              style={{
+                textAlign: "center",
+                fontFamily:
+                  " Lucida Sans, Lucida Sans Regular, Lucida Grande,Lucida Sans Unicode, Geneva, Verdana, sans-serif",
+              }}
+            >
+              You are not LoggedIn!{" "}
+            </h1>
+            <p
+              style={{
+                textAlign: "center",
+                fontFamily:
+                  " Lucida Sans, Lucida Sans Regular, Lucida Grande,Lucida Sans Unicode, Geneva, Verdana, sans-serif",
+              }}
+            >
+              Please Login to view your cart
+            </p>
+          </>
+        )}
+        {/* <div className="cartPageItems">
         <div>
           {cartItem.length == 0
             ? navigate("/")
@@ -362,6 +370,8 @@ const Cart = ({
                 );
               })}
         </div> */}
+      </div>
+      <Footer />
     </>
   );
 };
