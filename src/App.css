@@ -28,16 +28,35 @@ body,
   align-items: center; */
   background-color: white;
 }
-.order-detail-page {
+.order-detail-page,
+.aboutus-page,
+.order-summary-page {
   height: 100%;
   width: 100%;
   background-color: white;
   display: flex;
   flex-direction: column;
 }
+.cart {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  /* background-color: #184d92; */
+}
+.order-summary-page .order-summary-info {
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
 .order-detail-page .order-detail {
   margin-top: auto;
   margin-bottom: auto;
+}
+.aboutus-page main {
+  margin-top: auto;
+  margin-bottom: auto;
+  padding-left: 20px;
 }
 
 form {
@@ -453,6 +472,7 @@ textarea {
 }
 .footer-button button {
   background-color: #def4fd;
+  text-decoration: underline;
 }
 .footer-button {
   display: flex;

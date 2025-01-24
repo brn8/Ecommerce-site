@@ -1,12 +1,34 @@
 // import { useEffect, useState } from "react";
 // import { useNavigate } from "react-router-dom";
-// import NavBar from "./NavBar";
-// import Footer from "./Footer";
+import NavBar from "./NavBar";
+import Footer from "./Footer";
 
-const AboutUsPage = () => {
+const AboutUsPage = ({
+  token,
+  setToken,
+  numItemCart,
+  active,
+  setActive,
+  setSearch,
+  isAdmin,
+  filterElectorics,
+  filterOfficeSupplies,
+  filterAllProduct,
+}) => {
   return (
-    <div>
-      {/* <NavBar /> */}
+    <div className="aboutus-page">
+      <NavBar
+        token={token}
+        setToken={setToken}
+        numItemCart={numItemCart}
+        active={active}
+        setActive={setActive}
+        setSearch={setSearch}
+        isAdmin={isAdmin}
+        filterElectorics={filterElectorics}
+        filterOfficeSupplies={filterOfficeSupplies}
+        filterAllProduct={filterAllProduct}
+      />
       <main>
         <section>
           <h1>About Us</h1>
@@ -37,6 +59,7 @@ const AboutUsPage = () => {
           <p>Contact Customer Service if you need help.</p>
         </section>
       </main>
+      <Footer />
     </div>
   );
 };

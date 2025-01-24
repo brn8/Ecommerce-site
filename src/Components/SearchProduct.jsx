@@ -151,7 +151,11 @@ const SearchProduct = ({
                       )}
                     </p>
                     <span>{product.description}</span>
-                    <button onClick={() => addItemToCart(product)}>
+                    <button
+                      onClick={(event) => {
+                        event.stopPropagation(), addItemToCart(product);
+                      }}
+                    >
                       Add to Cart
                     </button>
                   </div>

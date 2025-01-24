@@ -208,6 +208,9 @@ function App() {
                 numItemCart={numItemCart}
                 setSearch={setSearch}
                 isAdmin={isAdmin}
+                filterElectorics={filterElectorics}
+                filterOfficeSupplies={filterOfficeSupplies}
+                filterAllProduct={filterAllProduct}
               />
 
               <SignupPage
@@ -246,6 +249,9 @@ function App() {
                 numItemCart={numItemCart}
                 setSearch={setSearch}
                 isAdmin={isAdmin}
+                filterElectorics={filterElectorics}
+                filterOfficeSupplies={filterOfficeSupplies}
+                filterAllProduct={filterAllProduct}
               />
 
               <LoginPage
@@ -479,6 +485,9 @@ function App() {
                 numItemCart={numItemCart}
                 setSearch={setSearch}
                 isAdmin={isAdmin}
+                filterElectorics={filterElectorics}
+                filterOfficeSupplies={filterOfficeSupplies}
+                filterAllProduct={filterAllProduct}
               />
             </div>
           }
@@ -499,11 +508,30 @@ function App() {
                 numItemCart={numItemCart}
                 setSearch={setSearch}
                 isAdmin={isAdmin}
+                filterElectorics={filterElectorics}
+                filterOfficeSupplies={filterOfficeSupplies}
+                filterAllProduct={filterAllProduct}
               />
             </div>
           }
         />
-        <Route path="/aboutus" element={<AboutUsPage />} />
+        <Route
+          path="/aboutus"
+          element={
+            <AboutUsPage
+              token={token}
+              setToken={setToken}
+              numItemCart={numItemCart}
+              active={active}
+              setActive={setActive}
+              setSearch={setSearch}
+              isAdmin={isAdmin}
+              filterElectorics={filterElectorics}
+              filterOfficeSupplies={filterOfficeSupplies}
+              filterAllProduct={filterAllProduct}
+            />
+          }
+        />
       </Routes>
     </>
   );

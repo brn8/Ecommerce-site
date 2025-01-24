@@ -13,6 +13,9 @@ const ResetPassword = ({
   numItemCart,
   setSearch,
   isAdmin,
+  filterElectorics,
+  filterOfficeSupplies,
+  filterAllProduct,
 }) => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -73,6 +76,9 @@ const ResetPassword = ({
         numItemCart={numItemCart}
         setSearch={setSearch}
         isAdmin={isAdmin}
+        filterElectorics={filterElectorics}
+        filterOfficeSupplies={filterOfficeSupplies}
+        filterAllProduct={filterAllProduct}
       />
       <form onSubmit={handleSubmit}>
         <h1>Reset Password</h1>
