@@ -27,6 +27,7 @@ import PurchaseDetails from "./Components/PurchaseDetails";
 
 import Category from "./Components/Category";
 import ContactUs from "./Components/ContactUs";
+import AboutUsPage from "./Components/AboutUsPage";
 
 function App() {
   const [firstName, setFirstName] = useState("");
@@ -207,6 +208,9 @@ function App() {
                 numItemCart={numItemCart}
                 setSearch={setSearch}
                 isAdmin={isAdmin}
+                filterElectorics={filterElectorics}
+                filterOfficeSupplies={filterOfficeSupplies}
+                filterAllProduct={filterAllProduct}
               />
 
               <SignupPage
@@ -245,6 +249,9 @@ function App() {
                 numItemCart={numItemCart}
                 setSearch={setSearch}
                 isAdmin={isAdmin}
+                filterElectorics={filterElectorics}
+                filterOfficeSupplies={filterOfficeSupplies}
+                filterAllProduct={filterAllProduct}
               />
 
               <LoginPage
@@ -270,7 +277,7 @@ function App() {
         <Route
           path="/account"
           element={
-            <div>
+            <div className="account-page">
               <Account
                 token={token}
                 setToken={setToken}
@@ -307,7 +314,7 @@ function App() {
         <Route
           path="/contactus"
           element={
-            <div>
+            <div className="contact-us-page">
               <ContactUs
                 token={token}
                 setToken={setToken}
@@ -327,17 +334,19 @@ function App() {
         <Route
           path="/order-details/:purchaseId"
           element={
-            <PurchaseDetails
-              token={token}
-              setToken={setToken}
-              active={active}
-              numItemCart={numItemCart}
-              setActive={setActive}
-              setSearch={setSearch}
-              isAdmin={isAdmin}
-              firstName={firstName}
-              lastName={lastName}
-            />
+            <div className="order-detail-page">
+              <PurchaseDetails
+                token={token}
+                setToken={setToken}
+                active={active}
+                numItemCart={numItemCart}
+                setActive={setActive}
+                setSearch={setSearch}
+                isAdmin={isAdmin}
+                firstName={firstName}
+                lastName={lastName}
+              />
+            </div>
           }
         />
 
@@ -476,6 +485,9 @@ function App() {
                 numItemCart={numItemCart}
                 setSearch={setSearch}
                 isAdmin={isAdmin}
+                filterElectorics={filterElectorics}
+                filterOfficeSupplies={filterOfficeSupplies}
+                filterAllProduct={filterAllProduct}
               />
             </div>
           }
@@ -496,8 +508,28 @@ function App() {
                 numItemCart={numItemCart}
                 setSearch={setSearch}
                 isAdmin={isAdmin}
+                filterElectorics={filterElectorics}
+                filterOfficeSupplies={filterOfficeSupplies}
+                filterAllProduct={filterAllProduct}
               />
             </div>
+          }
+        />
+        <Route
+          path="/aboutus"
+          element={
+            <AboutUsPage
+              token={token}
+              setToken={setToken}
+              numItemCart={numItemCart}
+              active={active}
+              setActive={setActive}
+              setSearch={setSearch}
+              isAdmin={isAdmin}
+              filterElectorics={filterElectorics}
+              filterOfficeSupplies={filterOfficeSupplies}
+              filterAllProduct={filterAllProduct}
+            />
           }
         />
       </Routes>

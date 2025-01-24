@@ -205,232 +205,234 @@ const Account = ({
         filterOfficeSupplies={filterOfficeSupplies}
         filterAllProduct={filterAllProduct}
       />
-      <h1 className="account-headers" style={{ paddingLeft: "50px" }}>
-        My Account
-      </h1>
-      <div className="account">
-        <div className="account-orders">
-          <h2 className="account-headers">Order History</h2>
+      <div className="account-details">
+        <h1 className="account-headers" style={{ paddingLeft: "50px" }}>
+          My Account
+        </h1>
+        <div className="account">
+          <div className="account-orders">
+            <h2 className="account-headers">Order History</h2>
 
-          <table className="orders">
-            <thead>
-              <tr className="account-headers">
-                <th style={{ width: "15%" }}>Order</th>
-                <th>Date</th>
-                <th>Status</th>
-                <th>Total</th>
-              </tr>
-            </thead>
+            <table className="orders">
+              <thead>
+                <tr className="account-headers">
+                  <th style={{ width: "15%" }}>Order</th>
+                  <th>Date</th>
+                  <th>Status</th>
+                  <th>Total</th>
+                </tr>
+              </thead>
 
-            {orders &&
-              orders.map((val, key) => {
-                return (
-                  <tbody key={key}>
-                    <tr key={key}>
-                      {/*make this a link/navigate to specific order page*/}
-                      <td
-                        onClick={(e) => {
-                          e.preventDefault();
-                          navigate(`/order-details/${val.id}`);
-                        }}
-                        className="account-links"
-                      >
-                        #{val.id.toString().padStart(4, "0")}
-                      </td>
-                      <td>{val.created_at.slice(0, 10)}</td>
-                      <td>{val.status}</td>
-                      <td>${parseFloat(val.amountPaid).toFixed(2)}</td>
-                    </tr>
-                  </tbody>
-                );
-              })}
-          </table>
-        </div>
-        <div className="account-details">
-          <div>
-            <h2 className="account-headers">Account Details</h2>
-            {info && (
-              <>
-                {info.email}
-                <br />
-                {`${info.firstName} ${info.lastName}`}
-                <br />
-                {info.contact}
-              </>
-            )}
-            <div
-              onClick={() => {
-                if (showForm) {
-                  setShowForm(false);
-                } else {
-                  setShowForm(true);
-                }
-              }}
-              className="account-links"
-            >
-              {`Edit Info`}
-            </div>
-            {addresses.length > 0 ? (
-              <address>
-                <br />
-                {`${addresses[0].country}`}
-                <br />
-                {`${addresses[0].street}`}
-                <br />
-                {`${addresses[0].city}, ${addresses[0].state} ${addresses[0].zip}`}
-              </address>
-            ) : (
-              <p>No Address Saved</p>
-            )}
-            {addresses.length > 1 && (
+              {orders &&
+                orders.map((val, key) => {
+                  return (
+                    <tbody key={key}>
+                      <tr key={key}>
+                        {/*make this a link/navigate to specific order page*/}
+                        <td
+                          onClick={(e) => {
+                            e.preventDefault();
+                            navigate(`/order-details/${val.id}`);
+                          }}
+                          className="account-links"
+                        >
+                          #{val.id.toString().padStart(4, "0")}
+                        </td>
+                        <td>{val.created_at.slice(0, 10)}</td>
+                        <td>{val.status}</td>
+                        <td>${parseFloat(val.amountPaid).toFixed(2)}</td>
+                      </tr>
+                    </tbody>
+                  );
+                })}
+            </table>
+          </div>
+          <div className="account-details">
+            <div>
+              <h2 className="account-headers">Account Details</h2>
+              {info && (
+                <>
+                  {info.email}
+                  <br />
+                  {`${info.firstName} ${info.lastName}`}
+                  <br />
+                  {info.contact}
+                </>
+              )}
               <div
-                className="account-links"
                 onClick={() => {
-                  if (showAddresses) {
-                    setShowAddresses(false);
+                  if (showForm) {
+                    setShowForm(false);
                   } else {
-                    setShowAddresses(true);
+                    setShowForm(true);
                   }
                 }}
-              >{`View Addresses (${addresses.length - 1}) >`}</div>
-            )}
-            {showAddresses &&
-              addresses.slice(1).map((val, key) => {
-                return (
-                  <>
-                    <address>
-                      {val.country} <br />
-                      {val.street} <br />
-                      {val.city}, {val.state} {val.zip} <br />
-                    </address>
-                    <br />
-                  </>
-                );
-              })}
-            <div
-              onClick={() => {
-                if (showAddressForm) {
-                  setshowAddressForm(false);
-                } else {
-                  setshowAddressForm(true);
-                }
-              }}
-              className="account-links"
-            >
-              {`Edit Address`}
+                className="account-links"
+              >
+                {`Edit Info`}
+              </div>
+              {addresses.length > 0 ? (
+                <address>
+                  <br />
+                  {`${addresses[0].country}`}
+                  <br />
+                  {`${addresses[0].street}`}
+                  <br />
+                  {`${addresses[0].city}, ${addresses[0].state} ${addresses[0].zip}`}
+                </address>
+              ) : (
+                <p>No Address Saved</p>
+              )}
+              {addresses.length > 1 && (
+                <div
+                  className="account-links"
+                  onClick={() => {
+                    if (showAddresses) {
+                      setShowAddresses(false);
+                    } else {
+                      setShowAddresses(true);
+                    }
+                  }}
+                >{`View Addresses (${addresses.length - 1}) >`}</div>
+              )}
+              {showAddresses &&
+                addresses.slice(1).map((val, key) => {
+                  return (
+                    <>
+                      <address>
+                        {val.country} <br />
+                        {val.street} <br />
+                        {val.city}, {val.state} {val.zip} <br />
+                      </address>
+                      <br />
+                    </>
+                  );
+                })}
+              <div
+                onClick={() => {
+                  if (showAddressForm) {
+                    setshowAddressForm(false);
+                  } else {
+                    setshowAddressForm(true);
+                  }
+                }}
+                className="account-links"
+              >
+                {`Edit Address`}
+              </div>
             </div>
           </div>
+          {showAddressForm && (
+            <form className="address-form" onSubmit={handleAddressFormSubmit}>
+              <label>
+                Street Address:
+                <br />
+                <input
+                  required
+                  value={street}
+                  onChange={(e) => setStreet(e.target.value)}
+                />
+              </label>
+              <br />
+
+              <label>
+                ZIP:
+                <br />
+                <input
+                  required
+                  value={zip}
+                  onChange={(e) => setZip(e.target.value)}
+                />
+              </label>
+              <br />
+
+              <label>
+                City:
+                <br />
+                <input
+                  required
+                  value={city}
+                  onChange={(e) => setCity(e.target.value)}
+                />
+              </label>
+              <br />
+
+              <label>
+                State:
+                <br />
+                <input
+                  required
+                  value={state}
+                  onChange={(e) => setState(e.target.value)}
+                />
+              </label>
+              <br />
+
+              <label>
+                Country:
+                <br />
+                <input
+                  required
+                  value={country}
+                  onChange={(e) => setCountry(e.target.value)}
+                />
+              </label>
+              <br />
+              <button>Change</button>
+            </form>
+          )}
+
+          {showForm && (
+            <form className="address-form" onSubmit={handleInfoFormSubmit}>
+              <label>
+                Email:
+                <br />
+                <input
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </label>
+              <br />
+
+              <label>
+                First Name:
+                <br />
+                <input
+                  required
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                />
+              </label>
+              <br />
+
+              <label>
+                Last Name:
+                <br />
+                <input
+                  required
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                />
+              </label>
+              <br />
+
+              <label>
+                Contact:
+                <br />
+                <input
+                  required
+                  value={contact}
+                  onChange={(e) => setContact(e.target.value)}
+                />
+              </label>
+              <br />
+
+              <br />
+              <button>Change</button>
+            </form>
+          )}
         </div>
-        {showAddressForm && (
-          <form className="address-form" onSubmit={handleAddressFormSubmit}>
-            <label>
-              Street Address:
-              <br />
-              <input
-                required
-                value={street}
-                onChange={(e) => setStreet(e.target.value)}
-              />
-            </label>
-            <br />
-
-            <label>
-              ZIP:
-              <br />
-              <input
-                required
-                value={zip}
-                onChange={(e) => setZip(e.target.value)}
-              />
-            </label>
-            <br />
-
-            <label>
-              City:
-              <br />
-              <input
-                required
-                value={city}
-                onChange={(e) => setCity(e.target.value)}
-              />
-            </label>
-            <br />
-
-            <label>
-              State:
-              <br />
-              <input
-                required
-                value={state}
-                onChange={(e) => setState(e.target.value)}
-              />
-            </label>
-            <br />
-
-            <label>
-              Country:
-              <br />
-              <input
-                required
-                value={country}
-                onChange={(e) => setCountry(e.target.value)}
-              />
-            </label>
-            <br />
-            <button>Change</button>
-          </form>
-        )}
-
-        {showForm && (
-          <form className="address-form" onSubmit={handleInfoFormSubmit}>
-            <label>
-              Email:
-              <br />
-              <input
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </label>
-            <br />
-
-            <label>
-              First Name:
-              <br />
-              <input
-                required
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
-              />
-            </label>
-            <br />
-
-            <label>
-              Last Name:
-              <br />
-              <input
-                required
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
-              />
-            </label>
-            <br />
-
-            <label>
-              Contact:
-              <br />
-              <input
-                required
-                value={contact}
-                onChange={(e) => setContact(e.target.value)}
-              />
-            </label>
-            <br />
-
-            <br />
-            <button>Change</button>
-          </form>
-        )}
       </div>
       <Footer />
     </>

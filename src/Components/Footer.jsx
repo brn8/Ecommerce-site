@@ -6,6 +6,9 @@ const Footer = () => {
       case "contactus":
         navigate("/contactus");
         break;
+      case "aboutus":
+        navigate("/aboutus");
+        break;
       default:
         navigate("/");
     }
@@ -14,7 +17,8 @@ const Footer = () => {
   return (
     <div className="footer">
       <div className="footer-button">
-        <button>About Us</button>
+        <button onClick={() => navigate("/")}>Home</button>
+        <button onClick={() => handleClick("aboutus")}>About Us</button>
         <button onClick={() => handleClick("contactus")}>Contact Us</button>
       </div>
     </div>

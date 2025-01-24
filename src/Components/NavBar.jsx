@@ -40,6 +40,9 @@ const NavBar = ({
       case "contactus":
         navigate("/contactus");
         break;
+      case "aboutus":
+        navigate("/aboutus");
+        break;
       default:
         sessionStorage.removeItem("authToken");
         setToken("");
@@ -79,7 +82,7 @@ const NavBar = ({
           ) : (
             ""
           )}
-          <button>About Us</button>
+          <button onClick={() => handleClick("aboutus")}>About Us</button>
           <button onClick={() => handleClick("contactus")}>Contact Us</button>
           {/* <button onClick={() => handleClick("category")}>Category</button> */}
           <div

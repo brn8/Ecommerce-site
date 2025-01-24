@@ -28,7 +28,7 @@ const ContactUs = ({
         filterAllProduct={filterAllProduct}
       />
       <div className="simple-page">
-        <div>
+        <div className="info">
           <h2>Contact us on GitHub! </h2>
           <p>
             <a href="https://github.com/pdp5" rel="noreferrer" target="_blank">

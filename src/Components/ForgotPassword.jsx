@@ -10,6 +10,9 @@ const ForgotPassword = ({
   numItemCart,
   setSearch,
   isAdmin,
+  filterElectorics,
+  filterOfficeSupplies,
+  filterAllProduct,
 }) => {
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -50,9 +53,12 @@ const ForgotPassword = ({
         numItemCart={numItemCart}
         setSearch={setSearch}
         isAdmin={isAdmin}
+        filterElectorics={filterElectorics}
+        filterOfficeSupplies={filterOfficeSupplies}
+        filterAllProduct={filterAllProduct}
       />
       <form onSubmit={submitHandler}>
-        <h1>Forgot Passowrd</h1>
+        <h1>Forgot Password?</h1>
         <input
           value={email}
           onChange={(e) => setEmail(e.target.value)}
