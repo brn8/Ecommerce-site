@@ -52,7 +52,7 @@ const ForgotPassword = ({
         isAdmin={isAdmin}
       />
       <form onSubmit={submitHandler}>
-        <h1>Forgot Passowrd</h1>
+        <h1>Forgot Password?</h1>
         <input
           value={email}
           onChange={(e) => setEmail(e.target.value)}
