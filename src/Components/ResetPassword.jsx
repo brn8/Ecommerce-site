@@ -23,7 +23,7 @@ const ResetPassword = ({
     const queryParams = new URLSearchParams(location.search);
     const token = queryParams.get("token");
     setToken(token);
-    console.log("token: ", token);
+    // console.log("token: ", token);
   }, [location]);
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -46,7 +46,7 @@ const ResetPassword = ({
             }
           );
           const data = await response.json();
-          console.log("data: ", data);
+          // console.log("data: ", data);
           if (data.message) {
             alert(data.message);
             setPassword("");

@@ -27,7 +27,7 @@ const ForgotPassword = ({
           }
         );
         const data = await response.json();
-        console.log("data: ", data);
+        // console.log("data: ", data);
         if (data.url) {
           alert(data.message);
           setEmail("");
@@ -41,7 +41,7 @@ const ForgotPassword = ({
     } else {
       alert("Email is required!");
     }
-    console.log("Email: ", email);
+    // console.log("Email: ", email);
   };
   return (
     <>

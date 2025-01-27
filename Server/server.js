@@ -6,7 +6,6 @@ const morgan = require("morgan");
 
 const nodemailer = require("nodemailer");
 
-
 const Stripe = require("stripe");
 
 const cors = require("cors");
@@ -27,12 +26,14 @@ app.use(cors());
 app.use(require("morgan")("dev"));
 
 const JWT = process.env.JWT;
+const pass = process.env.pass;
+// console.log("Pass: ", pass);
 
 const transporter = nodemailer.createTransport({
   service: "Gmail",
   auth: {
     user: "pritpatel7311@gmail.com",
-    pass: "kjrw wpwn zrru idfu",
+    pass: pass,
   },
 });
 
@@ -151,7 +152,7 @@ app.post("/api/register/user", async (req, res, next) => {
   try {
     /*Retriving the data that is provided by the user */
     const user_data = req.body;
-    console.log("Length of user data: ", user_data.length);
+    // console.log("Length of user data: ", user_data.length);
 
     const firstName = user_data.firstName;
     const lastName = user_data.lastName;
@@ -215,7 +216,7 @@ const aunthenticate = async (user_data, res) => {
   if (ifExist.length > 0) {
     const user = ifExist[0];
     const id = user.id;
-    console.log("User id: ", id);
+    // console.log("User id: ", id);
     const verifyPassword = await bcrypt.compare(password, user.password);
     // console.log("Result of password verification: ", verifyPassword);
 
@@ -224,7 +225,7 @@ const aunthenticate = async (user_data, res) => {
       return null;
     } else {
       const token = await jwt.sign(id, JWT);
-      console.log("token: ", token);
+      // console.log("token: ", token);
       return token;
     }
   }
@@ -265,7 +266,7 @@ app.post("/api/googleauth/login/user", async (req, res, next) => {
 
     if (email_verified && username && firstName && lastName && email) {
       const findUser = await prisma.users.findMany({ where: { username } });
-      console.log("findUser: ", findUser);
+      // console.log("findUser: ", findUser);
 
       if (!findUser.length) {
         const createUser = await prisma.users.create({
@@ -282,11 +283,11 @@ app.post("/api/googleauth/login/user", async (req, res, next) => {
         const findRecentCreateUser = await prisma.users.findMany({
           where: { username },
         });
-        console.log("findRecentCreateUser: ", findRecentCreateUser);
+        // console.log("findRecentCreateUser: ", findRecentCreateUser);
 
         const id = findRecentCreateUser[0].id;
         const token = await jwt.sign(id, JWT);
-        console.log("token: ", token);
+        // console.log("token: ", token);
 
         return res.json({
           message: `Congratulations!! You are loggedIn successfully!`,
@@ -296,7 +297,7 @@ app.post("/api/googleauth/login/user", async (req, res, next) => {
       } else {
         const id = findUser[0].id;
         const token = await jwt.sign(id, JWT);
-        console.log("token: ", token);
+        // console.log("token: ", token);
         return res.json({
           message: `Congratulations!! You are loggedIn successfully!`,
           token: token,
@@ -477,7 +478,7 @@ app.patch("/api/products/:id", async (req, res, next) => {
         modified_at,
       },
     });
-    console.log(updateProduct);
+    // console.log(updateProduct);
     res.send(updateProduct);
   } catch (err) {
     next(err);
@@ -521,9 +522,9 @@ app.post("/api/user/additem", isLoggedIn, async (req, res, next) => {
   try {
     const loggedinUser = req.user;
     const product = req.body;
-    console.log("Product is: ", product);
-    console.log("user ID: ", loggedinUser.id);
-    console.log("Product id: ", product.id);
+    // console.log("Product is: ", product);
+    // console.log("user ID: ", loggedinUser.id);
+    // console.log("Product id: ", product.id);
 
     if (Object.keys(product).length >= 0) {
       const createOrderItem = await prisma.OrderItem.create({
@@ -535,8 +536,8 @@ app.post("/api/user/additem", isLoggedIn, async (req, res, next) => {
       });
       if (createOrderItem) {
         const totalPrice = 1 * product.price - product.discountAmount;
-        console.log("totalPrice: ", totalPrice);
-        console.log(createOrderItem.id);
+        // console.log("totalPrice: ", totalPrice);
+        // console.log(createOrderItem.id);
         const createOrder = await prisma.Orders.create({
           data: {
             userId: loggedinUser.id,
@@ -605,7 +606,7 @@ app.get("/api/user/orders", isLoggedIn, async (req, res, next) => {
     for (let i = 0; i < findOrders.length; i++) {
       orderItemIds.push(findOrders[i].orderItemId);
     }
-    console.log("Order item ids are: ", orderItemIds);
+    // console.log("Order item ids are: ", orderItemIds);
 
     // const findProductId = await prisma.OrderItem.findMany({
     //   where: { id },
@@ -617,8 +618,10 @@ app.get("/api/user/orders", isLoggedIn, async (req, res, next) => {
     }
     // console.log("find product id: ", findProductId);
     // console.log("Product id is: ", findProductId[0].productId);
-    console.log("Product ids are: ", productIds);
-    console.log("Product quantities: ", orderItemQuantity);
+
+    // console.log("Product ids are: ", productIds);
+    // console.log("Product quantities: ", orderItemQuantity);
+
     // const productId = findProductId.id;
 
     for (let i = 0; i < productIds.length; i++) {
@@ -626,13 +629,13 @@ app.get("/api/user/orders", isLoggedIn, async (req, res, next) => {
     }
 
     const findProduct = await prisma.Product.findMany({ where: { id } });
-    console.log("Product is: ", findProduct);
-    console.log("Prodcts are: ", products);
+    // console.log("Product is: ", findProduct);
+    // console.log("Prodcts are: ", products);
 
     for (let i = 0; i < productIds.length; i++) {
       productPrices.push(await findProductPrice(productIds[i]));
     }
-    console.log("Product prices are: ", productPrices);
+    // console.log("Product prices are: ", productPrices);
     let totalProductPrices = [];
 
     for (let i = 0; i < productPrices.length; i++) {
@@ -640,7 +643,7 @@ app.get("/api/user/orders", isLoggedIn, async (req, res, next) => {
         (orderItemQuantity[i] * productPrices[i]).toFixed(2)
       );
     }
-    console.log("totalProductPrices: ", totalProductPrices);
+    // console.log("totalProductPrices: ", totalProductPrices);
 
     // if (findProduct.length >= 0) {
     //   return res.send(findProduct);
@@ -675,14 +678,14 @@ app.patch("/api/orderItem/:id", isLoggedIn, async (req, res, next) => {
     const userId = user_data.id;
     const orderItemId = +req.params.id;
     const { quantity } = req.body;
-    console.log("Quantity: ", quantity);
-    console.log("orderItemId: ", orderItemId);
+    // console.log("Quantity: ", quantity);
+    // console.log("orderItemId: ", orderItemId);
     let id;
 
     const findUserFrmOrders = await prisma.Orders.findMany({
       where: { userId },
     });
-    console.log("findUserFrmOrders", findUserFrmOrders);
+    // console.log("findUserFrmOrders", findUserFrmOrders);
 
     // for (let i = 0; i < findUserFrmOrders.length; i++) {
     //   ids.push(findUserFrmOrders[i].orderItemId);
@@ -693,16 +696,20 @@ app.patch("/api/orderItem/:id", isLoggedIn, async (req, res, next) => {
       (order) => order.orderItemId === orderItemId
     );
 
-    console.log("orderitemid: ", orderitemid.orderItemId);
+    // console.log("orderitemid: ", orderitemid.orderItemId);
+
     id = orderitemid.orderItemId;
     const orderid = orderitemid.id;
-    console.log("orderid: ", orderid);
+
+    // console.log("orderid: ", orderid);
 
     if (findUserFrmOrders.length >= 0) {
       const findItemIdfromOrderItem = await prisma.orderItem.findMany({
         where: { id },
       });
-      console.log("findItemIdfromOrderItem: ", findItemIdfromOrderItem);
+
+      // console.log("findItemIdfromOrderItem: ", findItemIdfromOrderItem);
+
       let price = findItemIdfromOrderItem[0].price;
 
       if (findItemIdfromOrderItem.length >= 0) {
@@ -715,7 +722,7 @@ app.patch("/api/orderItem/:id", isLoggedIn, async (req, res, next) => {
           },
         });
         if (Object.keys(response).length >= 0) {
-          console.log("Response: ", response);
+          // console.log("Response: ", response);
           id = orderid;
 
           const findorderitemidfromorders = await prisma.Orders.update({
@@ -741,31 +748,33 @@ app.delete("/api/orderItem/:id", isLoggedIn, async (req, res, next) => {
     const userId = user_data.id;
     let id = +req.params.id;
     let orderItemId = id;
-    console.log("OrderItemID: ", orderItemId);
+
+    // console.log("OrderItemID: ", orderItemId);
 
     const findUserfrmOrder = await prisma.Orders.findMany({
       where: { userId },
     });
-    console.log("findUserfrmOrder: ", findUserfrmOrder);
+
+    // console.log("findUserfrmOrder: ", findUserfrmOrder);
 
     if (findUserfrmOrder.length >= 0) {
       const itemid = findUserfrmOrder.find((order) => order.orderItemId == id);
-      console.log("itemid length: ", itemid);
+      // console.log("itemid length: ", itemid);
       id = itemid.id;
 
       if (Object.keys(itemid).length >= 0) {
         const findOrderItemfrmOrders = await prisma.Orders.delete({
           where: { id },
         });
-        console.log("findOrderItemfrmOrders: ", findOrderItemfrmOrders);
+        // console.log("findOrderItemfrmOrders: ", findOrderItemfrmOrders);
         if (Object.keys(findOrderItemfrmOrders).length >= 0) {
           id = findOrderItemfrmOrders.orderItemId;
-          console.log("findOrderItemfrmOrders.id: ", id);
+          // console.log("findOrderItemfrmOrders.id: ", id);
 
           const findorderitemfrmorderitem = await prisma.OrderItem.findMany({
             where: { id },
           });
-          console.log("findorderitemfrmorderitem: ", findorderitemfrmorderitem);
+          // console.log("findorderitemfrmorderitem: ", findorderitemfrmorderitem);
           if (findorderitemfrmorderitem.length >= 0) {
             const findorderitemfrmorderitem = await prisma.OrderItem.delete({
               where: { id },
@@ -832,8 +841,8 @@ app.post("/api/user/product/review/:id", isLoggedIn, async (req, res, next) => {
     const comment = data.comment;
     const rating = data.rating;
 
-    console.log("loggedin_User_Data: ", loggedin_User_Data);
-    console.log("data: ", data);
+    // console.log("loggedin_User_Data: ", loggedin_User_Data);
+    // console.log("data: ", data);
 
     if (
       Object.keys(loggedin_User_Data).length >= 0 &&
@@ -864,10 +873,10 @@ app.post("/api/user/product/review/:id", isLoggedIn, async (req, res, next) => {
 app.get("/api/product/review", async (req, res, next) => {
   try {
     const getProductReview = await prisma.Review.findMany();
-    console.log("getProductReview: ", getProductReview);
+    // console.log("getProductReview: ", getProductReview);
 
     const userIds = getProductReview.map((review) => review.userId);
-    console.log("userIds", userIds);
+    // console.log("userIds", userIds);
 
     const users = (
       await Promise.all(
@@ -877,7 +886,7 @@ app.get("/api/product/review", async (req, res, next) => {
       )
     ).flat();
 
-    console.log("users: ", users);
+    // console.log("users: ", users);
 
     const productRatings = getProductReview.reduce((acc, productReview) => {
       let rating = Number(productReview.review);
@@ -890,7 +899,7 @@ app.get("/api/product/review", async (req, res, next) => {
       acc[productId].count += 1;
       return acc;
     }, {});
-    console.log("productRatings: ", productRatings);
+    // console.log("productRatings: ", productRatings);
 
     const avgProductRating = Object.entries(productRatings).map(
       ([productId, { sum, count }]) => ({
@@ -900,7 +909,7 @@ app.get("/api/product/review", async (req, res, next) => {
       })
     );
 
-    console.log("avgProductRating: ", avgProductRating);
+    // console.log("avgProductRating: ", avgProductRating);
 
     return res.json({
       productReview: getProductReview,
@@ -915,11 +924,11 @@ app.get("/api/product/review", async (req, res, next) => {
 app.get("/api/product/:id", async (req, res, next) => {
   try {
     const id = Number(req.params.id);
-    console.log("id: ", typeof id);
+    // console.log("id: ", typeof id);
 
     if (id !== null) {
       const findProduct = await prisma.Product.findMany({ where: { id } });
-      console.log("findProduct: ", findProduct);
+      // console.log("findProduct: ", findProduct);
       return res.json({ product: findProduct[0] });
     } else {
       return res.json({ message: `Product ID is not provided!!` });
@@ -1034,11 +1043,10 @@ app.get("/api/lineItems/:id", async (req, res, next) => {
   }
 });
 
-
 app.post("/api/user/forgotpassword", async (req, res, next) => {
   try {
     const email = req.body.email;
-    console.log("email is: ", email);
+    // console.log("email is: ", email);
     const frontend_url = `http://localhost:5173/reset-password`;
 
     const findUser = await prisma.users.findMany({ where: { email } });
@@ -1075,35 +1083,34 @@ app.post("/api/user/forgotpassword", async (req, res, next) => {
 app.patch("/api/user/resetPassword", async (req, res, next) => {
   try {
     const user_data = req.body;
-    console.log("user_data", user_data);
+    // console.log("user_data", user_data);
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(user_data.password, salt);
 
-app.post("/api/payment-intent", async (req, res) => {
-  try {
-    const { amount } = req.body;
-    const paymentIntent = await stripe.paymentIntents.create({
-      amount,
-      currency: "usd",
-    });
+    app.post("/api/payment-intent", async (req, res) => {
+      try {
+        const { amount } = req.body;
+        const paymentIntent = await stripe.paymentIntents.create({
+          amount,
+          currency: "usd",
+        });
 
-    res.send({
-      clientSecret: paymentIntent.client_secret,
+        res.send({
+          clientSecret: paymentIntent.client_secret,
+        });
+      } catch (error) {
+        res.status(500).send({ error: error.message });
+      }
     });
-  } catch (error) {
-    res.status(500).send({ error: error.message });
-  }
-});
-//get categories
-app.get("/api/categories", async (req, res, next) => {
-  try {
-    const response = await prisma.ProductCategory.findMany();
-    res.status(200).send(response);
-  } catch (err) {
-    next(err);
-  }
-});
-
+    //get categories
+    app.get("/api/categories", async (req, res, next) => {
+      try {
+        const response = await prisma.ProductCategory.findMany();
+        res.status(200).send(response);
+      } catch (err) {
+        next(err);
+      }
+    });
 
     const token = req.headers.authtoken;
     // console.log("user_data: ", user_data);

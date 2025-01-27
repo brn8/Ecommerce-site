@@ -25,6 +25,15 @@ const SignupPage = ({
 }) => {
   const navigate = useNavigate();
 
+  useEffect(() => {
+    setFirstName("");
+    setLastName("");
+    setUsername("");
+    setPassword("");
+    setEmail("");
+    setContact("");
+  }, []);
+
   async function submitHandler(e) {
     e.preventDefault();
     // console.log(firstName, " ", lastName, " ", username, " ", password);
@@ -55,7 +64,7 @@ const SignupPage = ({
       });
       const status = await response.status;
       const data = await response.json();
-      console.log("after register: ", data);
+      // console.log("after register: ", data);
 
       alert(data);
       setFirstName("");
