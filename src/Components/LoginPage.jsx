@@ -35,7 +35,7 @@ const LoginPage = ({
         }
       );
       const data = await response.json();
-      console.log("data after logging in: ", data);
+      // console.log("data after logging in: ", data);
       if (data) {
         alert(data.message);
         if (data.token) {
@@ -143,11 +143,11 @@ const LoginPage = ({
         <GoogleLogin
           className="google-login"
           onSuccess={(credentialResponse) => {
-            console.log("credentialResponse: ", credentialResponse);
+            // console.log("credentialResponse: ", credentialResponse);
             const userInfo = jwtDecode(credentialResponse.credential);
-            console.log(userInfo);
+            // console.log(userInfo);
             const userName = userInfo.email.split("@");
-            console.log("username: ", userName[0]);
+            // console.log("username: ", userName[0]);
             const obj = {
               firstName: userInfo.given_name,
               lastName: userInfo.family_name,
@@ -158,7 +158,7 @@ const LoginPage = ({
             googleauthhandler(obj);
           }}
           onError={() => {
-            console.log("Login failed!!");
+            alert("Login failed!!");
           }}
         />
       </form>

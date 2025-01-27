@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import NavBar from "./NavBar";
 import ReactStars from "react-rating-stars-component";
 import Footer from "./Footer";
-// import { orderItem } from "../../Server/prisma";
 
 const Cart = ({
   quantity,
@@ -41,24 +40,29 @@ const Cart = ({
   // const [grandTotal, setGrandtotal] = useState(null);
 
   const fetchOrderItem = async () => {
-    console.log("token: ", token);
+    // console.log("token: ", token);
     if (token) {
       try {
         const response = await fetch("http://localhost:3000/api/user/orders", {
           headers: { "Content-Type": "application/json", authtoken: token },
         });
         const data = await response.json();
-        console.log("data length: ", data.products.length);
-        console.log("orderItem IDs: ", data.orderItemIds);
-        console.log("data: ", data);
+        // console.log("data length: ", data.products.length);
+        // console.log("orderItem IDs: ", data.orderItemIds);
+        // console.log("data: ", data);
+
         // for (let i = 0; i < data.products.length; i++) {
         //   products.push(data.products[i]);
         //   productQuantity.push(data.orderItemQuantity[i]);
         //   orderItemIds.push(data.orderItemIds[i]);
         // }
-        console.log("data.products: ", data.products);
+
+        // console.log("data.products: ", data.products);
+
         // console.log("Products are: ", products);
-        console.log("Orderitem ids are: ", data.orderItemIds);
+
+        // console.log("Orderitem ids are: ", data.orderItemIds);
+
         // setCartItem(products);
         setNumItemCart(data.products);
         setQuantity(data.orderItemQuantity);
@@ -68,7 +72,7 @@ const Cart = ({
         const total = data.productPrices.reduce((accumulator, currentValue) => {
           return Number(accumulator) + Number(currentValue);
         }, 0);
-        console.log("total: ", total);
+        // console.log("total: ", total);
 
         setGrandtotal(total.toFixed(2));
       } catch (error) {
@@ -81,7 +85,7 @@ const Cart = ({
     try {
       const response = await fetch("/api/product/review");
       const data = await response.json();
-      console.log("data: ", data);
+      // console.log("data: ", data);
       setProductRating(data.productAvgRating);
     } catch (error) {
       console.log("Error while fetching ratings: ", error);
@@ -95,7 +99,7 @@ const Cart = ({
   }, [token]);
 
   const deleteOrderItem = async (orderItem) => {
-    console.log("OrderItem in delete: ", orderItem);
+    // console.log("OrderItem in delete: ", orderItem);
     const response = await fetch(`/api/orderItem/${orderItem}`, {
       method: "DELETE",
       headers: { "Content-Type": "application/json", authtoken: token },
@@ -114,13 +118,13 @@ const Cart = ({
       body: JSON.stringify({ quantity: quantity[index] - 1 }),
     });
     const data = await response.json();
-    console.log("after adding data: ", data);
+    // console.log("after adding data: ", data);
     fetchOrderItem();
     setCart(!cart);
   };
 
   const addItem = async (orderItem, index) => {
-    console.log("orderitem: ", orderItem);
+    // console.log("orderitem: ", orderItem);
     const response = await fetch(`/api/orderItem/${orderItem}`, {
       method: "PATCH",
       headers: {
@@ -130,11 +134,11 @@ const Cart = ({
       body: JSON.stringify({ quantity: quantity[index] + 1 }),
     });
     const data = await response.json();
-    console.log("after adding data: ", data);
+    // console.log("after adding data: ", data);
     fetchOrderItem();
     setCart(!cart);
   };
-  console.log("token: ", token);
+  // console.log("token: ", token);
 
   function clickHandler(product) {
     navigate(`/individualProduct/${product.id}`);
