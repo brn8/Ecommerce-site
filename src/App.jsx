@@ -27,7 +27,7 @@ import PurchaseDetails from "./Components/PurchaseDetails";
 
 import Category from "./Components/Category";
 import ContactUs from "./Components/ContactUs";
-import AboutUsPage from "./Components/AboutUsPage";
+import AboutUsPage from "./Components/aboutUsPage";
 
 function App() {
   const [firstName, setFirstName] = useState("");
