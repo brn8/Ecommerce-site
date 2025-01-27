@@ -34,25 +34,29 @@ const Product = ({
   // const [productRating, setProductRating] = useState([]);
   const location = useLocation();
   const { message } = location.state || {};
-  console.log("product token: ", token);
+  // console.log("product token: ", token);
 
   const fetchOrderItem = async () => {
-    console.log("token: ", token);
+    // console.log("token: ", token);
     if (token) {
       try {
         const response = await fetch("http://localhost:3000/api/user/orders", {
           headers: { "Content-Type": "application/json", authtoken: token },
         });
         const data = await response.json();
-        console.log("data length: ", data.products.length);
+        // console.log("data length: ", data.products.length);
+
         // console.log("orderItem IDs: ", data.orderItemIds);
-        console.log("data: ", data);
+
+        // console.log("data: ", data);
         // for (let i = 0; i < data.products.length; i++) {
         //   products.push(data.products[i]);
         //   productQuantity.push(data.orderItemQuantity[i]);
         //   orderItemIds.push(data.orderItemIds[i]);
         // }
-        console.log("data.products: ", data.products);
+
+        // console.log("data.products: ", data.products);
+
         // console.log("Products are: ", products);
         // console.log("Orderitem ids are: ", data.orderItemIds);
         // setCartItem(products);
@@ -87,7 +91,7 @@ const Product = ({
     // );
   };
   const addItemToCart = async (product) => {
-    console.log("Caret Item: ", cartItem);
+    // console.log("Caret Item: ", cartItem);
     if (token) {
       // const response = await fetch("/api/orderItem", {
       //   method: "POST",
@@ -108,7 +112,7 @@ const Product = ({
           body: JSON.stringify(product),
         });
         const data = await response;
-        console.log("After adding an item: ", data);
+        // console.log("After adding an item: ", data);
         fetchOrderItem();
         setCart(!cart);
       } catch (error) {
@@ -123,7 +127,7 @@ const Product = ({
     try {
       const response = await fetch("/api/product/review");
       const data = await response.json();
-      console.log("data: ", data);
+      // console.log("data: ", data);
       setProductRating(data.productAvgRating);
     } catch (error) {
       console.log("Error while fetching ratings: ", error);
@@ -133,7 +137,7 @@ const Product = ({
     const fetchProducts = async () => {
       const response = await fetch("/api/product");
       const fetchProduct = await response.json();
-      console.log("fetchProduct: ", fetchProduct);
+      // console.log("fetchProduct: ", fetchProduct);
       setProducts(fetchProduct);
       setFilterProduct(fetchProduct);
     };
