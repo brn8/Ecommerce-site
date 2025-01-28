@@ -27,7 +27,7 @@ app.use(require("morgan")("dev"));
 
 const JWT = process.env.JWT;
 const pass = process.env.pass;
-// console.log("Pass: ", pass);
+const frontendurl = process.env.frontendurl;
 
 const transporter = nodemailer.createTransport({
   service: "Gmail",
@@ -193,6 +193,13 @@ app.post("/api/register/user", async (req, res, next) => {
       res.status(409).json("This user already exists!!");
     }
   } catch (error) {
+    if (
+      error.code === "P2002" &&
+      error.meta &&
+      error.meta.target.includes("email")
+    ) {
+      return res.status(409).json("This email is already registered!");
+    }
     next(error);
   }
 });
@@ -1047,7 +1054,8 @@ app.post("/api/user/forgotpassword", async (req, res, next) => {
   try {
     const email = req.body.email;
     // console.log("email is: ", email);
-    const frontend_url = `http://localhost:5173/reset-password`;
+    const frontend_url = frontendurl || `http://localhost:5173/reset-password`;
+    // console.log("frontend_url: ", frontend_url);
 
     const findUser = await prisma.users.findMany({ where: { email } });
     // console.log("findUser: ", findUser);
@@ -1086,31 +1094,6 @@ app.patch("/api/user/resetPassword", async (req, res, next) => {
     // console.log("user_data", user_data);
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(user_data.password, salt);
-
-    app.post("/api/payment-intent", async (req, res) => {
-      try {
-        const { amount } = req.body;
-        const paymentIntent = await stripe.paymentIntents.create({
-          amount,
-          currency: "usd",
-        });
-
-        res.send({
-          clientSecret: paymentIntent.client_secret,
-        });
-      } catch (error) {
-        res.status(500).send({ error: error.message });
-      }
-    });
-    //get categories
-    app.get("/api/categories", async (req, res, next) => {
-      try {
-        const response = await prisma.ProductCategory.findMany();
-        res.status(200).send(response);
-      } catch (err) {
-        next(err);
-      }
-    });
 
     const token = req.headers.authtoken;
     // console.log("user_data: ", user_data);
@@ -1151,6 +1134,31 @@ app.patch("/api/user/resetPassword", async (req, res, next) => {
     }
   } catch (error) {
     next(error);
+  }
+});
+
+app.post("/api/payment-intent", async (req, res) => {
+  try {
+    const { amount } = req.body;
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount,
+      currency: "usd",
+    });
+
+    res.send({
+      clientSecret: paymentIntent.client_secret,
+    });
+  } catch (error) {
+    res.status(500).send({ error: error.message });
+  }
+});
+//get categories
+app.get("/api/categories", async (req, res, next) => {
+  try {
+    const response = await prisma.ProductCategory.findMany();
+    res.status(200).send(response);
+  } catch (err) {
+    next(err);
   }
 });
 
