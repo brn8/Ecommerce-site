@@ -1054,7 +1054,7 @@ app.post("/api/user/forgotpassword", async (req, res, next) => {
   try {
     const email = req.body.email;
     // console.log("email is: ", email);
-    const frontend_url = frontendurl || `http://localhost:5173/reset-password`;
+    const frontend_url = `http://localhost:5173/reset-password`;
     // console.log("frontend_url: ", frontend_url);
 
     const findUser = await prisma.users.findMany({ where: { email } });
