@@ -1,6 +1,3 @@
-# E-commerce Web Application (PERN Stack)
-- Built from scratch using PostgreSQL, Express.js, React.js, and Node.js, this full-stack e-commerce application allows users to browse products, make purchases, leave reviews, and view others' feedback. Users can also track their order history for a seamless shopping experience. 🚀
-
 # [Please click here to view the schema](https://drawsql.app/teams/full-stack-19/diagrams/ecommerce-site)
 
 <img width="728" alt="image" src="https://github.com/user-attachments/assets/50c086df-5771-4bad-b9eb-bfaa0a199890" />
