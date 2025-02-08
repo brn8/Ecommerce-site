@@ -58,7 +58,12 @@ body,
   margin-bottom: auto;
   padding-left: 20px;
 }
-
+.signup-page form .register-info {
+  display: flex;
+  flex-wrap: wrap;
+  /* background-color: #ae6c1f; */
+  justify-content: center;
+}
 form {
   background-color: #b3e1f4;
   display: flex;
